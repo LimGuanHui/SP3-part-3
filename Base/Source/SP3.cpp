@@ -357,6 +357,7 @@ void SP3::Update(double dt)
         }
 
         theHero->HeroUpdate(m_cMap);
+        Scenetransition();
 
 
         // ReCalculate the tile offsets
@@ -924,24 +925,29 @@ void SP3::GameStateRender()
 
 void SP3::Scenetransition()
 {
-    CurrLevel = static_cast<Level>(CurrLevel + 1);
-    switch (CurrLevel)
-    {   
-    case SP3::LEVEL1:
-        break;
-    case SP3::LEVEL2:
-        m_cMap->LoadMap("Map\\Map2.csv");        
-        break;
-    case SP3::LEVEL3:
-        m_cMap->LoadMap("Map\\Map3.csv");        
-        break;
-    case SP3::LEVEL4:
-        m_cMap->LoadMap("Map\\Map4.csv");
-        break;
-    default:
-        break;
+    if (theHero->TransitLevel)
+    {
+        CurrLevel = static_cast<Level>(CurrLevel + 1);
+        switch (CurrLevel)
+        {
+        case SP3::LEVEL1:
+            break;
+        case SP3::LEVEL2:
+            m_cMap->LoadMap("Map\\Map3.csv");
+            break;
+        case SP3::LEVEL3:
+            m_cMap->LoadMap("Map\\Map3.csv");
+            break;
+        case SP3::LEVEL4:
+            m_cMap->LoadMap("Map\\Map4.csv");
+            break;
+        default:
+            break;
+        }
+        SpawnCharacter();
+        theHero->TransitLevel = false;
     }
-    SpawnCharacter();
+    
 }
 void SP3::SpawnCharacter()
 {
