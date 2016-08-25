@@ -13,6 +13,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, mapFineOffset_y(0)
     , walking(false)
     , facingRight(true)
+	, TransitLevel(false)
 {
 }
 
@@ -72,7 +73,7 @@ void CPlayerInfo::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		hero_inMidAir_Up = true;
 		hero_inMidAir_Down = false;
-		jumpspeed = 15;
+		jumpspeed = 10;
 	}
 }
 
@@ -266,17 +267,29 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 	checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
 
 	if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
-		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5 ||
-		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2)
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5 )
 		theHeroPosition.x = (checkPosition_X - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
 	else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
 		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 4 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
 		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5 )
 	{
 		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 0)
 			theHeroPosition.x = (checkPosition_X + 1 - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
 		else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 			theHeroPosition.x = (checkPosition_X - 1 - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
 	}
@@ -287,9 +300,17 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 		int xValue = (int)theHeroPosition.x % 25;
 		if (m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 4 ||
 			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 5 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 7 ||
 			(m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 4 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 7 ||
 			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 5) &&
 			xValue != 0)
 		{
@@ -314,9 +335,17 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 
 		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 4 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
 			(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 			&& xValue != 0)
 		{
@@ -349,9 +378,17 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 
 		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 4 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
 			(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 			&& xValue != 0)
 		{
@@ -367,7 +404,12 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 		}
 	}
 
-	ConstrainHero(25, 750, 25, 575, 1.0f);
+	if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 10)
+	{
+		TransitLevel = true;
+	}
+
+	ConstrainHero(25, 750, 25, 600, 1.0f);
 	// Calculate the fine offset
 	mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();
 

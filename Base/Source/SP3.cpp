@@ -21,24 +21,18 @@ SP3::SP3()
 , rearWallTileOffset_y(0)
 , rearWallFineOffset_x(0)
 , rearWallFineOffset_y(0)
-, theEnemy(NULL)
+//, theEnemy(NULL)
 , sceneSoundEngine(NULL)
 {
 }
 
 SP3::~SP3()
 {
-    for (int i = 0; i<10; i++)
-    {
-        delete theArrayOfGoodies[i];
-    }
-    delete theArrayOfGoodies;
-
-    if (theEnemy)
+    /*if (theEnemy)
     {
         delete theEnemy;
         theEnemy = NULL;
-    }
+    }*/
 
     if (m_cMap)
     {
@@ -193,26 +187,9 @@ void SP3::Init()
     meshList[GEO_CONE]->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
     meshList[GEO_CONE]->material.kSpecular.Set(0.f, 0.f, 0.f);
 
-    meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("LEFT", Color(1, 1, 1), 1.f);
-    meshList[GEO_LEFT]->textureID = LoadTGA("Image//left.tga");
-    meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("RIGHT", Color(1, 1, 1), 1.f);
-    meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
-    meshList[GEO_TOP] = MeshBuilder::GenerateQuad("TOP", Color(1, 1, 1), 1.f);
-    meshList[GEO_TOP]->textureID = LoadTGA("Image//top.tga");
-    meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("BOTTOM", Color(1, 1, 1), 1.f);
-    meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom.tga");
-    meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("FRONT", Color(1, 1, 1), 1.f);
-    meshList[GEO_FRONT]->textureID = LoadTGA("Image//front.tga");
-    meshList[GEO_BACK] = MeshBuilder::GenerateQuad("BACK", Color(1, 1, 1), 1.f);
-    meshList[GEO_BACK]->textureID = LoadTGA("Image//back.tga");
-
-    // Load the ground mesh and texture
-    meshList[GEO_GRASS_DARKGREEN] = MeshBuilder::GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_DARKGREEN]->textureID = LoadTGA("Image//grass_darkgreen.tga");
-    meshList[GEO_GRASS_LIGHTGREEN] = MeshBuilder::GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_LIGHTGREEN]->textureID = LoadTGA("Image//grass_lightgreen.tga");
     meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
     meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
     meshList[GEO_TILEGROUND] = MeshBuilder::Generate2DMesh("GEO_TILEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILEGROUND]->textureID = LoadTGA("Image//tile1_ground.tga");
     meshList[GEO_TILEHERO] = MeshBuilder::Generate2DMesh("GEO_TILEHERO", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
@@ -286,11 +263,11 @@ void SP3::Init()
 
 
 
-
+	lives = 3;
     // Initialise and load the tile map
     m_cMap = new CMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800);
-    m_cMap->LoadMap("Map\\Map3.csv");
+    m_cMap->LoadMap("Map\\Map1.csv");
 
     // Initialise and load the REAR tile map
     m_cRearMap = new CMap();
@@ -298,25 +275,9 @@ void SP3::Init()
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
 	theHero = new CPlayerInfo();
-	int m = 0;
-	for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
-	{
-		for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
-		{
-			m = tileOffset_x + k;
-			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
-				break;
-			if (m_cMap->theScreenMap[i][m] == 9)
-			{
-				theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
-				theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
-			}
-		}
-	}
 
     // Initialise the hero's position
-   
+    SpawnCharacter();
     
 
     // Load the texture for minimap
@@ -327,19 +288,10 @@ void SP3::Init()
     m_cMinimap->SetAvatar(MeshBuilder::GenerateMinimapAvatar("MINIMAP AVATAR", Color(1, 1, 0), 1.f));
 
     // Set the strategy for the enemy
-    theEnemy = new CEnemy();
+    /*theEnemy = new CEnemy();
     theEnemy->ChangeStrategy(NULL, false);
     theEnemy->SetPos_x(575);
-    theEnemy->SetPos_y(100);
-
-    theArrayOfGoodies = new CGoodies*[10];
-    for (int i = 0; i<10; i++)
-    {
-        theArrayOfGoodies[i] = theGoodiesFactory.Create(TREASURECHEST);
-        theArrayOfGoodies[i]->SetPos(150 + i * 25, 150);
-        theArrayOfGoodies[i]->SetMesh(MeshBuilder::Generate2DMesh("GEO_TILE_TREASURECHEST", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f));
-        theArrayOfGoodies[i]->SetTextureID(LoadTGA("Image//tile4_treasurechest.tga"));
-    }
+    theEnemy->SetPos_y(100);*/
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 1000 units
     Mtx44 perspective;
@@ -351,20 +303,19 @@ void SP3::Init()
 
     bLightEnabled = true;
 
-    for (int i = 0; i < 10; i++)
-    {
-        Missile *missile = new Missile();
-        MissileList.push_back(missile);
-    }
-
-    lives = 3;
-    missileTriggerTimer = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		Missile *missile = new Missile();
+		MissileList.push_back(missile);
+	}
 
     sceneSoundEngine = createIrrKlangDevice();
     //source = sceneSoundEngine->addSoundSourceFromFile("music//etc.ogg")
     jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
 
     jumpsoundtimer = 0;
+
+    CurrLevel = LEVEL1;
 }
 
 void SP3::Update(double dt)
@@ -377,43 +328,6 @@ void SP3::Update(double dt)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     if (Application::IsKeyPressed('4'))
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    if (Application::IsKeyPressed('5'))
-    {
-        lights[0].type = Light::LIGHT_POINT;
-        glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-    }
-    else if (Application::IsKeyPressed('6'))
-    {
-        lights[0].type = Light::LIGHT_DIRECTIONAL;
-        glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-    }
-    else if (Application::IsKeyPressed('7'))
-    {
-        lights[0].type = Light::LIGHT_SPOT;
-        glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-    }
-    else if (Application::IsKeyPressed('8'))
-    {
-        bLightEnabled = true;
-    }
-    else if (Application::IsKeyPressed('9'))
-    {
-        bLightEnabled = false;
-    }
-
-    if (Application::IsKeyPressed('I'))
-        lights[0].position.z -= (float)(10.f * dt);
-    if (Application::IsKeyPressed('K'))
-        lights[0].position.z += (float)(10.f * dt);
-    if (Application::IsKeyPressed('J'))
-        lights[0].position.x -= (float)(10.f * dt);
-    if (Application::IsKeyPressed('L'))
-        lights[0].position.x += (float)(10.f * dt);
-    if (Application::IsKeyPressed('O'))
-        lights[0].position.y -= (float)(10.f * dt);
-    if (Application::IsKeyPressed('P'))
-        lights[0].position.y += (float)(10.f * dt);
 
     rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
 
@@ -453,24 +367,6 @@ void SP3::Update(double dt)
         // if the hero enters the kill zone, then enemy goes into kill strategy mode
         int checkPosition_X = (int)((theHero->GetMapOffset_x() + theHero->GetPos_x()) / m_cMap->GetTileSize());
         int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((theHero->GetPos_y() + m_cMap->GetTileSize()) / m_cMap->GetTileSize());
-        if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 10)
-        {
-            theEnemy->ChangeStrategy(new CStrategy_Kill());
-        }
-        else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 11)
-        {
-            theEnemy->ChangeStrategy(NULL);
-            //		theEnemy->ChangeStrategy( new CStrategy_Kill());
-        }
-        else
-        {
-            //theEnemy->ChangeStrategy(NULL);
-        }
-
-        // Update the enemies
-        theEnemy->SetDestination(theHero->GetPos_x(), theHero->GetPos_y());
-        theEnemy->Update(m_cMap);
-
         missileTriggerTimer += dt;
 
         if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 && missileTriggerTimer > 1.f)
@@ -481,39 +377,9 @@ void SP3::Update(double dt)
         }
         MissileUpdate(dt);
 
-        if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 4)
-        {
-            State = End;
-        }
-
         fps = (float)(1.f / dt);
     }
-
-
 }
-
-/********************************************************************************
-Update Camera position
-********************************************************************************/
-void SP3::UpdateCameraStatus(const unsigned char key, const bool status)
-{
-    //camera.UpdateStatus(key, status);
-
-    // Update avatar position
-}
-
-/********************************************************************************
-Update Weapon status
-********************************************************************************/
-void SP3::UpdateWeaponStatus(const unsigned char key)
-{
-    if (key == WA_FIRE)
-    {
-        // Add a bullet object which starts at the camera position and moves in the camera's direction
-    }
-}
-
-static const float SKYBOXSIZE = 1000.f;
 
 void SP3::RenderText(Mesh* mesh, std::string text, Color color)
 {
@@ -715,30 +581,6 @@ void SP3::RenderMesh(Mesh *mesh, bool enableLight)
     }
 }
 
-void SP3::RenderGround()
-{
-    modelStack.PushMatrix();
-    modelStack.Rotate(-90, 1, 0, 0);
-    modelStack.Translate(0, 0, -10);
-    modelStack.Rotate(-90, 0, 0, 1);
-    modelStack.Scale(100.0f, 100.0f, 100.0f);
-
-    for (int x = 0; x<10; x++)
-    {
-        for (int z = 0; z<10; z++)
-        {
-            modelStack.PushMatrix();
-            modelStack.Translate(x - 5.0f, z - 5.0f, 0.0f);
-            if (((x * 9 + z) % 2) == 0)
-                RenderMesh(meshList[GEO_GRASS_DARKGREEN], false);
-            else
-                RenderMesh(meshList[GEO_GRASS_LIGHTGREEN], false);
-            modelStack.PopMatrix();
-        }
-    }
-    modelStack.PopMatrix();
-}
-
 void SP3::RenderBackground()
 {
     // Render the crosshair
@@ -769,8 +611,6 @@ void SP3::Render()
     RenderRearTileMap();
     // Render the tile map
     RenderTileMap();
-    // Render the goodies
-    RenderGoodies();
     //Render missiles
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
     {
@@ -810,14 +650,34 @@ void SP3::RenderTileMap()
             // If we have reached the right side of the Map, then do not display the extra column of tiles.
             if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                 break;
-            if (m_cMap->theScreenMap[i][m] == 5)
+            if (m_cMap->theScreenMap[i][m] == 1)
             {
                 Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
             else if (m_cMap->theScreenMap[i][m] == 2)
             {
                 Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-            }
+			} 
+			else if (m_cMap->theScreenMap[i][m] == 3)
+			{
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 4)
+			{
+				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 5)
+			{
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 6)
+			{
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 7)
+			{
+				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
             else if (m_cMap->theScreenMap[i][m] == 10)
             {
                 Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
@@ -933,18 +793,6 @@ void SP3::RenderRearTileMap()
     }
 }
 
-/********************************************************************************
-Render the goodies. This is a private function for use in this class only
-********************************************************************************/
-void SP3::RenderGoodies()
-{
-    // Render the goodies
-    /*for (int i=0; i<10; i++)
-    {
-    Render2DMesh(theArrayOfGoodies[i]->GetMesh(), false, 1.0f, theArrayOfGoodies[i]->GetPos_x(), theArrayOfGoodies[i]->GetPos_y());
-    }*/
-}
-
 Missile* SP3::FetchMissile()
 {
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
@@ -1035,6 +883,7 @@ void SP3::GameStateRenderText()
 
 
 }
+
 void SP3::GameStateUpdate()
 {
     switch (State)
@@ -1067,7 +916,50 @@ void SP3::GameStateUpdate()
         break;
     }
 }
+
 void SP3::GameStateRender()
 {
+
+}
+
+void SP3::Scenetransition()
+{
+    CurrLevel = static_cast<Level>(CurrLevel + 1);
+    switch (CurrLevel)
+    {   
+    case SP3::LEVEL1:
+        break;
+    case SP3::LEVEL2:
+        m_cMap->LoadMap("Map\\Map2.csv");        
+        break;
+    case SP3::LEVEL3:
+        m_cMap->LoadMap("Map\\Map3.csv");        
+        break;
+    case SP3::LEVEL4:
+        m_cMap->LoadMap("Map\\Map4.csv");
+        break;
+    default:
+        break;
+    }
+    SpawnCharacter();
+}
+void SP3::SpawnCharacter()
+{
+    int m = 0;
+    for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+    {
+        for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+        {
+            m = tileOffset_x + k;
+            // If we have reached the right side of the Map, then do not display the extra column of tiles.
+            if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                break;
+            if (m_cMap->theScreenMap[i][m] == 9)
+            {
+                theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+                theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
+            }
+        }
+    }
 
 }
