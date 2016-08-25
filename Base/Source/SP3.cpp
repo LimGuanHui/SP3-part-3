@@ -187,26 +187,9 @@ void SP3::Init()
     meshList[GEO_CONE]->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
     meshList[GEO_CONE]->material.kSpecular.Set(0.f, 0.f, 0.f);
 
-    meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("LEFT", Color(1, 1, 1), 1.f);
-    meshList[GEO_LEFT]->textureID = LoadTGA("Image//left.tga");
-    meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("RIGHT", Color(1, 1, 1), 1.f);
-    meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
-    meshList[GEO_TOP] = MeshBuilder::GenerateQuad("TOP", Color(1, 1, 1), 1.f);
-    meshList[GEO_TOP]->textureID = LoadTGA("Image//top.tga");
-    meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("BOTTOM", Color(1, 1, 1), 1.f);
-    meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom.tga");
-    meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("FRONT", Color(1, 1, 1), 1.f);
-    meshList[GEO_FRONT]->textureID = LoadTGA("Image//front.tga");
-    meshList[GEO_BACK] = MeshBuilder::GenerateQuad("BACK", Color(1, 1, 1), 1.f);
-    meshList[GEO_BACK]->textureID = LoadTGA("Image//back.tga");
-
-    // Load the ground mesh and texture
-    meshList[GEO_GRASS_DARKGREEN] = MeshBuilder::GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_DARKGREEN]->textureID = LoadTGA("Image//grass_darkgreen.tga");
-    meshList[GEO_GRASS_LIGHTGREEN] = MeshBuilder::GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_LIGHTGREEN]->textureID = LoadTGA("Image//grass_lightgreen.tga");
     meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
     meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
     meshList[GEO_TILEGROUND] = MeshBuilder::Generate2DMesh("GEO_TILEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILEGROUND]->textureID = LoadTGA("Image//tile1_ground.tga");
     meshList[GEO_TILEHERO] = MeshBuilder::Generate2DMesh("GEO_TILEHERO", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);

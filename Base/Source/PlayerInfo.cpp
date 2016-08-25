@@ -13,6 +13,7 @@ CPlayerInfo::CPlayerInfo(void)
 	, mapFineOffset_y(0)
     , walking(false)
     , facingRight(true)
+	, TransitLevel(false)
 {
 }
 
@@ -401,6 +402,11 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 			theHeroPosition.y -= jumpspeed;
 			jumpspeed += 1;
 		}
+	}
+
+	if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 10)
+	{
+		TransitLevel = true;
 	}
 
 	ConstrainHero(25, 750, 25, 600, 1.0f);
