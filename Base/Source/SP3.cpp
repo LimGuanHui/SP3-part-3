@@ -183,7 +183,7 @@ void SP3::Init()
     meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
     meshList[GEO_OBJECT] = MeshBuilder::GenerateOBJ("OBJ1", "OBJ//chair.obj");//MeshBuilder::GenerateCube("cube", 1);
-    meshList[GEO_OBJECT]->textureID = LoadTGA("Image//chair.tga");
+   // meshList[GEO_OBJECT]->textureID = LoadTGA("Image//chair.tga");
     meshList[GEO_RING] = MeshBuilder::GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
     meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", Color(1, 0, 0), 18, 36, 1.f);
     meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 10.f);
