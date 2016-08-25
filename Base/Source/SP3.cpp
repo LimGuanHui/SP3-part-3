@@ -289,18 +289,35 @@ void SP3::Init()
 
     // Initialise and load the tile map
     m_cMap = new CMap();
-    m_cMap->Init(600, 800, 24, 32, 600, 1600);
-    m_cMap->LoadMap("Image//MapDesign.csv");
+    m_cMap->Init(600, 800, 24, 32, 600, 800);
+    m_cMap->LoadMap("Map\\Map3.csv");
 
     // Initialise and load the REAR tile map
     m_cRearMap = new CMap();
     m_cRearMap->Init(600, 800, 24, 32, 600, 1600);
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
+	theHero = new CPlayerInfo();
+	int m = 0;
+	for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+	{
+		for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+		{
+			m = tileOffset_x + k;
+			// If we have reached the right side of the Map, then do not display the extra column of tiles.
+			if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+				break;
+			if (m_cMap->theScreenMap[i][m] == 9)
+			{
+				theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+				theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
+			}
+		}
+	}
+
     // Initialise the hero's position
-    theHero = new CPlayerInfo();
-    theHero->SetPos_x(50);
-    theHero->SetPos_y(175);
+   
+    
 
     // Load the texture for minimap
     m_cMinimap = new CMinimap();
@@ -410,10 +427,6 @@ void SP3::Update(double dt)
     if (State == SP3::Game)
     {
         // Update the hero
-        if (Application::IsKeyPressed('W'))
-            this->theHero->MoveUpDown(true, 1.0f);
-        if (Application::IsKeyPressed('S'))
-            this->theHero->MoveUpDown(false, 1.0f);
         if (Application::IsKeyPressed('A'))
             this->theHero->MoveLeftRight(true, 1.0f);
         if (Application::IsKeyPressed('D'))
@@ -430,11 +443,6 @@ void SP3::Update(double dt)
         }
 
         theHero->HeroUpdate(m_cMap);
-
-        if (theHero->GetPos_y() < 30)
-        {
-            Init();
-        }
 
 
         // ReCalculate the tile offsets
@@ -731,53 +739,6 @@ void SP3::RenderGround()
     modelStack.PopMatrix();
 }
 
-void SP3::RenderSkybox()
-{
-    //left
-    modelStack.PushMatrix();
-    modelStack.Rotate(90, 0, 1, 0);
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_LEFT], false);
-    modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-    modelStack.Rotate(-90, 0, 1, 0);
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_RIGHT], false);
-    modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_FRONT], false);
-    modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-    modelStack.Rotate(180, 0, 1, 0);
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_BACK], false);
-    modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-    modelStack.Rotate(90, 1, 0, 0);
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Rotate(90, 0, 0, 1);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_TOP], false);
-    modelStack.PopMatrix();
-
-    modelStack.PushMatrix();
-    modelStack.Rotate(-90, 1, 0, 0);
-    modelStack.Translate(0, 0, -SKYBOXSIZE / 2 + 2.f);
-    modelStack.Rotate(-90, 0, 0, 1);
-    modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-    RenderMesh(meshList[GEO_BOTTOM], false);
-    modelStack.PopMatrix();
-}
-
 void SP3::RenderBackground()
 {
     // Render the crosshair
@@ -849,7 +810,7 @@ void SP3::RenderTileMap()
             // If we have reached the right side of the Map, then do not display the extra column of tiles.
             if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                 break;
-            if (m_cMap->theScreenMap[i][m] == 1)
+            if (m_cMap->theScreenMap[i][m] == 5)
             {
                 Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
