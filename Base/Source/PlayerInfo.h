@@ -82,6 +82,8 @@ public:
 
     bool walking;
     bool facingRight;
+
+	bool TransitLevel;
 private:
 	// Hero's information
 	Vector2 theHeroPosition;
@@ -94,6 +96,7 @@ private:
 	// For scrolling.
 	int mapOffset_x, mapOffset_y;
 	int mapFineOffset_x, mapFineOffset_y;
+
 };
 
 #endif

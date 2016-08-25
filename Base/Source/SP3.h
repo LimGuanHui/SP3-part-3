@@ -68,27 +68,14 @@ class SP3 : public Scene
         GEO_CROSSHAIR,
         GEO_LIGHTBALL,
         GEO_SPHERE,
-        GEO_SPHERE2,
-        GEO_SPHERE3,
-        GEO_SPHERE4,
-        GEO_SPHERE5,
-        GEO_SPHERE6,
-        GEO_SPHERE7,
-        GEO_SPHERE8,
-        GEO_SPHERE9,
+
         GEO_QUAD,
         GEO_CUBE,
         GEO_RING,
         GEO_CONE,
-        GEO_LEFT,
-        GEO_RIGHT,
-        GEO_TOP,
-        GEO_BOTTOM,
-        GEO_FRONT,
-        GEO_BACK,
-        GEO_GRASS_DARKGREEN,
-        GEO_GRASS_LIGHTGREEN,
+
         GEO_BACKGROUND,
+
         GEO_TILEGROUND,
         GEO_TILEHERO,
         GEO_TILETREE,
@@ -139,10 +126,6 @@ public:
 
     virtual void Init();
     virtual void Update(double dt);
-    // Update Camera status
-    virtual void UpdateCameraStatus(const unsigned char key, const bool status = true);
-    // Update Weapon status
-    virtual void UpdateWeaponStatus(const unsigned char key);
     virtual void Render();
     virtual void Exit();
 
@@ -151,8 +134,6 @@ public:
     void RenderTextOnScreen2(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, bool rotate = false);
     void RenderMesh(Mesh *mesh, bool enableLight);
-    void RenderGround();
-    void RenderSkybox();
     void RenderBackground();
     void Render2DMesh(Mesh *mesh, const bool enableLight, const float size = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
     Missile* FetchMissile();
@@ -165,14 +146,6 @@ public:
     void Scenetransition();
     void SpawnCharacter();
 
-    enum WEAPON_ACTION
-    {
-        WA_NIL = 0,
-        WA_FIRE,
-        WA_RELOAD,
-        WA_CHANGEWEAPON,
-        WA_TOTAL,
-    };
     enum Level
     {
         LEVEL1,
@@ -221,12 +194,7 @@ private:
     int rearWallFineOffset_x, rearWallFineOffset_y;
 
     // Enemies
-    CEnemy* theEnemy;
-
-    // Goodies and Goodies Factory
-    CGoodiesFactory theGoodiesFactory;
-    CGoodies** theArrayOfGoodies;
-    void RenderGoodies(void);
+    //CEnemy* theEnemy;
 
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;
