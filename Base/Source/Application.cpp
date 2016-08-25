@@ -72,40 +72,7 @@ bool Application::GetMouseUpdate()
 	mouse_last_x = mouse_current_x;
 	mouse_last_y = mouse_current_y;
 
-	// Get the mouse button status
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		scene->UpdateWeaponStatus(scene->WA_FIRE);
-
     return false;
-}
-
-bool Application::GetKeyboardUpdate()
-{
-	if (IsKeyPressed('A'))
-	{
-		scene->UpdateCameraStatus('a');
-	}
-	if (IsKeyPressed('D'))
-	{
-		scene->UpdateCameraStatus('d');
-	}
-	if (IsKeyPressed('W'))
-	{
-		scene->UpdateCameraStatus('w');
-	}
-	else
-	{
-		scene->UpdateCameraStatus('w', false);
-	}
-	if (IsKeyPressed('S'))
-	{
-		scene->UpdateCameraStatus('s');
-	}
-	if (IsKeyPressed(32))
-	{
-		scene->UpdateCameraStatus(32);
-	}
-    return true;
 }
 
 Application::Application()
@@ -202,7 +169,6 @@ void Application::Run()
 		if (m_dAccumulatedTime_ThreadOne > 0.03)
 		{
 			//GetMouseUpdate();
-			GetKeyboardUpdate();
             if (hwnd == GetActiveWindow())
             {
                 scene->Update(m_dElapsedTime);

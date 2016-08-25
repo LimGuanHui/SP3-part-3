@@ -139,10 +139,6 @@ public:
 
     virtual void Init();
     virtual void Update(double dt);
-    // Update Camera status
-    virtual void UpdateCameraStatus(const unsigned char key, const bool status = true);
-    // Update Weapon status
-    virtual void UpdateWeaponStatus(const unsigned char key);
     virtual void Render();
     virtual void Exit();
 
@@ -151,8 +147,6 @@ public:
     void RenderTextOnScreen2(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, bool rotate = false);
     void RenderMesh(Mesh *mesh, bool enableLight);
-    void RenderGround();
-    void RenderSkybox();
     void RenderBackground();
     void Render2DMesh(Mesh *mesh, const bool enableLight, const float size = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
     Missile* FetchMissile();
@@ -161,15 +155,6 @@ public:
     void GameStateRenderText();
     void GameStateUpdate();
     void GameStateRender();
-
-    enum WEAPON_ACTION
-    {
-        WA_NIL = 0,
-        WA_FIRE,
-        WA_RELOAD,
-        WA_CHANGEWEAPON,
-        WA_TOTAL,
-    };
 
 private:
     unsigned m_vertexArrayID;
@@ -211,12 +196,7 @@ private:
     int rearWallFineOffset_x, rearWallFineOffset_y;
 
     // Enemies
-    CEnemy* theEnemy;
-
-    // Goodies and Goodies Factory
-    CGoodiesFactory theGoodiesFactory;
-    CGoodies** theArrayOfGoodies;
-    void RenderGoodies(void);
+    //CEnemy* theEnemy;
 
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;
