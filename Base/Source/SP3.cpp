@@ -290,7 +290,7 @@ void SP3::Init()
     // Initialise and load the tile map
     m_cMap = new CMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800);
-    m_cMap->LoadMap("Map\\Map3.csv");
+    m_cMap->LoadMap("Map\\Map1.csv");
 
     // Initialise and load the REAR tile map
     m_cRearMap = new CMap();
@@ -298,25 +298,9 @@ void SP3::Init()
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
 	theHero = new CPlayerInfo();
-	int m = 0;
-	for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
-	{
-		for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
-		{
-			m = tileOffset_x + k;
-			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
-				break;
-			if (m_cMap->theScreenMap[i][m] == 9)
-			{
-				theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
-				theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
-			}
-		}
-	}
 
     // Initialise the hero's position
-   
+    SpawnCharacter();
     
 
     // Load the texture for minimap
@@ -365,6 +349,8 @@ void SP3::Init()
     jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
 
     jumpsoundtimer = 0;
+
+    CurrLevel = LEVEL1;
 }
 
 void SP3::Update(double dt)
@@ -1069,5 +1055,47 @@ void SP3::GameStateUpdate()
 }
 void SP3::GameStateRender()
 {
+
+}
+
+void SP3::Scenetransition()
+{
+    CurrLevel = static_cast<Level>(CurrLevel + 1);
+    switch (CurrLevel)
+    {   
+    case SP3::LEVEL1:
+        break;
+    case SP3::LEVEL2:
+        m_cMap->LoadMap("Map\\Map2.csv");        
+        break;
+    case SP3::LEVEL3:
+        m_cMap->LoadMap("Map\\Map3.csv");        
+        break;
+    case SP3::LEVEL4:
+        m_cMap->LoadMap("Map\\Map4.csv");
+        break;
+    default:
+        break;
+    }
+    SpawnCharacter();
+}
+void SP3::SpawnCharacter()
+{
+    int m = 0;
+    for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+    {
+        for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+        {
+            m = tileOffset_x + k;
+            // If we have reached the right side of the Map, then do not display the extra column of tiles.
+            if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                break;
+            if (m_cMap->theScreenMap[i][m] == 9)
+            {
+                theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+                theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
+            }
+        }
+    }
 
 }

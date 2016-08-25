@@ -162,6 +162,9 @@ public:
     void GameStateUpdate();
     void GameStateRender();
 
+    void Scenetransition();
+    void SpawnCharacter();
+
     enum WEAPON_ACTION
     {
         WA_NIL = 0,
@@ -169,6 +172,13 @@ public:
         WA_RELOAD,
         WA_CHANGEWEAPON,
         WA_TOTAL,
+    };
+    enum Level
+    {
+        LEVEL1,
+        LEVEL2,
+        LEVEL3,
+        LEVEL4,
     };
 
 private:
@@ -232,6 +242,9 @@ private:
     ISoundSource* lose;*/
     ISoundSource* jump;
     float jumpsoundtimer;
+
+    //level transition
+    Level CurrLevel;
 };
 
 #endif
