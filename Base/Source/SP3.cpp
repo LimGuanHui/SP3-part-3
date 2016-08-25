@@ -933,7 +933,7 @@ void SP3::Scenetransition()
         case SP3::LEVEL1:
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map4.csv");
+            m_cMap->LoadMap("Map\\Map2.csv");
             break;
         case SP3::LEVEL3:
             m_cMap->LoadMap("Map\\Map3.csv");
