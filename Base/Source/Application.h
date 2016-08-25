@@ -3,7 +3,8 @@
 #define APPLICATION_H
 
 #include "timer.h"
-#include "SceneText.h"
+//#include "SceneText.h"
+#include "SP3.h"
 #include <irrKlang.h>
 using namespace irrklang;
 class Application
@@ -42,7 +43,7 @@ private:
 	double m_dAccumulatedTime_ThreadTwo;
 
 	// The handler for the scene
-	SceneText *scene;
+	SP3 *scene;
 };
 
 #endif
