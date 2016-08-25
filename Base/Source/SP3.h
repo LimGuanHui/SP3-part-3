@@ -8,18 +8,17 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Minimap.h"
-#include "Map.h"
 #include "Vector2.h"
 #include "PlayerInfo.h"
 #include "Enemy.h"
 #include "Missile.h"
 #include <irrKlang.h>
 using namespace irrklang;
+#include "Character.h"
+using namespace CHARACTER;
 
-// Goodies and Goodies Factory
-#include "GoodiesFactory.h"
-#include "Goodies.h"
-#include "TreasureChest.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 class SP3 : public Scene
 {
@@ -109,6 +108,10 @@ class SP3 : public Scene
         GEO_STILE2,
         GEO_MISSILE,
 
+		// lvl 2 tile 
+		GEO_GRASS,
+		GEO_DIRT,
+
         NUM_GEOMETRY,
     };
 
@@ -139,12 +142,16 @@ public:
     Missile* FetchMissile();
     void MissileUpdate(float dt);
 
+	void RenderProjectile(PROJECTILE::Projectile* projectile);
+
     void GameStateRenderText();
     void GameStateUpdate();
     void GameStateRender();
 
     void Scenetransition();
     void SpawnCharacter();
+
+	void RenderCharacter();
 
     enum Level
     {
@@ -153,6 +160,10 @@ public:
         LEVEL3,
         LEVEL4,
     };
+
+	CCharacter* Character;
+
+	MapLoad* LoadFile;
 
 private:
     unsigned m_vertexArrayID;
@@ -178,7 +189,7 @@ private:
     CMinimap* m_cMinimap;
 
     // Handle to the tilemaps
-    CMap* m_cMap;
+    MapLoad* m_cMap;
     void RenderTileMap();
     // Hero's information
     CPlayerInfo* theHero;
@@ -187,7 +198,7 @@ private:
     int tileOffset_x, tileOffset_y;
 
     // Codes for Parallax Scrolling
-    CMap* m_cRearMap;
+    MapLoad* m_cRearMap;
     void RenderRearTileMap();
     int rearWallOffset_x, rearWallOffset_y;
     int rearWallTileOffset_x, rearWallTileOffset_y;
@@ -199,7 +210,14 @@ private:
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;
 
+	float firingDebounce;
+	static const int fireRate = 10;
+	bool Fire;
+	bool chargeFire;
+	float chargeTime;
+
     int lives;
+	bool Moving;
 
     GameState State = Menu;
 

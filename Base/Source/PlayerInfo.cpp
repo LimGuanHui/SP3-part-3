@@ -257,7 +257,7 @@ void CPlayerInfo::ConstrainHero(const int leftBorder, const int rightBorder,
 /********************************************************************************
  Hero Update
  ********************************************************************************/
-void CPlayerInfo::HeroUpdate(CMap* m_cMap)
+void CPlayerInfo::HeroUpdate(MapLoad* m_cMap)
 {// Update Hero's info
 	int checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
 	int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((mapOffset_y + theHeroPosition.y) / m_cMap->GetTileSize()) - 1;
@@ -408,6 +408,7 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 	{
 		TransitLevel = true;
 	}
+
 
 	ConstrainHero(25, 750, 25, 600, 1.0f);
 	// Calculate the fine offset
