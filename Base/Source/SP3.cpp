@@ -23,6 +23,7 @@ SP3::SP3()
 , rearWallFineOffset_y(0)
 //, theEnemy(NULL)
 , sceneSoundEngine(NULL)
+, Moving(false)
 {
 }
 
@@ -275,10 +276,11 @@ void SP3::Init()
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
 	theHero = new CPlayerInfo();
-
+	Character = N_Character();
+	LoadFile = LoadMap();
+	LoadFile->Init();
     // Initialise the hero's position
     SpawnCharacter();
-    
 
     // Load the texture for minimap
     m_cMinimap = new CMinimap();
@@ -341,10 +343,23 @@ void SP3::Update(double dt)
     if (State == SP3::Game)
     {
         // Update the hero
-        if (Application::IsKeyPressed('A'))
-            this->theHero->MoveLeftRight(true, 1.0f);
-        if (Application::IsKeyPressed('D'))
-            this->theHero->MoveLeftRight(false, 1.0f);
+		if (Application::IsKeyPressed('A'))
+		{
+			this->theHero->MoveLeftRight(true, 1.0f);
+			Moving = true;
+		}
+            
+		if (Application::IsKeyPressed('D'))
+		{
+			this->theHero->MoveLeftRight(false, 1.0f);
+			Moving = true;
+		}
+
+		if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
+		{
+			Moving = false;
+		}
+			
         if (Application::IsKeyPressed(' '))
         {
             this->theHero->SetToJumpUpwards(true);
@@ -359,6 +374,47 @@ void SP3::Update(double dt)
         theHero->HeroUpdate(m_cMap);
         Scenetransition();
 
+		firingDebounce += (float)dt;
+
+		bool KeyDown = false;
+		bool check1 = false;
+		bool check2 = false;
+
+		if (Application::IsKeyPressed('Z') && firingDebounce > 1.f / fireRate)
+		{
+			KeyDown = false;
+			firingDebounce = 0;
+			Character->Movement->ProjectileUpdate(2.f, dt, 1);
+		}
+		if (Application::IsKeyPressed('X') && !KeyDown)
+		{
+			chargeTime += 2 * dt;
+			if (chargeTime > 1)
+			{
+				chargeFire = true;
+				KeyDown = true;
+			}
+		}
+		if (!Application::IsKeyPressed('X'))
+		{
+			chargeTime = 0;
+		}
+		if (KeyDown && chargeFire)
+		{
+			chargeFire = false;
+			KeyDown = false;
+			chargeTime = 0;
+			Character->Movement->ProjectileUpdate(2.f, dt, 3);
+		}
+
+		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+		{
+			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+			if (projectile->active)
+			{
+				projectile->pos += projectile->vel * dt;
+			}
+		}
 
         // ReCalculate the tile offsets
         tileOffset_x = (int)(theHero->GetMapOffset_x() / m_cMap->GetTileSize());
@@ -370,13 +426,14 @@ void SP3::Update(double dt)
         int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((theHero->GetPos_y() + m_cMap->GetTileSize()) / m_cMap->GetTileSize());
         missileTriggerTimer += dt;
 
-        if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 && missileTriggerTimer > 1.f)
+       /* if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 && missileTriggerTimer > 1.f)
         {
             missileTriggerTimer = 0;
             Missile* go = FetchMissile();
             go->Init(theHero->GetPos_x() - (32 * 11), theHero->GetPos_y());
-        }
-        MissileUpdate(dt);
+        }*/
+
+       // MissileUpdate(dt);
 
         fps = (float)(1.f / dt);
     }
@@ -621,6 +678,15 @@ void SP3::Render()
             Render2DMesh(meshList[GEO_MISSILE], false, 1.0f, go->x, go->y, false, true);
         }
     }
+	
+	for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+	{
+		PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+		if (projectile->active)
+		{
+			RenderProjectile(projectile);
+		}
+	}
 
     GameStateRenderText();
 }
@@ -690,11 +756,7 @@ void SP3::RenderTileMap()
         }
     }
 
-
-    //Render2DMesh(meshList[GEO_AXES], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y());
-
-
-    if (theHero->GetAnimationInvert() == false)
+    if (theHero->GetAnimationInvert() == false && Moving == true)
     {
         if (theHero->GetAnimationCounter() == 1)
             Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y());
@@ -721,7 +783,7 @@ void SP3::RenderTileMap()
         else
             Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y());
     }
-    else if (theHero->GetAnimationInvert() == true)
+    else if (theHero->GetAnimationInvert() == true && Moving == true)
     {
         if (theHero->GetAnimationCounter() == 1)
             Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y(), false, true);
@@ -748,10 +810,10 @@ void SP3::RenderTileMap()
         else
             Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y(), false, true);
     }
-    /*else if (!theHero->walking)
+    else if (Moving == false)
     {
-    Render2DMesh(meshList[GEO_STANDING], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y(), false, !theHero->facingRight);
-    }*/
+		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, theHero->GetPos_x(), theHero->GetPos_y(), false, !theHero->facingRight);
+    }
 
 
     // Render the enemy
@@ -949,6 +1011,7 @@ void SP3::Scenetransition()
     }
     
 }
+
 void SP3::SpawnCharacter()
 {
     int m = 0;
@@ -967,5 +1030,32 @@ void SP3::SpawnCharacter()
             }
         }
     }
+
+}
+
+void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
+{
+	if (Character->Movement->GetAnimationInvert() == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(projectile->pos.x, projectile->pos.y, 0);
+		modelStack.Scale(projectile->scale.x, projectile->scale.y, projectile->scale.z);
+		RenderMesh(meshList[GEO_MISSILE], false);
+		modelStack.PopMatrix();
+	}
+	else if (Character->Movement->GetAnimationInvert() == true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(projectile->pos.x, projectile->pos.y, 0);
+		modelStack.Scale(projectile->scale.x, projectile->scale.y, projectile->scale.z);
+		modelStack.Rotate(180, 0, 0, 1);
+		RenderMesh(meshList[GEO_MISSILE], false);
+		modelStack.PopMatrix();
+	}
+
+}
+
+void SP3::RenderCharacter()
+{
 
 }

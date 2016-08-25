@@ -409,6 +409,7 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 		TransitLevel = true;
 	}
 
+
 	ConstrainHero(25, 750, 25, 600, 1.0f);
 	// Calculate the fine offset
 	mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();

@@ -28,12 +28,6 @@ SceneText::SceneText()
 
 SceneText::~SceneText()
 {
-	for (int i=0; i<10; i++)
-	{
-		delete theArrayOfGoodies[i];
-	}
-	delete theArrayOfGoodies;
-
 	if (theEnemy)
 	{
 		delete theEnemy;
@@ -315,14 +309,6 @@ void SceneText::Init()
 	theEnemy->SetPos_x(575);
 	theEnemy->SetPos_y(100);
 
-	theArrayOfGoodies = new CGoodies*[10];
-	for (int i=0; i<10; i++)
-	{
-		theArrayOfGoodies[i] = theGoodiesFactory.Create( TREASURECHEST );
-		theArrayOfGoodies[i]->SetPos( 150 + i*25, 150 );
-		theArrayOfGoodies[i]->SetMesh(MeshBuilder::Generate2DMesh("GEO_TILE_TREASURECHEST", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f));
-		theArrayOfGoodies[i]->SetTextureID(LoadTGA("Image//tile4_treasurechest.tga"));
-	}
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 1000 units
 	Mtx44 perspective;
@@ -809,7 +795,6 @@ void SceneText::Render()
 	// Render the tile map
 	RenderTileMap();
 	// Render the goodies
-	RenderGoodies();
     //Render missiles
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
     {
@@ -975,14 +960,6 @@ void SceneText::RenderRearTileMap()
 /********************************************************************************
  Render the goodies. This is a private function for use in this class only
  ********************************************************************************/
-void SceneText::RenderGoodies()
-{
-	// Render the goodies
-	/*for (int i=0; i<10; i++)
-	{
-		Render2DMesh(theArrayOfGoodies[i]->GetMesh(), false, 1.0f, theArrayOfGoodies[i]->GetPos_x(), theArrayOfGoodies[i]->GetPos_y());
-	}*/
-}
 
 Missile* SceneText::FetchMissile()
 {

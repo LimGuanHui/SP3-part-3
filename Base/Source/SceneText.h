@@ -16,10 +16,6 @@
 #include <irrKlang.h>
 using namespace irrklang;
 
-// Goodies and Goodies Factory
-#include "GoodiesFactory.h"
-#include "Goodies.h"
-#include "TreasureChest.h"
 
 class SceneText : public Scene
 {
@@ -212,11 +208,6 @@ private:
 
 	// Enemies
 	CEnemy* theEnemy;
-
-	// Goodies and Goodies Factory
-	CGoodiesFactory theGoodiesFactory;
-	CGoodies** theArrayOfGoodies;
-	void RenderGoodies(void);
 
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;

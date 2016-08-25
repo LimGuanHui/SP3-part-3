@@ -15,11 +15,11 @@
 #include "Missile.h"
 #include <irrKlang.h>
 using namespace irrklang;
+#include "Character.h"
+using namespace CHARACTER;
 
-// Goodies and Goodies Factory
-#include "GoodiesFactory.h"
-#include "Goodies.h"
-#include "TreasureChest.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 class SP3 : public Scene
 {
@@ -139,12 +139,16 @@ public:
     Missile* FetchMissile();
     void MissileUpdate(float dt);
 
+	void RenderProjectile(PROJECTILE::Projectile* projectile);
+
     void GameStateRenderText();
     void GameStateUpdate();
     void GameStateRender();
 
     void Scenetransition();
     void SpawnCharacter();
+
+	void RenderCharacter();
 
     enum Level
     {
@@ -153,6 +157,10 @@ public:
         LEVEL3,
         LEVEL4,
     };
+
+	CCharacter* Character;
+
+	MapLoad* LoadFile;
 
 private:
     unsigned m_vertexArrayID;
@@ -199,7 +207,14 @@ private:
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;
 
+	float firingDebounce;
+	static const int fireRate = 10;
+	bool Fire;
+	bool chargeFire;
+	float chargeTime;
+
     int lives;
+	bool Moving;
 
     GameState State = Menu;
 
