@@ -68,7 +68,7 @@ void CPlayerInfo::SetOnFreeFall(bool isOnFreeFall)
 // Set the player to jumping upwards
 void CPlayerInfo::SetToJumpUpwards(bool isOnJumpUpwards)
 {
-	if (isOnJumpUpwards == true)
+	if (isOnJumpUpwards == true && isOnGround() )
 	{
 		hero_inMidAir_Up = true;
 		hero_inMidAir_Down = false;
