@@ -109,6 +109,10 @@ class SP3 : public Scene
         GEO_STILE2,
         GEO_MISSILE,
 
+		// lvl 2 tile 
+		GEO_GRASS,
+		GEO_DIRT,
+
         NUM_GEOMETRY,
     };
 

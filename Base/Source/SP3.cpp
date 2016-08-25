@@ -258,6 +258,12 @@ void SP3::Init()
     meshList[GEO_STILE2] = MeshBuilder::Generate2DMesh("GEO_STILE1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_STILE2]->textureID = LoadTGA("Image//tiles//tile2.tga");
 
+	meshList[GEO_GRASS] = MeshBuilder::Generate2DMesh("GEO_GRASS", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GRASS]->textureID = LoadTGA("Image//tiles//grass.tga");
+
+	meshList[GEO_DIRT] = MeshBuilder::Generate2DMesh("GEO_DIRT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
+
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
 
@@ -661,11 +667,11 @@ void SP3::RenderTileMap()
 			} 
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 4)
 			{
-				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 5)
 			{
