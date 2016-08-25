@@ -196,7 +196,7 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	scene = new SceneText();
+	scene = new SP3();
 	scene->Init();
 
     HWND hwnd = GetActiveWindow();
