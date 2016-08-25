@@ -1,7 +1,8 @@
 #pragma once
 #include "Vector2.h"
-#include "Map.h"
 #include "Strategy.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 class CEnemy
 {
@@ -38,7 +39,7 @@ public:
 	int GetDestination_y(void);
 
 	// ENEMY Update
-	void Update(CMap* m_cMap);
+	void Update(MapLoad* m_cMap);
 
 	// Strategy
 	void ChangeStrategy(CStrategy* theNewStrategy, bool bDelete=true);

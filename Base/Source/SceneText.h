@@ -8,14 +8,14 @@
 #include "MatrixStack.h"
 #include "Light.h"
 #include "Minimap.h"
-#include "Map.h"
 #include "Vector2.h"
 #include "PlayerInfo.h"
 #include "Enemy.h"
 #include "Missile.h"
 #include <irrKlang.h>
 using namespace irrklang;
-
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 class SceneText : public Scene
 {
@@ -191,7 +191,7 @@ private:
 	CMinimap* m_cMinimap;
 
 	// Handle to the tilemaps
-	CMap* m_cMap;
+	MapLoad* m_cMap;
 	void RenderTileMap();
 	// Hero's information
 	CPlayerInfo* theHero;
@@ -200,7 +200,7 @@ private:
 	int tileOffset_x, tileOffset_y;
 
 	// Codes for Parallax Scrolling
-	CMap* m_cRearMap;
+	MapLoad* m_cRearMap;
 	void RenderRearTileMap();
 	int rearWallOffset_x, rearWallOffset_y;
 	int rearWallTileOffset_x, rearWallTileOffset_y;

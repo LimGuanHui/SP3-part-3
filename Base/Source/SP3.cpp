@@ -272,19 +272,17 @@ void SP3::Init()
 
 	lives = 3;
     // Initialise and load the tile map
-    m_cMap = new CMap();
+	m_cMap = LoadMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800);
     m_cMap->LoadMap("Map\\Map1.csv");
 
     // Initialise and load the REAR tile map
-    m_cRearMap = new CMap();
+    m_cRearMap = LoadMap();
     m_cRearMap->Init(600, 800, 24, 32, 600, 1600);
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
 	theHero = new CPlayerInfo();
 	Character = N_Character();
-	LoadFile = LoadMap();
-	LoadFile->Init();
     // Initialise the hero's position
     SpawnCharacter();
 

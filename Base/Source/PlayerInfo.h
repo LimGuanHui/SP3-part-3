@@ -1,8 +1,9 @@
 #ifndef PLAYER_INFO_H
 #define PLAYER_INFO_H
 #include "Vector2.h"
-#include "Map.h"
 #include "MyMath.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 class CPlayerInfo
 {
@@ -64,7 +65,7 @@ public:
 	// Update FreeFall
 	void UpdateFreeFall();
 	// Hero Update
-	void HeroUpdate(CMap* m_cMap);
+	void HeroUpdate(MapLoad* m_cMap);
 
 	// Set Animation Invert status of the player
 	void SetAnimationInvert(bool heroAnimationInvert);

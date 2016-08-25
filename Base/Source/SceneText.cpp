@@ -282,12 +282,12 @@ void SceneText::Init()
 
 
 	// Initialise and load the tile map
-	m_cMap = new CMap();
+	m_cMap = LoadMap();
 	m_cMap->Init( 600, 800, 24, 32, 600, 1600 );
 	m_cMap->LoadMap( "Image//MapDesign.csv" );
 
 	// Initialise and load the REAR tile map
-	m_cRearMap = new CMap();
+	m_cRearMap = LoadMap();
 	m_cRearMap->Init( 600, 800, 24, 32, 600, 1600 );
 	m_cRearMap->LoadMap( "Image//MapDesign_Rear.csv" );
 

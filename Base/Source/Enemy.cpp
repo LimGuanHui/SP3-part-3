@@ -94,7 +94,7 @@ int CEnemy::GetAnimationCounter(void)
 /********************************************************************************
  Hero Update
  ********************************************************************************/
-void CEnemy::Update(CMap* m_cMap)
+void CEnemy::Update(MapLoad* m_cMap)
 {
 	if (theStrategy != NULL)
 	{
