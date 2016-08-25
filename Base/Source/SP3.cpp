@@ -187,26 +187,9 @@ void SP3::Init()
     meshList[GEO_CONE]->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
     meshList[GEO_CONE]->material.kSpecular.Set(0.f, 0.f, 0.f);
 
-    meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("LEFT", Color(1, 1, 1), 1.f);
-    meshList[GEO_LEFT]->textureID = LoadTGA("Image//left.tga");
-    meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("RIGHT", Color(1, 1, 1), 1.f);
-    meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
-    meshList[GEO_TOP] = MeshBuilder::GenerateQuad("TOP", Color(1, 1, 1), 1.f);
-    meshList[GEO_TOP]->textureID = LoadTGA("Image//top.tga");
-    meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("BOTTOM", Color(1, 1, 1), 1.f);
-    meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom.tga");
-    meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("FRONT", Color(1, 1, 1), 1.f);
-    meshList[GEO_FRONT]->textureID = LoadTGA("Image//front.tga");
-    meshList[GEO_BACK] = MeshBuilder::GenerateQuad("BACK", Color(1, 1, 1), 1.f);
-    meshList[GEO_BACK]->textureID = LoadTGA("Image//back.tga");
-
-    // Load the ground mesh and texture
-    meshList[GEO_GRASS_DARKGREEN] = MeshBuilder::GenerateQuad("GRASS_DARKGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_DARKGREEN]->textureID = LoadTGA("Image//grass_darkgreen.tga");
-    meshList[GEO_GRASS_LIGHTGREEN] = MeshBuilder::GenerateQuad("GEO_GRASS_LIGHTGREEN", Color(1, 1, 1), 1.f);
-    meshList[GEO_GRASS_LIGHTGREEN]->textureID = LoadTGA("Image//grass_lightgreen.tga");
     meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
     meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
+
     meshList[GEO_TILEGROUND] = MeshBuilder::Generate2DMesh("GEO_TILEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILEGROUND]->textureID = LoadTGA("Image//tile1_ground.tga");
     meshList[GEO_TILEHERO] = MeshBuilder::Generate2DMesh("GEO_TILEHERO", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
@@ -284,7 +267,7 @@ void SP3::Init()
     // Initialise and load the tile map
     m_cMap = new CMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800);
-    m_cMap->LoadMap("Map\\Map3.csv");
+    m_cMap->LoadMap("Map\\Map1.csv");
 
     // Initialise and load the REAR tile map
     m_cRearMap = new CMap();
@@ -292,22 +275,17 @@ void SP3::Init()
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
 	theHero = new CPlayerInfo();
-	int m = 0;
-	for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
-	{
-		for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
-		{
-			m = tileOffset_x + k;
-			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
-				break;
-			if (m_cMap->theScreenMap[i][m] == 9)
-			{
-				theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
-				theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
-			}
-		}
-	}
+
+    // Initialise the hero's position
+    SpawnCharacter();
+    
+
+    // Load the texture for minimap
+    m_cMinimap = new CMinimap();
+    m_cMinimap->SetBackground(MeshBuilder::GenerateMinimap("MINIMAP", Color(1, 1, 1), 1.f));
+    m_cMinimap->GetBackground()->textureID = LoadTGA("Image//grass_darkgreen.tga");
+    m_cMinimap->SetBorder(MeshBuilder::GenerateMinimapBorder("MINIMAP BORDER", Color(1, 1, 0), 1.f));
+    m_cMinimap->SetAvatar(MeshBuilder::GenerateMinimapAvatar("MINIMAP AVATAR", Color(1, 1, 0), 1.f));
 
     // Set the strategy for the enemy
     /*theEnemy = new CEnemy();
@@ -336,6 +314,8 @@ void SP3::Init()
     jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
 
     jumpsoundtimer = 0;
+
+    CurrLevel = LEVEL1;
 }
 
 void SP3::Update(double dt)
@@ -939,5 +919,47 @@ void SP3::GameStateUpdate()
 
 void SP3::GameStateRender()
 {
+
+}
+
+void SP3::Scenetransition()
+{
+    CurrLevel = static_cast<Level>(CurrLevel + 1);
+    switch (CurrLevel)
+    {   
+    case SP3::LEVEL1:
+        break;
+    case SP3::LEVEL2:
+        m_cMap->LoadMap("Map\\Map2.csv");        
+        break;
+    case SP3::LEVEL3:
+        m_cMap->LoadMap("Map\\Map3.csv");        
+        break;
+    case SP3::LEVEL4:
+        m_cMap->LoadMap("Map\\Map4.csv");
+        break;
+    default:
+        break;
+    }
+    SpawnCharacter();
+}
+void SP3::SpawnCharacter()
+{
+    int m = 0;
+    for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+    {
+        for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+        {
+            m = tileOffset_x + k;
+            // If we have reached the right side of the Map, then do not display the extra column of tiles.
+            if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                break;
+            if (m_cMap->theScreenMap[i][m] == 9)
+            {
+                theHero->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+                theHero->SetPos_y(575 - i*m_cMap->GetTileSize());
+            }
+        }
+    }
 
 }

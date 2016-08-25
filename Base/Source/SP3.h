@@ -68,27 +68,14 @@ class SP3 : public Scene
         GEO_CROSSHAIR,
         GEO_LIGHTBALL,
         GEO_SPHERE,
-        GEO_SPHERE2,
-        GEO_SPHERE3,
-        GEO_SPHERE4,
-        GEO_SPHERE5,
-        GEO_SPHERE6,
-        GEO_SPHERE7,
-        GEO_SPHERE8,
-        GEO_SPHERE9,
+
         GEO_QUAD,
         GEO_CUBE,
         GEO_RING,
         GEO_CONE,
-        GEO_LEFT,
-        GEO_RIGHT,
-        GEO_TOP,
-        GEO_BOTTOM,
-        GEO_FRONT,
-        GEO_BACK,
-        GEO_GRASS_DARKGREEN,
-        GEO_GRASS_LIGHTGREEN,
+
         GEO_BACKGROUND,
+
         GEO_TILEGROUND,
         GEO_TILEHERO,
         GEO_TILETREE,
@@ -156,6 +143,17 @@ public:
     void GameStateUpdate();
     void GameStateRender();
 
+    void Scenetransition();
+    void SpawnCharacter();
+
+    enum Level
+    {
+        LEVEL1,
+        LEVEL2,
+        LEVEL3,
+        LEVEL4,
+    };
+
 private:
     unsigned m_vertexArrayID;
     Mesh* meshList[NUM_GEOMETRY];
@@ -212,6 +210,9 @@ private:
     ISoundSource* lose;*/
     ISoundSource* jump;
     float jumpsoundtimer;
+
+    //level transition
+    Level CurrLevel;
 };
 
 #endif

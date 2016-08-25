@@ -35,9 +35,9 @@ void CMap::Init(const int theScreen_Height,		const int theScreen_Width,
 	theNumOfTiles_MapHeight = (int) (theMap_Height / theTileSize);
 	theNumOfTiles_MapWidth = (int) (theMap_Width / theTileSize);
 
-	theScreenMap.resize(theNumOfTiles_MapHeight);
-	for (int i = 0; i < theNumOfTiles_MapHeight; ++i)
-		theScreenMap[i].resize(theNumOfTiles_MapWidth);
+	//theScreenMap.resize(theNumOfTiles_MapHeight);
+	//for (int i = 0; i < theNumOfTiles_MapHeight; ++i)
+	//	theScreenMap[i].resize(theNumOfTiles_MapWidth);
 }
 
 bool CMap::LoadMap(const string mapName)
@@ -55,7 +55,13 @@ bool CMap::LoadFile(const string mapName)
 {
 	int theLineCounter = 0;
 	int theMaxNumOfColumns = 0;
-    
+
+    theScreenMap.clear();
+
+    theScreenMap.resize(theNumOfTiles_MapHeight);
+    for (int i = 0; i < theNumOfTiles_MapHeight; ++i)
+        theScreenMap[i].resize(theNumOfTiles_MapWidth);
+
 	ifstream file(mapName.c_str());
 	if(file.is_open())
 	{
