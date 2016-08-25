@@ -129,7 +129,7 @@ void CPlayerInfo::MoveLeftRight(const bool mode, const float timeDiff)
         theHeroPosition.x = theHeroPosition.x - (int)(5.0f * timeDiff);
         heroAnimationInvert = true;
         heroAnimationCounter--;
-        if (heroAnimationCounter == 1)
+        if (heroAnimationCounter < 1)
             heroAnimationCounter = 11;
     }
     else//right
@@ -257,33 +257,68 @@ void CPlayerInfo::ConstrainHero(const int leftBorder, const int rightBorder,
  Hero Update
  ********************************************************************************/
 void CPlayerInfo::HeroUpdate(CMap* m_cMap)
-{
-    walking = false;
-	// Update Hero's info
-  	if (hero_inMidAir_Up == false && hero_inMidAir_Down == false)
+{// Update Hero's info
+	int checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
+	int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((mapOffset_y + theHeroPosition.y) / m_cMap->GetTileSize()) - 1;
+	int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
+
+	checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
+	checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
+
+	if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2)
+		theHeroPosition.x = (checkPosition_X - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
+	else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+		m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2)
 	{
-		// Don't jump
+		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 0)
+			theHeroPosition.x = (checkPosition_X + 1 - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
+		else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2)
+			theHeroPosition.x = (checkPosition_X - 1 - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
+	}
+
+	// Update Hero's info
+	if (hero_inMidAir_Up == false && hero_inMidAir_Down == false)
+	{
+		int xValue = (int)theHeroPosition.x % 25;
+		if (m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 2 ||
+			(m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 2) &&
+			xValue != 0)
+		{
+		}
+		else
+		{
+			jumpspeed = 0;
+			hero_inMidAir_Up = false;
+			hero_inMidAir_Down = true;
+		}
 	}
 	else if (hero_inMidAir_Up == true && hero_inMidAir_Down == false)
 	{
 		// Check if the hero can move up into mid air...
-		int checkPosition_X = (int) ((mapOffset_x+theHeroPosition.x) / m_cMap->GetTileSize());
-		int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int) ceil( (float) (theHeroPosition.y + m_cMap->GetTileSize() + jumpspeed) / m_cMap->GetTileSize());
-		if ( (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
-		     (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X+1] == 1) )
+		checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
+		checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)ceil((float)(theHeroPosition.y + m_cMap->GetTileSize() + jumpspeed) / m_cMap->GetTileSize());
+		tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
+		int xValue = (int)theHeroPosition.x % 25;
+
+		checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
+		checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
+
+		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2 ||
+			(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2)
+			&& xValue != 0)
 		{
-			// Since the new position does not allow the hero to move into, then go back to the old position
-			theHeroPosition.y = ((int) (theHeroPosition.y / m_cMap->GetTileSize())) * m_cMap->GetTileSize();
+			// Since the new position does not allow the hero to move into, then go	back to the old position
+			theHeroPosition.y = (ceil(theHeroPosition.y / m_cMap->GetTileSize()) *	m_cMap->GetTileSize());
 			hero_inMidAir_Up = false;
+			hero_inMidAir_Down = true;
 			jumpspeed = 0;
 		}
-        else if ((m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2) ||
-            (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2))
-        {
-            theHeroPosition.y = ((int)(theHeroPosition.y / m_cMap->GetTileSize())) * m_cMap->GetTileSize();
-            hero_inMidAir_Up = false;
-            jumpspeed = 0;
-        }
 		else
 		{
 			theHeroPosition.y += jumpspeed;
@@ -298,30 +333,24 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 	else if (hero_inMidAir_Up == false && hero_inMidAir_Down == true)
 	{
 		// Check if the hero is still in mid air...
-		int checkPosition_X = (int) ((mapOffset_x+theHeroPosition.x) / m_cMap->GetTileSize());
-		if (checkPosition_X < 0)
-			checkPosition_X = 0;
-		if (checkPosition_X > m_cMap->getNumOfTiles_MapWidth())
-			checkPosition_X = m_cMap->getNumOfTiles_MapWidth();
-		int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int) ceil( (float) (theHeroPosition.y - jumpspeed) / m_cMap->GetTileSize());
-		if (checkPosition_Y < 0)
-			checkPosition_Y = 0;
-		if (checkPosition_Y > m_cMap->GetNumOfTiles_Height())
-			checkPosition_Y = m_cMap->GetNumOfTiles_Height();
-		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+		checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
+		checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)ceil((float)(theHeroPosition.y - jumpspeed) / m_cMap->GetTileSize());
+		int xValue = (int)theHeroPosition.x % 25;
+
+		checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
+		checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
+
+		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2 ||
+			(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
+			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2)
+			&& xValue != 0)
 		{
-			// Since the new position does not allow the hero to move into, then go back to the old position
-			theHeroPosition.y = ((int) (theHeroPosition.y / m_cMap->GetTileSize())) * m_cMap->GetTileSize();
+			// Since the new position does not allow the hero to move into, then go	back to the old position
+			theHeroPosition.y = ((int)(theHeroPosition.y / m_cMap->GetTileSize())) * m_cMap->GetTileSize();
 			hero_inMidAir_Down = false;
 			jumpspeed = 0;
 		}
-        else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 2)
-        {
-            // Since the new position does not allow the hero to move into, then go back to the old position
-            theHeroPosition.y = ((int)(theHeroPosition.y / m_cMap->GetTileSize())) * m_cMap->GetTileSize();
-            hero_inMidAir_Down = false;
-            jumpspeed = 0;
-        }
 		else
 		{
 			theHeroPosition.y -= jumpspeed;
@@ -330,13 +359,7 @@ void CPlayerInfo::HeroUpdate(CMap* m_cMap)
 	}
 
 	ConstrainHero(25, 750, 25, 575, 1.0f);
-
 	// Calculate the fine offset
 	mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();
 
-
-	if (theHeroPosition.y > 560)
-	{
-		theHeroPosition.y = 560;
-	}
 }

@@ -2,6 +2,7 @@
 #define PLAYER_INFO_H
 #include "Vector2.h"
 #include "Map.h"
+#include "MyMath.h"
 
 class CPlayerInfo
 {
