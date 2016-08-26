@@ -87,14 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
-    <ClInclude Include="AttributeExports.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="CharacterExports.h" />
     <ClInclude Include="Movement.h" />
-    <ClInclude Include="MovementExport.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Skills.h" />
-    <ClInclude Include="SkillsExport.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AI\AI.vcxproj">

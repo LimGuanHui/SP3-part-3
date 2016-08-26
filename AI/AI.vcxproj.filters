@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MonsterMovementExports.h">
-      <Filter>Monster\Header</Filter>
-    </ClInclude>
     <ClInclude Include="MonsterMovement.h">
       <Filter>Monster\Header</Filter>
     </ClInclude>
@@ -76,9 +73,6 @@
       <Filter>Boss\Header</Filter>
     </ClInclude>
     <ClInclude Include="MonsterAttribute.h">
-      <Filter>Monster\Header</Filter>
-    </ClInclude>
-    <ClInclude Include="MonsterAttributeExports.h">
       <Filter>Monster\Header</Filter>
     </ClInclude>
   </ItemGroup>

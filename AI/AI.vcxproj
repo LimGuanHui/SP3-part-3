@@ -97,10 +97,8 @@
     <ClInclude Include="Mob.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterAttribute.h" />
-    <ClInclude Include="MonsterAttributeExports.h" />
     <ClInclude Include="MonsterExports.h" />
     <ClInclude Include="MonsterMovement.h" />
-    <ClInclude Include="MonsterMovementExports.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />

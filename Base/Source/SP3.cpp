@@ -1,10 +1,7 @@
 #include "SP3.h"
 #include "GL\glew.h"
-
-//#include "shader.hpp"
 #include "MeshBuilder.h"
 #include "Application.h"
-//#include "Utility.h"
 #include "LoadTGA.h"
 //#include <sstream>
 #include "Strategy_Kill.h"
@@ -28,23 +25,12 @@ SP3::SP3()
 
 SP3::~SP3()
 {
-    /*if (theEnemy)
-    {
-        delete theEnemy;
-        theEnemy = NULL;
-    }*/
-
     if (m_cMap)
     {
         delete m_cMap;
         m_cMap = NULL;
     }
 
-    if (m_cMinimap)
-    {
-        delete m_cMinimap;
-        m_cMinimap = NULL;
-    }
     if (sceneSoundEngine != NULL)
     {
         sceneSoundEngine->drop();
@@ -54,7 +40,6 @@ SP3::~SP3()
 void SP3::Init()
 {
     SceneBase::Init();
-
 
 	lives = 3;
     // Initialise and load the tile map
@@ -69,24 +54,9 @@ void SP3::Init()
 
 	theHero = new CPlayerInfo();
 	Character = N_Character();
-    // Initialise the hero's position
     SpawnObjects();
 
-    // Load the texture for minimap
-    m_cMinimap = new CMinimap();
-    m_cMinimap->SetBackground(MeshBuilder::GenerateMinimap("MINIMAP", Color(1, 1, 1), 1.f));
-    m_cMinimap->GetBackground()->textureID = LoadTGA("Image//grass_darkgreen.tga");
-    m_cMinimap->SetBorder(MeshBuilder::GenerateMinimapBorder("MINIMAP BORDER", Color(1, 1, 0), 1.f));
-    m_cMinimap->SetAvatar(MeshBuilder::GenerateMinimapAvatar("MINIMAP AVATAR", Color(1, 1, 0), 1.f));
-
-    // Set the strategy for the enemy
-    /*theEnemy = new CEnemy();
-    theEnemy->ChangeStrategy(NULL, false);
-    theEnemy->SetPos_x(575);
-    theEnemy->SetPos_y(100);*/
-
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 1000 units
-    Mtx44 perspective;
+	Mtx44 perspective;
     perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
     //perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
     projectionStack.LoadMatrix(perspective);
@@ -164,15 +134,12 @@ void SP3::Update(double dt)
         Scenetransition();
 
 		firingDebounce += (float)dt;
-
 		bool KeyDown = false;
-
 		if (Application::IsKeyPressed('J') && firingDebounce > 1.f / fireRate)
 		{
 			KeyDown = false;
 			firingDebounce = 0;
 			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet);
-			std::cout << "Fire" << std::endl;
 		}
 		if (Application::IsKeyPressed('K') && !KeyDown)
 		{
@@ -225,7 +192,6 @@ void SP3::Update(double dt)
 
 void SP3::RenderBackground()
 {
-    // Render the crosshair
     Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f);
 }
 
@@ -247,17 +213,11 @@ void SP3::Render()
     // Model matrix : an identity matrix (model will be at the origin)
     modelStack.LoadIdentity();
 
-    // Render the background image
     RenderBackground();
-    // Render the rear tile map
     RenderRearTileMap();
-    // Render the tile map
     RenderTileMap();
 	RenderCharacter();
-    //Render missiles
-    
     RenderList();
-	
 
     GameStateRenderText();
 }
@@ -265,14 +225,6 @@ void SP3::Render()
 void SP3::Exit()
 {
     SceneBase::Exit();
-    // Cleanup VBO
-    /*for (int i = 0; i < NUM_GEOMETRY; ++i)
-    {
-        if (meshList[i])
-            delete meshList[i];
-    }
-    glDeleteProgram(m_programID);
-    glDeleteVertexArrays(1, &m_vertexArrayID);*/
 }
 
 /********************************************************************************

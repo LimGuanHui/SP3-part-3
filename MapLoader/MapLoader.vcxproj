@@ -79,7 +79,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="MapLoad.h" />
-    <ClInclude Include="MapLoadExports.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MapLoad.cpp" />
