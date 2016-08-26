@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Boss">
+      <UniqueIdentifier>{aedfb39e-24c5-4063-942e-8b8eb04a71e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monster">
+      <UniqueIdentifier>{3ffcd7ea-b9a3-461d-ae23-244bb449bb1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monster\Header">
+      <UniqueIdentifier>{8a59690d-40dd-4788-8e44-c4dd26be0ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{7ebf9515-b649-4f22-a9d0-0423ab33df5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Header">
+      <UniqueIdentifier>{8b70a7d6-db97-4c1a-9208-f5bbf4073123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boss\Resource">
+      <UniqueIdentifier>{16392584-fe4f-412e-a815-c3b0853d657e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Boss\Header">
+      <UniqueIdentifier>{81ab4a5e-4df4-4d33-a334-c0b13a3f7467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Monster\CPP">
+      <UniqueIdentifier>{1678c7de-52d4-4ed7-82e2-6515b0e9b216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\CPP">
+      <UniqueIdentifier>{3e2f4cb9-e279-445c-ac0c-0a655ce740c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MonsterMovementExports.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterMovement.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>AI\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="AIExports.h">
+      <Filter>AI\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossMovementExports.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossMovement.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossSkills.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossSkillsExports.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterExports.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Mob.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossAttribute.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossAttributeExports.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BossExports.h">
+      <Filter>Boss\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterAttribute.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterAttributeExports.h">
+      <Filter>Monster\Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BossMovement.cpp">
+      <Filter>Boss\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterMovement.cpp">
+      <Filter>Monster\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>AI\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="BossSkills.cpp">
+      <Filter>Boss\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="BossAttribute.cpp">
+      <Filter>Boss\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Boss\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Mob.cpp">
+      <Filter>Monster\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Monster\CPP</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterAttribute.cpp">
+      <Filter>Monster\CPP</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

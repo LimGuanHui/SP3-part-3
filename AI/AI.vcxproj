@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{38E2E4D0-088C-41C9-9A96-96835FD9F5C2}</ProjectGuid>
+    <ProjectGuid>{611353AD-3C23-4C93-A69E-B2638C9F8E4E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Character</RootNamespace>
+    <RootNamespace>AI</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -51,9 +51,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CHARACTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MapLoader;$(SolutionDir)\AI;$(SolutionDir)\Common\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Common\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -68,7 +68,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CHARACTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;AI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -79,33 +79,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Attribute.cpp" />
-    <ClCompile Include="Character.cpp" />
-    <ClCompile Include="Movement.cpp" />
-    <ClCompile Include="Projectile.cpp" />
-    <ClCompile Include="Skills.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Attribute.h" />
-    <ClInclude Include="AttributeExports.h" />
-    <ClInclude Include="Character.h" />
-    <ClInclude Include="CharacterExports.h" />
-    <ClInclude Include="Movement.h" />
-    <ClInclude Include="MovementExport.h" />
-    <ClInclude Include="Projectile.h" />
-    <ClInclude Include="Skills.h" />
-    <ClInclude Include="SkillsExport.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AI\AI.vcxproj">
-      <Project>{611353ad-3c23-4c93-a69e-b2638c9f8e4e}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{b594fe34-e00b-4e94-ad04-d1ff100aa5dc}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\MapLoader\MapLoader.vcxproj">
-      <Project>{c69ecf74-8d8f-45c6-866b-50c777de2715}</Project>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AI.h" />
+    <ClInclude Include="AIExports.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossAttribute.h" />
+    <ClInclude Include="BossAttributeExports.h" />
+    <ClInclude Include="BossExports.h" />
+    <ClInclude Include="BossMovement.h" />
+    <ClInclude Include="BossMovementExports.h" />
+    <ClInclude Include="BossSkills.h" />
+    <ClInclude Include="BossSkillsExports.h" />
+    <ClInclude Include="Mob.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterAttribute.h" />
+    <ClInclude Include="MonsterAttributeExports.h" />
+    <ClInclude Include="MonsterExports.h" />
+    <ClInclude Include="MonsterMovement.h" />
+    <ClInclude Include="MonsterMovementExports.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AI.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossAttribute.cpp" />
+    <ClCompile Include="BossMovement.cpp" />
+    <ClCompile Include="BossSkills.cpp" />
+    <ClCompile Include="Mob.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonsterAttribute.cpp" />
+    <ClCompile Include="MonsterMovement.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -575,16 +575,18 @@ void SP3::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, float 
     modelStack.Scale(size, size, size);
 
 
-    if (flip)
+   /* if (flip)
     {
         glDisable(GL_CULL_FACE);
         modelStack.Translate(32, 0, 0);
         modelStack.Rotate(180, 0, 1, 0);
-    }
+    }*/
 
 	if (rotate)
 	{
-		modelStack.Rotate(180, 0, 0, 1);
+		glFrontFace(GL_CW);
+		modelStack.Translate(m_cMap->GetTileSize(), 0, 0);
+		modelStack.Rotate(180, 0, 1, 0);
 	}
 
 
@@ -608,8 +610,12 @@ void SP3::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, float 
     {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-    if (flip)
-        glEnable(GL_CULL_FACE);
+	if (rotate)
+	{
+		glFrontFace(GL_CCW);
+	}
+   /* if (flip)
+        glEnable(GL_CULL_FACE);*/
     modelStack.PopMatrix();
     viewStack.PopMatrix();
     projectionStack.PopMatrix();
@@ -1019,10 +1025,10 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 	//	modelStack.PopMatrix();
 	//}
 
-	if (Character->Movement->GetAnimationInvert() == false)
-		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, false, false);
-	else if (Character->Movement->GetAnimationInvert() == true)
-		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, true, false);
+	if (!projectile->Left)
+		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, true);
+	else if (projectile->Left)
+		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, false);
 
 }
 
@@ -1058,32 +1064,32 @@ void SP3::RenderCharacter()
 	else if (Character->Movement->GetAnimationInvert() == true && Moving == true)
 	{
 		if (Character->Movement->GetAnimationCounter() == 1)
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 2)
-			Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 3)
-			Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 4)
-			Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 5)
-			Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 6)
-			Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 7)
-			Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 8)
-			Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 9)
-			Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 10)
-			Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else if (Character->Movement->GetAnimationCounter() == 11)
-			Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 		else
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, true);
+			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
 	}
 	else if (Moving == false)
 	{
-		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, !Character->Movement->facingRight);
+		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
 	}
 }

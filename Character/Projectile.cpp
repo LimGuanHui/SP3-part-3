@@ -5,6 +5,7 @@ namespace PROJECTILE
 	Projectile::Projectile()
 		:scale(1,1,1)
 		, active(false)
+		, Left(false)
 	{
 	}
 
@@ -16,7 +17,7 @@ namespace PROJECTILE
 	void Projectile::Init()
 	{
 		scale = Vector3(1,1,1);
-
+		Left = false;
 		active = false;
 	}
 

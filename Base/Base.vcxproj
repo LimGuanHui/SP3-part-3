@@ -57,6 +57,9 @@
     <ClInclude Include="Source\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AI\AI.vcxproj">
+      <Project>{611353ad-3c23-4c93-a69e-b2638c9f8e4e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Character\Character.vcxproj">
       <Project>{38e2e4d0-088c-41c9-9a96-96835fd9f5c2}</Project>
     </ProjectReference>
@@ -107,7 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MapLoader;$(SolutionDir)\Character;$(SolutionDir)/Common/Source;$(SolutionDir)/glew/include;$(SolutionDir)/glfw/include;$(SolutionDir)/Base/irrKlang-1.5.0/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\AI;$(SolutionDir)\MapLoader;$(SolutionDir)\Character;$(SolutionDir)/Common/Source;$(SolutionDir)/glew/include;$(SolutionDir)/glfw/include;$(SolutionDir)/Base/irrKlang-1.5.0/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

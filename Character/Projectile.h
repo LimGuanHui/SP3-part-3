@@ -25,6 +25,7 @@ namespace PROJECTILE
 		Vector3 scale;
 
 		bool active;
+		bool Left;
 
 		void Init();
 

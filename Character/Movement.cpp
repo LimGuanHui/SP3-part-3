@@ -453,6 +453,7 @@ namespace MOVEMENT
 			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
 			Projectile->vel.Set(300, 0, 0);
 			Projectile->scale.Set(scale, scale, scale);
+			Projectile->Left = heroAnimationInvert;
 		}
 		else if (heroAnimationInvert == true)
 		{
@@ -460,6 +461,7 @@ namespace MOVEMENT
 			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
 			Projectile->vel.Set(-300, 0, 0);
 			Projectile->scale.Set(scale, scale, scale);
+			Projectile->Left = heroAnimationInvert;
 		}
 	}
 }
