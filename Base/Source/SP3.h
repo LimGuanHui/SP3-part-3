@@ -17,6 +17,8 @@
 using namespace irrklang;
 #include "Character.h"
 using namespace CHARACTER;
+#include "Monster.h"
+using namespace MONSTER;
 
 
 
@@ -132,13 +134,8 @@ public:
     virtual void Render();
     virtual void Exit();
 
-    //void RenderText(Mesh* mesh, std::string text, Color color);
-    //void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderTextOnScreen2(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-    //void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, bool rotate = false);
-    //void RenderMesh(Mesh *mesh, bool enableLight);
     void RenderBackground();
-    //void Render2DMesh(Mesh *mesh, const bool enableLight, const float size = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
     Missile* FetchMissile();
     void MissileUpdate(float dt);
 
@@ -149,9 +146,11 @@ public:
     void GameStateRender();
 
     void Scenetransition();
-    void SpawnCharacter();
+    void SpawnObjects();
 
 	void RenderCharacter();
+    void RenderList();
+
 
     enum Level
     {
@@ -166,26 +165,7 @@ public:
 	MapLoad* LoadFile;
 
 private:
-    /*unsigned m_vertexArrayID;
-    Mesh* meshList[NUM_GEOMETRY];
-    unsigned m_programID;
-    unsigned m_parameters[U_TOTAL];
-
-    Camera3 camera;
-
-    Light lights[2];
-
-    bool bLightEnabled;
-
-    float fps;
-
-    MS modelStack;
-    MS viewStack;
-    MS projectionStack;*/
-
-    float rotateAngle;
-
-    
+    float rotateAngle;   
 
     // Handle to the minimap
     CMinimap* m_cMinimap;
@@ -207,7 +187,7 @@ private:
     int rearWallFineOffset_x, rearWallFineOffset_y;
 
     // Enemies
-    //CEnemy* theEnemy;
+    std::vector<Monster*> Monster_List;
 
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;

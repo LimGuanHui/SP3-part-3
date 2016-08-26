@@ -137,8 +137,8 @@ void SceneBase::Init()
     }
     meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference");//, 1000, 1000, 1000);
     meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateCrossHair("crosshair");
-    meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1.f);
-    meshList[GEO_QUAD]->textureID = LoadTGA("Image//calibri.tga");
+    meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 25.f);
+    //meshList[GEO_QUAD]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
     meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
@@ -232,6 +232,9 @@ void SceneBase::Init()
 
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
+
+    meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+
 
 	m_cMap = LoadMap();
 

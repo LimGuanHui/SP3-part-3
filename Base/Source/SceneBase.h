@@ -127,6 +127,9 @@ protected:
         GEO_GRASS,
         GEO_DIRT,
 
+        //monster
+        GEO_GASTLY,
+
         NUM_GEOMETRY,
     };
 

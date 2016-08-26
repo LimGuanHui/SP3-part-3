@@ -70,7 +70,7 @@ void SP3::Init()
 	theHero = new CPlayerInfo();
 	Character = N_Character();
     // Initialise the hero's position
-    SpawnCharacter();
+    SpawnObjects();
 
     // Load the texture for minimap
     m_cMinimap = new CMinimap();
@@ -100,6 +100,7 @@ void SP3::Init()
 		Missile *missile = new Missile();
 		MissileList.push_back(missile);
 	}
+
 
     sceneSoundEngine = createIrrKlangDevice();
     //source = sceneSoundEngine->addSoundSourceFromFile("music//etc.ogg")
@@ -263,24 +264,8 @@ void SP3::Render()
     RenderTileMap();
 	RenderCharacter();
     //Render missiles
-    for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
-    {
-        Missile *go = (Missile *)*it;
-        if (go->active)
-        {
-            Render2DMesh(meshList[GEO_MISSILE], false, 1.0f, go->x, go->y, false, true);
-        }
-    }
-	
-	for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
-	{
-		PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-		if (projectile->active)
-		{
-			RenderProjectile(projectile);
-		}
-	}
-
+    
+    RenderList();
 	
 
     GameStateRenderText();
@@ -349,20 +334,13 @@ void SP3::RenderTileMap()
             {
                 Render2DMesh(meshList[GEO_TILE_SAFEZONE], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
+
         }
     }
 
     
 
 
-    // Render the enemy
-    /*int theEnemy_x = theEnemy->GetPos_x()-theHero->GetMapFineOffset_x();
-    int theEnemy_y = theEnemy->GetPos_y();
-    if ( ((theEnemy_x>=0) && (theEnemy_x<800)) &&
-    ((theEnemy_y>=0) && (theEnemy_y<600)) )
-    {
-    Render2DMesh(meshList[GEO_TILEENEMY_FRAME0], false, 1.0f, theEnemy_x, theEnemy_y);
-    }*/
 }
 
 /********************************************************************************
@@ -545,13 +523,13 @@ void SP3::Scenetransition()
         default:
             break;
         }
-        SpawnCharacter();
+        SpawnObjects();
         Character->Movement->TransitLevel = false;
     }
     
 }
 
-void SP3::SpawnCharacter()
+void SP3::SpawnObjects()
 {
     int m = 0;
     for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
@@ -562,10 +540,32 @@ void SP3::SpawnCharacter()
             // If we have reached the right side of the Map, then do not display the extra column of tiles.
             if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                 break;
-            if (m_cMap->theScreenMap[i][m] == 9)
+            switch (m_cMap->theScreenMap[i][m])
             {
-                Character->Movement->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
-                Character->Movement->SetPos_y(575 - i*m_cMap->GetTileSize());
+            case 9:
+            {
+                      int x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
+                      int y = 575 - i*m_cMap->GetTileSize();
+                      Character->Movement->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+                      Character->Movement->SetPos_y(575 - i*m_cMap->GetTileSize());
+
+            }
+                break;
+            case 10:
+                break;
+            case 11:
+            {
+                       Monster* newmon = N_Monster();
+                       Monster_List.push_back(newmon);
+                       float x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
+                       float y = 575 - i*m_cMap->GetTileSize();
+                       Vector3 temp = Vector3(x, y,0);
+                       newmon->Init(temp, 1.f, 1.f);
+            }
+
+                break;
+            default:
+                break;
             }
         }
     }
@@ -662,4 +662,30 @@ void SP3::RenderCharacter()
 	{
 		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
 	}
+}
+
+void SP3::RenderList()
+{
+    for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
+    {
+        Monster* go = (Monster*)*it;
+        Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->getcurrpos().x, go->getcurrpos().y);
+    }
+    for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
+    {
+        Missile *go = (Missile *)*it;
+        if (go->active)
+        {
+            Render2DMesh(meshList[GEO_MISSILE], false, 1.0f, go->x, go->y, false, true);
+        }
+    }
+
+    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+    {
+        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+        if (projectile->active)
+        {
+            RenderProjectile(projectile);
+        }
+    }
 }
