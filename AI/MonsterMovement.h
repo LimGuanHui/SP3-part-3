@@ -25,6 +25,7 @@ namespace MONSTER_MOVEMENT
 		~MMovement();
 
 		void Init();
+        void update();
 
 		int GetPos_X();
 		int GetPos_Y();

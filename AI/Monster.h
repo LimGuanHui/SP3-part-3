@@ -16,9 +16,8 @@ namespace MONSTER
 	public:
 		Monster();
 		~Monster();
-        void Init(Vector3 startpos, float patrol, float detectionradius);
-        void Init(Vector3 startpos, float left_patrol, float right_patrol, float detectionradius);
-
+        void Init(Vector3 startpos, float patrol, float detectionradius, float movementspd);
+        void Init(Vector3 startpos, float left_patrol, float right_patrol, 
 		MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
 		MONSTER_MOVEMENT::MMovement* Movement;
 
@@ -41,6 +40,7 @@ namespace MONSTER
        // Vector3 currpos;
         float patrol_left, patrol_right;
         float detectionradius;
+        float movespeed;
 	};
 	MONSTER_API Monster* N_Monster();
 

@@ -13,15 +13,17 @@ namespace MONSTER
 	{
 	}
 
-    void Monster::Init(Vector3 startpos, float patrol, float detectionradius)
+    void Monster::Init(Vector3 startpos, float patrol, float detectionradius, float movementspd)
     {
 		Movement->SetPos_X(startpos.x);
 		Movement->SetPos_Y(startpos.y);
-
+        movespeed = movementspd;
     }
-    void Monster::Init(Vector3 startpos, float left_patrol, float right_patrol, float detectionradius)
+    void Monster::Init(Vector3 startpos, float left_patrol, float right_patrol, float detectionradius, float movementspd)
     {
-        
+        Movement->SetPos_X(startpos.x);
+        Movement->SetPos_Y(startpos.y);
+        movespeed = movementspd;
     }
 
 	Monster* N_Monster()
