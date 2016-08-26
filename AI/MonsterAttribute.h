@@ -29,4 +29,3 @@ namespace MONSTER_ATTRIBUTE
 	};
 
 }
-
