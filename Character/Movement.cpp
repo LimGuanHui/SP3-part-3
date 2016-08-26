@@ -19,6 +19,7 @@ namespace MOVEMENT
 		, facingRight(true)
 		, TransitLevel(false)
 	{
+
 	}
 
 	CMovement::~CMovement(void)
@@ -444,24 +445,26 @@ namespace MOVEMENT
 		return projectile;
 	}
 
-	void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale)
+	void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale, PROJECTILE::Projectile::ProjType type)
 	{
 
 		if (heroAnimationInvert == false)
 		{
 			Projectile = FetchProjectile();
 			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
-			Projectile->vel.Set(300, 0, 0);
-			Projectile->scale.Set(scale, scale, scale);
+			Projectile->vel.Set(500, 0, 0);
+			Projectile->scale.Set(scale, scale);
 			Projectile->Left = heroAnimationInvert;
+			Projectile->type = type;
 		}
 		else if (heroAnimationInvert == true)
 		{
 			Projectile = FetchProjectile();
 			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
-			Projectile->vel.Set(-300, 0, 0);
-			Projectile->scale.Set(scale, scale, scale);
+			Projectile->vel.Set(-500, 0, 0);
+			Projectile->scale.Set(scale, scale);
 			Projectile->Left = heroAnimationInvert;
+			Projectile->type = type;
 		}
 	}
 }

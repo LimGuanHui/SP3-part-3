@@ -6,6 +6,7 @@ namespace PROJECTILE
 		:scale(1,1,1)
 		, active(false)
 		, Left(false)
+		, type(Bullet)
 	{
 	}
 
@@ -24,6 +25,11 @@ namespace PROJECTILE
 	Vector3 Projectile::GetPos()
 	{
 		return pos;
+	}
+
+	Vector3 Projectile::GetScale()
+	{
+		return scale;
 	}
 }
 

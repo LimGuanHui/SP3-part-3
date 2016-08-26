@@ -59,7 +59,7 @@ void SP3::Init()
 	lives = 3;
     // Initialise and load the tile map
 	m_cMap = LoadMap();
-    m_cMap->Init(600, 800, 24, 32, 600, 800);
+    m_cMap->Init(600, 800, 24, 32, 600, 800, 25);
     m_cMap->LoadMap("Map\\Map1.csv");
 
     // Initialise and load the REAR tile map
@@ -167,14 +167,14 @@ void SP3::Update(double dt)
 
 		bool KeyDown = false;
 
-		if (Application::IsKeyPressed('Z') && firingDebounce > 1.f / fireRate)
+		if (Application::IsKeyPressed('J') && firingDebounce > 1.f / fireRate)
 		{
 			KeyDown = false;
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1);
-			//std::cout << "Fire" << std::endl;
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet);
+			std::cout << "Fire" << std::endl;
 		}
-		if (Application::IsKeyPressed('X') && !KeyDown)
+		if (Application::IsKeyPressed('K') && !KeyDown)
 		{
 			chargeTime += 2 * dt;
 			if (chargeTime > 1)
@@ -183,7 +183,7 @@ void SP3::Update(double dt)
 				KeyDown = true;
 			}
 		}
-		if (!Application::IsKeyPressed('X'))
+		if (!Application::IsKeyPressed('K'))
 		{
 			chargeTime = 0;
 		}
@@ -192,7 +192,7 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyDown = false;
 			chargeTime = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 3);
+			Character->Movement->ProjectileUpdate(2.f, dt, 4, Projectile::ChargeBullet);
 			//std::cout << "Fire" << std::endl;
 		}
 
@@ -574,30 +574,19 @@ void SP3::SpawnObjects()
 
 void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 {
-	//if (Character->Movement->GetAnimationInvert() == false)
-	//{
-	//	/*modelStack.PushMatrix();
-	//	modelStack.Translate(projectile->pos.x, projectile->pos.y, 0);
-	//	modelStack.Scale(projectile->scale.x, projectile->scale.y, projectile->scale.z);
-	//	RenderMesh(meshList[GEO_MISSILE], false);
-	//	modelStack.PopMatrix();*/
-
-	//	//Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->pos.x, projectile->pos.y, 0)
-	//}
-	//else if (Character->Movement->GetAnimationInvert() == true)
-	//{
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(projectile->pos.x, projectile->pos.y, 0);
-	//	modelStack.Scale(projectile->scale.x, projectile->scale.y, projectile->scale.z);
-	//	modelStack.Rotate(180, 0, 0, 1);
-	//	RenderMesh(meshList[GEO_MISSILE], false);
-	//	modelStack.PopMatrix();
-	//}
-
-	if (!projectile->Left)
-		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, true);
-	else if (projectile->Left)
-		Render2DMesh(meshList[GEO_MISSILE], false, 1.f, projectile->GetPos().x, projectile->GetPos().y, false);
+	switch (projectile->type)
+	{
+	case Projectile::Bullet:
+			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			break;
+	case Projectile::ChargeBullet:
+		Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , !projectile->Left);
+			break;
+	case Projectile::Net:
+			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			break;
+	}
+	
 
 }
 
