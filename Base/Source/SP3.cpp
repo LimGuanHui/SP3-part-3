@@ -11,7 +11,6 @@
 
 SP3::SP3()
 : m_cMinimap(NULL)
-, m_cMap(NULL)
 , tileOffset_x(0)
 , tileOffset_y(0)
 , m_cRearMap(NULL)

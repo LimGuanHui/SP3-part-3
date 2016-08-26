@@ -12,6 +12,7 @@
 #include "MapLoad.h"
 using namespace MAPLOADER;
 
+
 class SceneBase : public Scene
 {
     
@@ -32,8 +33,8 @@ public:
 	void RenderModelOnScreen(Mesh *mesh, bool enableLight, Vector3 size, float x, float y, float z, Vector3 rotation);
     void RenderMeshIn2D(Mesh *mesh, const bool enableLight, const float size, const float x, const float y, const bool rotate);
 
-	MapLoad* m_cMap;
-
+	
+    
 	//GameObject* FetchGO();
 protected:
     enum UNIFORM_TYPE
@@ -146,6 +147,10 @@ protected:
 	bool bLightEnabled;
 
 	float fps;
+
+    MapLoad* m_cMap;
+
+
 };
 
 #endif

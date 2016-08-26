@@ -8,7 +8,8 @@
 #include "LoadTGA.h"
 #include <sstream>
 
-SceneBase::SceneBase()
+SceneBase::SceneBase():
+m_cMap(NULL)
 {
 }
 

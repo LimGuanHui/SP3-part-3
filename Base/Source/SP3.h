@@ -18,8 +18,7 @@ using namespace irrklang;
 #include "Character.h"
 using namespace CHARACTER;
 
-#include "MapLoad.h"
-using namespace MAPLOADER;
+
 
 class SP3 : public SceneBase
 {
@@ -192,7 +191,7 @@ private:
     CMinimap* m_cMinimap;
 
     // Handle to the tilemaps
-    MapLoad* m_cMap;
+    
     void RenderTileMap();
     // Hero's information
     CPlayerInfo* theHero;
