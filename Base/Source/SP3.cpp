@@ -228,7 +228,7 @@ void SP3::Update(double dt)
 
         fps = (float)(1.f / dt);
     }
-
+    ProjectileCollision(dt);
 	//std::cout << fps << std::endl;
 }
 
@@ -675,6 +675,32 @@ void SP3::RenderList()
         if (projectile->active)
         {
             RenderProjectile(projectile);
+            
         }
     }
+}
+
+void SP3::ProjectileCollision(double dt)
+{
+    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+    {
+        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+        if (projectile->active)
+        {
+            for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+            {
+                Monster* go = (Monster*)*it2;
+                int tsize = m_cMap->GetTileSize() - 2.5;
+                Vector3 pos1(projectile->pos.x + (tsize*0.5), projectile->pos.y + (tsize*0.5), 0);
+                Vector3 pos2(go->getcurrpos().x + (tsize*0.5), go->getcurrpos().y + (tsize*0.5), 0);
+                if (Collision::SphericalCollision(pos1, tsize*0.5, pos2, tsize*0.5, dt))
+                {
+                    projectile->active = false;
+                    Monster_List.erase(it2);
+                    break;
+                }
+            }
+        }
+    }
+
 }

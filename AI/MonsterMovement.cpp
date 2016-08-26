@@ -15,7 +15,8 @@ namespace MONSTER_MOVEMENT
 
 	void MMovement::Init()
 	{
-		theMonsterPosition = Vector2(0, 0);
+		theMonsterPosition = 
+            (0, 0);
 	}
 
 	int MMovement::GetPos_X()

@@ -19,7 +19,8 @@ using namespace irrklang;
 using namespace CHARACTER;
 #include "Monster.h"
 using namespace MONSTER;
-
+#include "Projectile.h"
+#include "Collision.h"
 
 
 class SP3 : public SceneBase
@@ -150,6 +151,8 @@ public:
 
 	void RenderCharacter();
     void RenderList();
+
+    void ProjectileCollision(double dt);
 
 
     enum Level
