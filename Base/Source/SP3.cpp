@@ -691,9 +691,10 @@ void SP3::ProjectileCollision(double dt)
             {
                 Monster* go = (Monster*)*it2;
                 int tsize = m_cMap->GetTileSize() - 2.5;
-                Vector3 pos1(projectile->pos.x + (tsize*0.5), projectile->pos.y + (tsize*0.5), 0);
-                Vector3 pos2(go->getcurrpos().x + (tsize*0.5), go->getcurrpos().y + (tsize*0.5), 0);
-                if (Collision::SphericalCollision(pos1, tsize*0.5, pos2, tsize*0.5, dt))
+                tsize *= 0.5;
+                Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                Vector3 pos2(go->getcurrpos().x + tsize, go->getcurrpos().y + tsize, 0);
+                if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
                 {
                     projectile->active = false;
                     Monster_List.erase(it2);
@@ -702,5 +703,4 @@ void SP3::ProjectileCollision(double dt)
             }
         }
     }
-
 }
