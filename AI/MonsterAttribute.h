@@ -29,5 +29,4 @@ namespace MONSTER_ATTRIBUTE
 	};
 
 }
-	MONSTER_ATTRIBUTE_API MONSTER_ATTRIBUTE::MonsterAttribute* test;
 

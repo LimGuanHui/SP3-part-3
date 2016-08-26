@@ -448,7 +448,7 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 
 void SceneBase::Render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 }
 
 void SceneBase::Exit()

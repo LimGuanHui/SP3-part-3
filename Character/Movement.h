@@ -17,11 +17,10 @@ namespace MOVEMENT
 		CMovement();
 		~CMovement();
 
-		void ProjectileUpdate(const float timeDiff, double dt, int scale);
+		void ProjectileUpdate(const float timeDiff, double dt, int scale, PROJECTILE::Projectile::ProjType type);
 
 		PROJECTILE::Projectile* Projectile;
 		PROJECTILE::Projectile* FetchProjectile();
-
 		std::vector<PROJECTILE::Projectile *>m_projectileList;
 
 		enum GEOMETRY_TYPE
