@@ -1,6 +1,12 @@
 #pragma once
 
-#include "MovementExport.h"
+
+#ifndef MOVEMENT_EXPORTS
+#define MOVEMENT_API __declspec(dllexport) 
+#else
+#define MOVEMENT_API __declspec(dllimport) 
+#endif
+
 #include "Projectile.h"
 using namespace PROJECTILE;
 #include "Vector3.h"

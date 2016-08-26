@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MapLoadExports.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MapLoad.h">
       <Filter>Header Files</Filter>
     </ClInclude>

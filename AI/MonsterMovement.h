@@ -1,8 +1,12 @@
 #pragma once
 
-#include "MonsterMovementExports.h"
+#ifndef MONSTER_MOVEMENT_EXPORTS
+#define MONSTER_MOVEMENT_API __declspec(dllexport) 
+#else
+#define MONSTER_MOVEMENT_API __declspec(dllimport) 
+#endif
+
 #include "Vector3.h"
-#include "Vector2.h"
 
 namespace MONSTER_MOVEMENT
 {

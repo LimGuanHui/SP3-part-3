@@ -1,6 +1,11 @@
 #pragma once
 
-#include "AttributeExports.h"
+
+#ifndef ATTRIBUTE_EXPORTS
+#define ATTRIBUTE_API __declspec(dllexport) 
+#else
+#define ATTRIBUTE_API __declspec(dllimport) 
+#endif
 //#include "Boss.h"
 //using namespace BOSS;
 //#include "Monster.h"
