@@ -31,5 +31,25 @@ namespace PROJECTILE
 	{
 		return scale;
 	}
+
+	Vector3 Projectile::GetVel()
+	{
+		return vel;
+	}
+
+	void Projectile::SetPos(Vector3 pos)
+	{
+		this->pos = pos;
+	}
+
+	void Projectile::SetScale(Vector3 scale)
+	{
+		this->scale = scale;
+	}
+
+	void Projectile::SetVel(Vector3 vel)
+	{
+		this->vel = vel;
+	}
 }
 

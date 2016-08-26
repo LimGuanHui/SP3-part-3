@@ -28,20 +28,23 @@ namespace PROJECTILE
 
 		ProjType type;
 
-		void SetPos(Vector3 pos);
 		Vector3 GetPos();
-
 		Vector3 GetScale();
+		Vector3 GetVel();
 
-		Vector3 pos;
-		Vector3 vel;
-		Vector3 scale;
-
+		void SetPos(Vector3 pos);
+		void SetScale(Vector3 scale);
+		void SetVel(Vector3 vel);
+	
 		bool active;
 		bool Left;
 
 		void Init();
 
+		Vector3 pos;
+		Vector3 vel;
+		Vector3 scale;
+	private:
 	};
 
 }

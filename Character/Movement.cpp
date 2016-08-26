@@ -451,18 +451,18 @@ namespace MOVEMENT
 		if (heroAnimationInvert == false)
 		{
 			Projectile = FetchProjectile();
-			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
-			Projectile->vel.Set(500, 0, 0);
-			Projectile->scale.Set(scale, scale);
+			Projectile->SetPos(Vector3 (theHeroPosition.x, theHeroPosition.y, 10));
+			Projectile->SetVel(Vector3(500, 0, 0));
+			Projectile->SetScale(Vector3(scale, scale, 1));
 			Projectile->Left = heroAnimationInvert;
 			Projectile->type = type;
 		}
 		else if (heroAnimationInvert == true)
 		{
 			Projectile = FetchProjectile();
-			Projectile->pos.Set(theHeroPosition.x, theHeroPosition.y, 10);
-			Projectile->vel.Set(-500, 0, 0);
-			Projectile->scale.Set(scale, scale);
+			Projectile->SetPos(Vector3(theHeroPosition.x, theHeroPosition.y, 10));
+			Projectile->SetVel(Vector3(-500, 0, 0));
+			Projectile->SetScale(Vector3(scale, scale, 1));
 			Projectile->Left = heroAnimationInvert;
 			Projectile->type = type;
 		}
