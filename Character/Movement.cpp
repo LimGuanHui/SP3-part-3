@@ -421,7 +421,7 @@ namespace MOVEMENT
 
 	}
 
-	Projectile* CMovement::FetchProjectile()
+    Projectile* CMovement::FetchProjectile(MapLoad* m_cMap)
 	{
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = m_projectileList.begin(); it != m_projectileList.end(); ++it)
 		{
@@ -437,7 +437,7 @@ namespace MOVEMENT
 		}
 		for (unsigned i = 0; i < 10; ++i)
 		{
-			PROJECTILE::Projectile *projectile = new PROJECTILE::Projectile();
+            PROJECTILE::Projectile *projectile = new PROJECTILE::Projectile(m_cMap);
 			m_projectileList.push_back(projectile);
 		}
 		PROJECTILE::Projectile *projectile = m_projectileList.back();
@@ -445,12 +445,12 @@ namespace MOVEMENT
 		return projectile;
 	}
 
-	void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale, PROJECTILE::Projectile::ProjType type)
+    void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale, PROJECTILE::Projectile::ProjType type, MapLoad* m_cMap)
 	{
 
 		if (heroAnimationInvert == false)
 		{
-			Projectile = FetchProjectile();
+            Projectile = FetchProjectile(m_cMap);
 			Projectile->SetPos(Vector3 (theHeroPosition.x, theHeroPosition.y, 10));
 			Projectile->SetVel(Vector3(500, 0, 0));
 			Projectile->SetScale(Vector3(scale, scale, 1));
@@ -459,7 +459,7 @@ namespace MOVEMENT
 		}
 		else if (heroAnimationInvert == true)
 		{
-			Projectile = FetchProjectile();
+            Projectile = FetchProjectile(m_cMap);
 			Projectile->SetPos(Vector3(theHeroPosition.x, theHeroPosition.y, 10));
 			Projectile->SetVel(Vector3(-500, 0, 0));
 			Projectile->SetScale(Vector3(scale, scale, 1));

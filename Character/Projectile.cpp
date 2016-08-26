@@ -2,11 +2,12 @@
 
 namespace PROJECTILE
 {
-	Projectile::Projectile()
+    Projectile::Projectile(MapLoad* map)
 		:scale(1,1,1)
 		, active(false)
 		, Left(false)
 		, type(Bullet)
+        , map(map)
 	{
 	}
 
@@ -21,6 +22,11 @@ namespace PROJECTILE
 		Left = false;
 		active = false;
 	}
+
+    void Projectile::Update(double dt)
+    {
+        pos += vel * dt;
+    }
 
 	Vector3 Projectile::GetPos()
 	{

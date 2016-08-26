@@ -139,7 +139,7 @@ void SP3::Update(double dt)
 		{
 			KeyDown = false;
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet);
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
 		}
 		if (Application::IsKeyPressed('K') && !KeyDown)
 		{
@@ -159,7 +159,7 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyDown = false;
 			chargeTime = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 4, Projectile::ChargeBullet);
+            Character->Movement->ProjectileUpdate(2.f, dt, 4, Projectile::ChargeBullet, m_cMap);
 			//std::cout << "Fire" << std::endl;
 		}
 
@@ -170,7 +170,8 @@ void SP3::Update(double dt)
 			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
 			if (projectile->active)
 			{
-				projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
+				//projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
+                projectile->Update(dt);
 			}
 		}
 
@@ -505,6 +506,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize());
+                       newmon->InitAttrib(10, 1);
             }
                 break;
             default:
@@ -639,13 +641,39 @@ void SP3::ProjectileCollision(double dt)
                 if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
                 {
                     projectile->active = false;
-                    Monster_List.erase(it2);
-                    break;
+                    go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+                    if (go->Attribute->GetCurrentHP() <= 0)
+                    {
+                        Monster_List.erase(it2);
+                        break;
+                    }
+                    
                 }
             }
+            int m = 0;
+            for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+            {
+                for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+                {
+                    m = tileOffset_x + k;
+                    if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                        break;
+                    if (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 11 && m_cMap->theScreenMap[i][m] != 10)
+                    {
+                        int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+                        Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                        Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
+                        if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
+                        {
+                            projectile->active = false;
+                        }
+                    }
+                    
+                }
+            }
+
         }
     }
-
 }
 
 void SP3::MonsterUpdate(double dt)
@@ -656,3 +684,4 @@ void SP3::MonsterUpdate(double dt)
         go->update(dt);
     }
 }
+

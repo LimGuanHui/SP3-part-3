@@ -22,7 +22,7 @@ namespace MONSTER_ATTRIBUTE
 		void SetMonsterDamage(int Damage);
 		int GetMonsterDamage();
 
-		void SetReceivedDamage(int ReceiveDmg);
+		void ReceiveDamage(int ReceiveDmg);
 		int GetReceivedDamage();
 
 		int GetCurrentHP();

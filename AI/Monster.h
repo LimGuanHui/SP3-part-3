@@ -14,9 +14,8 @@ namespace MONSTER
         void Init(Vector3 startpos, Vector3 scale ,float patrol, float detectionradius, float movementspd);
         void Init(Vector3 startpos, Vector3 scale ,float left_patrol, float right_patrol,
             float detectionradius, float movementspd);
-
         void InitAttrib(int maxhp, int Damage);
-
+        
         void update(double dt);
 		
         enum MON_TYPE
@@ -32,5 +31,3 @@ namespace MONSTER
 	MONSTER_API Monster* N_Monster();
 
 }
-
-

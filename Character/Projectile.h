@@ -9,6 +9,8 @@
 
 #include "Vector3.h"
 #include "Vector2.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 namespace PROJECTILE
 {
@@ -23,8 +25,10 @@ namespace PROJECTILE
 			Net,
 		};
 
-		Projectile();
+		Projectile(MapLoad* map);
 		~Projectile();
+
+        
 
 		ProjType type;
 
@@ -40,11 +44,14 @@ namespace PROJECTILE
 		bool Left;
 
 		void Init();
+        void Update(double dt);
 
 		Vector3 pos;
 		Vector3 vel;
 		Vector3 scale;
 	private:
+
+        MapLoad* map;
 	};
 
 }

@@ -40,7 +40,7 @@ namespace MONSTER_ATTRIBUTE
 		return Damage;
 	}
 
-	void MonsterAttribute::SetReceivedDamage(int ReceiveDmg)
+	void MonsterAttribute::ReceiveDamage(int ReceiveDmg)
 	{
 		this->CurrentHealth -= ReceiveDmg;
 	}

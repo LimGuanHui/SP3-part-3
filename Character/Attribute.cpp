@@ -3,7 +3,7 @@
 namespace ATTRIBUTE
 {
 	CAttribute::CAttribute() 
-		: Damage(0)
+		: Damage(5)
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
 	{
