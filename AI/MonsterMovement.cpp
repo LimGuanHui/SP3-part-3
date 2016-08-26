@@ -13,12 +13,30 @@ namespace MONSTER_MOVEMENT
 	{
 	}
 
-	void MMovement::Init()
-	{
-		theMonsterPosition =  (0, 0, 0);
-		theMonsterScale = (1, 1, 1);
-		theMonsterVel = (0, 0, 0);
-	}
+    void MMovement::Init(Vector3 startpos,
+        Vector3 theMonsterScale, float patrol, float movespeed)
+    {
+        theMonsterPosition = this->startpos = startpos;
+        this->theMonsterScale = theMonsterScale;
+        patrol_left =  patrol / 2;
+        patrol_right = patrol_left;
+        this->movespeed = movespeed;
+        theMonsterVel = Vector3(-movespeed, 0, 0);
+        Monstate = IDLE;
+        facingleft = true;
+    }
+    void MMovement::Init(Vector3 startpos,
+        Vector3 theMonsterScale, float patrol_left, float patrol_right, float movespeed)
+    {
+        this->startpos = startpos;
+        this->theMonsterScale = theMonsterScale;
+        this->patrol_left = patrol_left;
+        this->patrol_right = patrol_right;
+        this->movespeed = movespeed;
+        Monstate = IDLE;
+        facingleft = true;
+    }
+
 
 	int MMovement::GetPos_X()
 	{
@@ -80,9 +98,40 @@ namespace MONSTER_MOVEMENT
 		this->theMonsterVel.y = vel_Y;
 	}
 
-    void MMovement::update()
+    void MMovement::update(double dt)
     {
+        theMonsterPosition += theMonsterVel * dt;
+        switch (Monstate)
+        {
+        case MONSTER_MOVEMENT::MMovement::IDLE:
+        {
+            float test = (theMonsterPosition.x - startpos.x) * (theMonsterPosition.x - startpos.x);
 
+            if (theMonsterPosition.x <  (startpos.x - patrol_left) && facingleft)//left to right
+            {
+                theMonsterVel.x = -theMonsterVel.x;
+                facingleft = false;
+            }
+            else if (theMonsterPosition.x > (startpos.x + patrol_right) && !facingleft)//right to left
+            {
+                theMonsterVel.x = -theMonsterVel.x;
+                facingleft = true;
+            }
+        }
+            break;
+        case MONSTER_MOVEMENT::MMovement::ATTACK:
+        {
+            
+        }
+            break;
+        case MONSTER_MOVEMENT::MMovement::DIE:
+        {
+            
+        }
+            break;
+        default:
+            break;
+        }
     }
 
 	MMovement* N_Monster()

@@ -20,8 +20,12 @@ namespace MONSTER_MOVEMENT
 		MMovement();
 		~MMovement();
 
-		void Init();
-        void update();
+        void Init(Vector3 startpos,
+            Vector3 theMonsterScale,float patrol, float movespeed);
+        void Init(Vector3 startpos,
+            Vector3 theMonsterScale, float patrol_left,float patrol_right, float movespeed);
+
+        void update(double dt);
 
 		int GetPos_X();
 		int GetPos_Y();
@@ -37,11 +41,16 @@ namespace MONSTER_MOVEMENT
 		void SetVel_X(int vel_X);
 		void SetVel_Y(int vel_Y);
 
+        State Monstate;
 	private:
+        Vector3 startpos;
 		Vector3 theMonsterPosition;
 		Vector3 theMonsterScale;
 		Vector3 theMonsterVel;
 
+        float patrol_left, patrol_right;
+        float movespeed;
+        bool facingleft;
 	};
 
 	MONSTER_MOVEMENT_API MMovement* N_Monster();

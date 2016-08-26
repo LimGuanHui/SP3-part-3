@@ -153,7 +153,7 @@ public:
     void RenderList();
 
     void ProjectileCollision(double dt);
-
+    void MonsterUpdate(double dt);
 
     enum Level
     {

@@ -219,6 +219,7 @@ void SP3::Update(double dt)
 
         fps = (float)(1.f / dt);
     }
+    MonsterUpdate(dt);
     ProjectileCollision(dt);
 	//std::cout << fps << std::endl;
 }
@@ -551,9 +552,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, 1.f, 1.f,1.f);
+                       newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize());
             }
-
                 break;
             default:
                 break;
@@ -694,4 +694,13 @@ void SP3::ProjectileCollision(double dt)
         }
     }
 
+}
+
+void SP3::MonsterUpdate(double dt)
+{
+    for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
+    {
+        Monster* go = (Monster*)*it;
+        go->update(dt);
+    }
 }

@@ -14,6 +14,12 @@ namespace MONSTER_ATTRIBUTE
 	{
 	}
 
+    void MonsterAttribute::Init(int MaxhealthPoint, int Damage)
+    {
+        CurrentHealth = this->MaxhealthPoint = MaxhealthPoint;
+        this->Damage = Damage;
+    }
+
 	void MonsterAttribute::SetMonsterMaxHealth(int MaxHealthPoint)
 	{
 		this->MaxhealthPoint = MaxHealthPoint;

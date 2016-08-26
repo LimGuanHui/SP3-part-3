@@ -11,31 +11,23 @@ namespace MONSTER
 	public:
 		Monster();
 		~Monster();
-        void Init(Vector3 startpos, float patrol, float detectionradius, float movementspd);
-        void Init(Vector3 startpos, float left_patrol, float right_patrol, 
+        void Init(Vector3 startpos, Vector3 scale ,float patrol, float detectionradius, float movementspd);
+        void Init(Vector3 startpos, Vector3 scale ,float left_patrol, float right_patrol,
             float detectionradius, float movementspd);
-		MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
-		MONSTER_MOVEMENT::MMovement* Movement;
+
+        void InitAttrib(int maxhp, int Damage);
+
+        void update(double dt);
+		
         enum MON_TYPE
         {
             GASTLY,
         };
         MON_TYPE type;
-        enum STATE
-        {
-            Spawn,
-            Idle,
-            Attack,
-            Die,
-        };
-
-        //Vector3 getcurrpos();
-    private:
-       // Vector3 initialpos;
-       // Vector3 currpos;
-        float patrol_left, patrol_right;
-        float detectionradius;
-        float movespeed;
+        MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
+        MONSTER_MOVEMENT::MMovement* Movement;        
+    private:        
+        float detectionradius;        
 	};
 	MONSTER_API Monster* N_Monster();
 

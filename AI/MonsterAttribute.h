@@ -10,6 +10,8 @@ namespace MONSTER_ATTRIBUTE
 		MonsterAttribute();
 		~MonsterAttribute();
 
+        void Init(int MaxhealthPoint, int Damage);
+
 		void SetMonsterMaxHealth(int HealthPoint);
 		int GetMonsterMaxHealth();
 
