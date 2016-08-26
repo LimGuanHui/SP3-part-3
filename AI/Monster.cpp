@@ -5,6 +5,7 @@ namespace MONSTER
 	Monster::Monster()
 	{
 		Movement = new MONSTER_MOVEMENT::MMovement();
+		Attribute = new MONSTER_ATTRIBUTE::MonsterAttribute();
 	}
 
 

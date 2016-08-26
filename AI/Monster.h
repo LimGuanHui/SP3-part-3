@@ -2,6 +2,7 @@
 
 #include "MonsterExports.h"
 #include "MonsterMovement.h"
+#include "MonsterAttribute.h"
 
 namespace MONSTER
 {
@@ -10,6 +11,7 @@ namespace MONSTER
 	public:
 		Monster();
 		~Monster();
+		MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
 		MONSTER_MOVEMENT::MMovement* Movement;
 
 	};
