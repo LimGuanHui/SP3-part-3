@@ -28,10 +28,10 @@ namespace MONSTER
             Die,
         };
 
-        Vector3 getcurrpos();
+        //Vector3 getcurrpos();
     private:
-        Vector3 initialpos;
-        Vector3 currpos;
+       // Vector3 initialpos;
+       // Vector3 currpos;
         float patrol_left, patrol_right;
         float detectionradius;
 	};

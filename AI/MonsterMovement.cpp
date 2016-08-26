@@ -3,9 +3,9 @@
 namespace MONSTER_MOVEMENT
 {
 	MMovement::MMovement()
-		: theMonsterPosition(0, 0)
-		, theMonsterScale(1,1)
-		, theMonsterVel(0,0)
+		: theMonsterPosition(0, 0, 0)
+		, theMonsterScale(1,1, 1)
+		, theMonsterVel(0,0,0)
 	{
 	}
 
@@ -15,8 +15,9 @@ namespace MONSTER_MOVEMENT
 
 	void MMovement::Init()
 	{
-		theMonsterPosition = 
-            (0, 0);
+		theMonsterPosition =  (0, 0, 0);
+		theMonsterScale = (1, 1, 1);
+		theMonsterVel = (0, 0, 0);
 	}
 
 	int MMovement::GetPos_X()

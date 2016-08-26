@@ -559,7 +559,7 @@ void SP3::SpawnObjects()
                        Monster_List.push_back(newmon);
                        float x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
-                       Vector3 temp = Vector3(x, y,0);
+                       Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, 1.f, 1.f);
             }
 
@@ -580,7 +580,7 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
 			break;
 	case Projectile::ChargeBullet:
-		Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , !projectile->Left);
+			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , !projectile->Left);
 			break;
 	case Projectile::Net:
 			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
@@ -658,7 +658,7 @@ void SP3::RenderList()
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
-        Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->getcurrpos().x, go->getcurrpos().y);
+        Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
     }
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
     {
@@ -689,10 +689,10 @@ void SP3::ProjectileCollision(double dt)
         {
             for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
             {
-                Monster* go = (Monster*)*it2;
+				Monster* go = (Monster*)*it2;
                 int tsize = m_cMap->GetTileSize() - 2.5;
                 Vector3 pos1(projectile->pos.x + (tsize*0.5), projectile->pos.y + (tsize*0.5), 0);
-                Vector3 pos2(go->getcurrpos().x + (tsize*0.5), go->getcurrpos().y + (tsize*0.5), 0);
+                Vector3 pos2(go->Movement->GetPos_X() + (tsize*0.5), go->Movement->GetPos_Y() + (tsize*0.5), 0);
                 if (Collision::SphericalCollision(pos1, tsize*0.5, pos2, tsize*0.5, dt))
                 {
                     projectile->active = false;

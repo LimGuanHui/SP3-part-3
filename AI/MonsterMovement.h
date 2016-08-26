@@ -37,9 +37,9 @@ namespace MONSTER_MOVEMENT
 		void SetVel_Y(int vel_Y);
 
 	private:
-		Vector2 theMonsterPosition;
-		Vector2 theMonsterScale;
-		Vector2 theMonsterVel;
+		Vector3 theMonsterPosition;
+		Vector3 theMonsterScale;
+		Vector3 theMonsterVel;
 
 	};
 
