@@ -155,7 +155,7 @@ void SP3::Update(double dt)
             if (jumpsoundtimer <= 0)
             {
                 jumpsoundtimer = 0.4f;
-                sceneSoundEngine->play2D(jump);
+                //sceneSoundEngine->play2D(jump);
             }
 
         }
@@ -203,7 +203,7 @@ void SP3::Update(double dt)
 			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
 			if (projectile->active)
 			{
-				projectile->pos += projectile->vel * dt;
+				projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
 			}
 		}
 
@@ -216,15 +216,6 @@ void SP3::Update(double dt)
         int checkPosition_X = (int)((Character->Movement->GetMapOffset_x() + Character->Movement->GetPos_x()) / m_cMap->GetTileSize());
         int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((Character->Movement->GetPos_y() + m_cMap->GetTileSize()) / m_cMap->GetTileSize());
         missileTriggerTimer += dt;
-
-       /* if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 3 && missileTriggerTimer > 1.f)
-        {
-            missileTriggerTimer = 0;
-            Missile* go = FetchMissile();
-            go->Init(theHero->GetPos_x() - (32 * 11), theHero->GetPos_y());
-        }*/
-
-       // MissileUpdate(dt);
 
         fps = (float)(1.f / dt);
     }

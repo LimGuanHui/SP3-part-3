@@ -80,6 +80,11 @@ namespace MONSTER_MOVEMENT
 		this->theMonsterVel.y = vel_Y;
 	}
 
+    void MMovement::update()
+    {
+
+    }
+
 	MMovement* N_Monster()
 	{
 		return new MMovement();
