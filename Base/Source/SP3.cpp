@@ -690,7 +690,7 @@ void SP3::ProjectileCollision(double dt)
             for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
             {
 				Monster* go = (Monster*)*it2;
-                int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - 2.5) * 0.5;
+                int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
                 Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
                 Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
                 if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
