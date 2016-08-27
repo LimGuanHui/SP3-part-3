@@ -21,6 +21,8 @@ using namespace CHARACTER;
 using namespace MONSTER;
 #include "Projectile.h"
 #include "Collision.h"
+#include "AI.h"
+using namespace AI;
 //#include "Panel.h"
 
 
@@ -72,6 +74,7 @@ public:
     };
 
 	CCharacter* Character;
+	ArtInt* AI;
 
 	MapLoad* LoadFile;
 

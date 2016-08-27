@@ -52,8 +52,9 @@ void SP3::Init()
     m_cRearMap->Init(600, 800, 24, 32, 600, 1600);
     m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
 
-	theHero = new CPlayerInfo();
+	//theHero = new CPlayerInfo();
 	Character = N_Character();
+	AI = N_AI();
     SpawnObjects();
 
 	Mtx44 perspective;
@@ -64,13 +65,6 @@ void SP3::Init()
     rotateAngle = 0;
 
     bLightEnabled = true;
-
-	for (int i = 0; i < 10; i++)
-	{
-		Missile *missile = new Missile();
-		MissileList.push_back(missile);
-	}
-
 
     sceneSoundEngine = createIrrKlangDevice();
     //source = sceneSoundEngine->addSoundSourceFromFile("music//etc.ogg")
@@ -83,6 +77,11 @@ void SP3::Init()
 	chargeTime = 0;
 	chargeFire = false;
 
+	for (int i = 0; i < 1; ++i)
+	{
+		Character->Movement->m_projectileList.push_back(new Projectile(m_cMap));
+	}
+
     CurrLevel = LEVEL1;
 }
 
@@ -90,9 +89,9 @@ void SP3::Update(double dt)
 {
     SceneBase::Update(dt);
     
-    rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
+   // rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
 
-    camera.Update(dt);
+    //camera.Update(dt);
 
     GameStateUpdate();
 
@@ -135,11 +134,12 @@ void SP3::Update(double dt)
 
 		firingDebounce += (float)dt;
 		bool KeyDown = false;
-		if (Application::IsKeyPressed('J') && firingDebounce > 1.f / fireRate)
+		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
 			KeyDown = false;
 			firingDebounce = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
+            
 		}
 		if (Application::IsKeyPressed('K') && !KeyDown)
 		{
@@ -159,8 +159,8 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyDown = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 4, Projectile::ChargeBullet, m_cMap);
-			//std::cout << "Fire" << std::endl;
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::ChargeBullet, m_cMap);
+			std::cout << "Fire" << std::endl;
 		}
 
 		//std::cout << check1 << " " << check2 << " " << firingDebounce << std::endl;
@@ -171,24 +171,21 @@ void SP3::Update(double dt)
 			if (projectile->active)
 			{
 				//projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
-                projectile->Update(dt);
+				projectile->Update(dt);
+				ProjectileCollision(dt, projectile);
 			}
 		}
-
+		
         // ReCalculate the tile offsets
-        tileOffset_x = (int)(theHero->GetMapOffset_x() / m_cMap->GetTileSize());
+		tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
         if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
             tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
 
         // if the hero enters the kill zone, then enemy goes into kill strategy mode
-        int checkPosition_X = (int)((Character->Movement->GetMapOffset_x() + Character->Movement->GetPos_x()) / m_cMap->GetTileSize());
-        int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((Character->Movement->GetPos_y() + m_cMap->GetTileSize()) / m_cMap->GetTileSize());
-        missileTriggerTimer += dt;
-
-        fps = (float)(1.f / dt);
+      
     }
     MonsterUpdate(dt);
-    ProjectileCollision(dt);
+	
 	//std::cout << fps << std::endl;
 }
 
@@ -216,24 +213,24 @@ void SP3::Render()
     modelStack.LoadIdentity();
 
     RenderBackground();
-    RenderRearTileMap();
+    //RenderRearTileMap();
     RenderTileMap();
 	RenderCharacter();
     RenderList();
 
     GameStateRenderText();
-    std::ostringstream ss;
-    ss.str(string());
-    ss.precision(5);
-    ss << "fps" << fps;
-    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 550);
-
 
 }
 
 void SP3::Exit()
 {
     SceneBase::Exit();
+	/*while (Character->Movement->m_projectileList.size() > 0)
+	{
+		Projectile *go = Character->Movement->m_projectileList.back();
+		delete go;
+		Character->Movement->m_projectileList.pop_back();
+	}*/
 }
 
 /********************************************************************************
@@ -252,39 +249,39 @@ void SP3::RenderTileMap()
                 break;
             if (m_cMap->theScreenMap[i][m] == 1)
             {
-                Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
             else if (m_cMap->theScreenMap[i][m] == 2)
             {
-                Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			} 
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
-				Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 4)
 			{
-				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 5)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 6)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 7)
 			{
-				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
             else if (m_cMap->theScreenMap[i][m] == 10)
             {
-                Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
             else if (m_cMap->theScreenMap[i][m] == 11)
             {
-                Render2DMesh(meshList[GEO_TILE_SAFEZONE], false, 1.0f, k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_TILE_SAFEZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
 
         }
@@ -388,7 +385,7 @@ void SP3::GameStateRenderText()
 
                             ss.str(string());
                             ss.precision(5);
-                            ss << "Lives: " << lives;
+                            ss << "Lives: " << fps;
                             RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
         break;
@@ -461,7 +458,7 @@ void SP3::Scenetransition()
         CurrLevel = static_cast<Level>(CurrLevel + 1);
         switch (CurrLevel)
         {
-        case SP3::LEVEL1:
+		case SP3::LEVEL1:
             break;
         case SP3::LEVEL2:
             m_cMap->LoadMap("Map\\Map2.csv");
@@ -483,7 +480,6 @@ void SP3::Scenetransition()
 
 void SP3::SpawnObjects()
 {
-    Monster_List.clear();
     int m = 0;
     for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
     {
@@ -497,9 +493,9 @@ void SP3::SpawnObjects()
             {
             case 9:
             {
-                      int x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
+					  int x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                       int y = 575 - i*m_cMap->GetTileSize();
-                      Character->Movement->SetPos_x(k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x());
+					  Character->Movement->SetPos_x(k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x());
                       Character->Movement->SetPos_y(575 - i*m_cMap->GetTileSize());
 
             }
@@ -509,8 +505,8 @@ void SP3::SpawnObjects()
             case 11:
             {
                        Monster* newmon = N_Monster();
-                       Monster_List.push_back(newmon);
-                       float x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
+                       AI->Monster->Monster_List.push_back(newmon);
+                       float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize());
@@ -545,7 +541,6 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 
 void SP3::RenderCharacter()
 {
-    //meshList[GEO_WALK]
 	if (Character->Movement->GetAnimationInvert() == false && Moving == true)
 	{
 		if (Character->Movement->GetAnimationCounter() == 1)
@@ -608,18 +603,10 @@ void SP3::RenderCharacter()
 
 void SP3::RenderList()
 {
-    for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
+    for (std::vector<Monster*>::iterator it = AI->Monster->Monster_List.begin(); it != AI->Monster->Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
         Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
-    }
-    for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
-    {
-        Missile *go = (Missile *)*it;
-        if (go->active)
-        {
-            Render2DMesh(meshList[GEO_MISSILE], false, 1.0f, go->x, go->y, false, true);
-        }
     }
 
     for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
@@ -633,36 +620,57 @@ void SP3::RenderList()
     }
 }
 
-void SP3::ProjectileCollision(double dt)
+void SP3::ProjectileCollision(double dt, PROJECTILE::Projectile *projectile)
 {
     for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
     {
         PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
         if (projectile->active)
         {
-            if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
-                projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
-            {
-                projectile->active = false;
-                continue;
-            }
-            for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+            for (std::vector<Monster*>::iterator it2 = AI->Monster->Monster_List.begin(); it2 != AI->Monster->Monster_List.end(); ++it2)
             {
 				Monster* go = (Monster*)*it2;
-                int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-                if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
-                {
-                    projectile->active = false;
-                    go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
-                    if (go->Attribute->GetCurrentHP() <= 0)
-                    {
-                        Monster_List.erase(it2);
-                        break;
-                    }
-                    
-                }
+				switch (projectile->type)
+				{
+				case Projectile::Bullet:
+				{
+					int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+					Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+					Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+					if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+					{
+					   projectile->active = false;
+					   go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+					   if (go->Attribute->GetCurrentHP() <= 0)
+					   {
+						   AI->Monster->Monster_List.erase(it2);
+						   break;
+					   }
+
+					}
+				}
+				
+				case Projectile::ChargeBullet:
+				{
+					int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+					Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+					Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+					if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+					{
+						 projectile->active = false;
+						 go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+						 if (go->Attribute->GetCurrentHP() <= 0)
+						 {
+							 AI->Monster->Monster_List.erase(it2);
+							 break;
+						 }
+
+					}
+				}
+				default:
+					break;
+				}
+				break;
             }
             int m = 0;
             for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
@@ -672,16 +680,37 @@ void SP3::ProjectileCollision(double dt)
                     m = tileOffset_x + k;
                     if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                         break;
-                    if (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 11 && m_cMap->theScreenMap[i][m] != 10)
+                    if (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 9 && m_cMap->theScreenMap[i][m] != 11 && m_cMap->theScreenMap[i][m] != 10)
                     {
-                        int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                        Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                        Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
-                        if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
-                        {
-                            projectile->active = false;
-                            continue;
-                        }
+						switch (projectile->type)
+						{
+						case Projectile::Bullet:
+						{
+							int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+							Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+							Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
+							if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+							{
+							   projectile->active = false;
+							}
+						}
+							break;
+						case Projectile::ChargeBullet:
+						{
+							/*int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+							Vector3 pos1(projectile->pos.x + tsize, (projectile->pos.y + (tsize)), 0);
+							Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
+							if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+							{
+								projectile->active = false;
+							}*/
+						}
+							break;
+
+						default:
+							break;
+						}
+                        
                     }
                     
                 }
@@ -693,20 +722,9 @@ void SP3::ProjectileCollision(double dt)
 
 void SP3::MonsterUpdate(double dt)
 {
-    for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
+    for (std::vector<Monster*>::iterator it = AI->Monster->Monster_List.begin(); it != AI->Monster->Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
         go->update(dt);
-        Vector3 dist(go->Movement->GetPos() - Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
-        if ((dist.LengthSquared() / m_cMap->GetTileSize()) < (m_cMap->GetTileSize() * 2) )
-        {
-            int tsize = ((m_cMap->GetTileSize() * 1 /*character scale*/) - (6 * 1 /*character scale*/)) * 0.5;
-            Vector3 pos1(Character->Movement->GetPos_x() + tsize, Character->Movement->GetPos_y() + tsize, 0);
-            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
-            {
-                Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
-            }
-        }
     }
 }
