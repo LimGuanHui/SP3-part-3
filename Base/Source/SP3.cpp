@@ -513,7 +513,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - theHero->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize());
+                       newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY);
                        newmon->InitAttrib(10, 1);
             }
                 break;
