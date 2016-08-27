@@ -128,7 +128,9 @@ protected:
         GEO_DIRT,
 
         //monster
-        GEO_GASTLY,
+        GEO_GASTLY,//11
+        GEO_MONSTER2,//12
+        GEO_MONSTER3,//13
 
         NUM_GEOMETRY,
     };

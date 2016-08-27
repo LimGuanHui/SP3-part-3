@@ -15,6 +15,8 @@ namespace MONSTER
         enum MON_TYPE
         {
             GASTLY,
+            MONSTER2,
+            MONSTER3,
         };
 		Monster();
 		~Monster();

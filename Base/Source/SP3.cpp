@@ -514,6 +514,29 @@ void SP3::SpawnObjects()
                        newmon->InitAttrib(10, 1);
             }
                 break;
+            
+            case 12:
+            {
+                       Monster* newmon = N_Monster();
+                       Monster_List.push_back(newmon);
+                       float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
+                       float y = 575 - i*m_cMap->GetTileSize();
+                       Vector3 temp = Vector3(x, y, 0);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap);
+                       newmon->InitAttrib(10, 1);
+            }
+                break;
+            case 13:
+            {
+                       Monster* newmon = N_Monster();
+                       Monster_List.push_back(newmon);
+                       float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
+                       float y = 575 - i*m_cMap->GetTileSize();
+                       Vector3 temp = Vector3(x, y, 0);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap);
+                       newmon->InitAttrib(10, 1);
+            }
+                break;
             default:
                 break;
             }
@@ -607,7 +630,20 @@ void SP3::RenderList()
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
-        Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+        switch (go->type)
+        {
+        case Monster::GASTLY:
+            Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            break;
+        case Monster::MONSTER2:
+            Render2DMesh(meshList[GEO_MONSTER2], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            break;
+        case Monster::MONSTER3:
+            Render2DMesh(meshList[GEO_MONSTER3], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            break;
+        default:
+            break;
+        }
     }
 
     for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
@@ -660,7 +696,11 @@ void SP3::ProjectileCollision(double dt)
                     m = tileOffset_x + k;
                     if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                         break;
-                    if (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 11 && m_cMap->theScreenMap[i][m] != 10)
+                    if (m_cMap->theScreenMap[i][m] != 0 && 
+                        m_cMap->theScreenMap[i][m] != 11 && 
+                        m_cMap->theScreenMap[i][m] != 10 && 
+                        m_cMap->theScreenMap[i][m] != 12 && 
+                        m_cMap->theScreenMap[i][m] != 13 )
                     {
                         int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
                         Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);

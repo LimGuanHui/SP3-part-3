@@ -234,6 +234,8 @@ void SceneBase::Init()
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
 
     meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_MONSTER2] = MeshBuilder::Generate2DMesh("monster2", Color(1.000f, 0.843f, 0.000f), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_MONSTER3] = MeshBuilder::Generate2DMesh("monster3", Color(0.580f, 0.000f, 0.827f), 0.0f, 0.0f, 25.0f, 25.0f);
 
 
 	m_cMap = LoadMap();
