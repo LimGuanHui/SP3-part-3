@@ -19,6 +19,7 @@ double Application::mouse_last_x = 0.0, Application::mouse_last_y = 0.0,
 	   Application::mouse_current_x = 0.0, Application::mouse_current_y = 0.0,
 	   Application::mouse_diff_x = 0.0, Application::mouse_diff_y = 0.0;
 double Application::camera_yaw = 0.0, Application::camera_pitch = 0.0;
+int m_width, m_height;
 
 //Define an error callback
 static void error_callback(int error, const char* description)
@@ -42,6 +43,16 @@ void resize_callback(GLFWwindow* window, int w, int h)
 bool Application::IsKeyPressed(unsigned short key)
 {
     return ((GetAsyncKeyState(key) & 0x8001) != 0);
+}
+
+int Application::GetWindowWidth()
+{
+	return m_width;
+}
+
+int Application::GetWindowHeight()
+{
+	return m_height;
 }
 
 bool Application::GetMouseUpdate()
@@ -109,8 +120,8 @@ void Application::Init()
 
     const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    m_window_width = mode->width;
-    m_window_height = mode->height;
+	m_width = mode->width;
+	m_height = mode->height;
 
 
 	//Create a window and create its OpenGL context

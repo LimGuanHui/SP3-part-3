@@ -24,7 +24,9 @@ using namespace MONSTER;
 #include "AI.h"
 using namespace AI;
 //#include "Panel.h"
-
+#include "MainMenu.h"
+#include "Buttons.h"
+#include "GameObject.h"
 
 class SP3 : public SceneBase
 {
@@ -78,8 +80,17 @@ public:
 
 	MapLoad* LoadFile;
     
+	GameObject* FetchGO();
+	void RenderGO(GameObject *go);
+	Vector3 Checkmousepos();
+
+	Buttons Play;
+	MainMenu Main;
+	int m_objectCount = 0;
 private:
     float rotateAngle;   
+
+	std::vector<GameObject *> m_goList;
 
     // Handle to the minimap
     CMinimap* m_cMinimap;
