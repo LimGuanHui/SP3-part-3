@@ -12,14 +12,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Buttons.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Camera2.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Collision.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\MainMenu.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Minimap.cpp" />
@@ -36,15 +39,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Buttons.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Camera2.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Geometry.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
+    <ClInclude Include="Source\MainMenu.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\MeshBuilder.h" />

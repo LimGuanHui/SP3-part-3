@@ -378,6 +378,7 @@ void SP3::Render()
 		// Render the tile map
 		RenderTileMap();
 		RenderCharacter();
+		RenderList();
 		break;
 
 	case End:
