@@ -62,7 +62,7 @@ public:
 	void RenderCharacter();
     void RenderList();
 
-    void ProjectileCollision(double dt);
+	void ProjectileCollision(double dt, PROJECTILE::Projectile *projectile);
     void MonsterUpdate(double dt);
 
     enum Level
@@ -101,7 +101,7 @@ private:
     int rearWallFineOffset_x, rearWallFineOffset_y;
 
     // Enemies
-    std::vector<Monster*> Monster_List;
+    
 
     std::vector<Missile*> MissileList;
     float missileTriggerTimer;

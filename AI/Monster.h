@@ -3,6 +3,7 @@
 #include "MonsterExports.h"
 #include "MonsterMovement.h"
 #include "MonsterAttribute.h"
+#include <vector>
 
 namespace MONSTER
 {
@@ -25,6 +26,8 @@ namespace MONSTER
         MON_TYPE type;
         MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
         MONSTER_MOVEMENT::MMovement* Movement;        
+
+		std::vector<Monster*> Monster_List;
     private:        
         float detectionradius;        
 	};
