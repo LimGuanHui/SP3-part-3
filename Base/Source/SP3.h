@@ -21,6 +21,8 @@ using namespace CHARACTER;
 using namespace MONSTER;
 #include "Projectile.h"
 #include "Collision.h"
+#include "AI.h"
+using namespace AI;
 //#include "Panel.h"
 
 
@@ -60,7 +62,7 @@ public:
 	void RenderCharacter();
     void RenderList();
 
-    void ProjectileCollision(double dt);
+	void ProjectileCollision(double dt);
     void MonsterUpdate(double dt);
 
     enum Level
@@ -72,9 +74,10 @@ public:
     };
 
 	CCharacter* Character;
+	ArtInt* AI;
 
 	MapLoad* LoadFile;
-
+    
 private:
     float rotateAngle;   
 

@@ -3,6 +3,7 @@
 #include "MonsterExports.h"
 #include "MonsterMovement.h"
 #include "MonsterAttribute.h"
+#include <vector>
 
 namespace MONSTER
 {
@@ -12,7 +13,6 @@ namespace MONSTER
         enum MON_TYPE
         {
             GASTLY,
-
         };
 		Monster();
 		~Monster();
@@ -26,9 +26,12 @@ namespace MONSTER
         
         MON_TYPE type;
         MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
-        MONSTER_MOVEMENT::MMovement* Movement;
+        MONSTER_MOVEMENT::MMovement* Movement;        
+
+		
     private:        
         float detectionradius;        
 	};
 	MONSTER_API Monster* N_Monster();
+
 }
