@@ -31,19 +31,21 @@ namespace MONSTER_MOVEMENT
 
         void update(double dt);
 
-		int GetPos_X();
-		int GetPos_Y();
-		int GetScale_Y();
-		int GetScale_X();
-		int GetVel_X();
-		int GetVel_Y();
+		float GetPos_X();
+        float GetPos_Y();
+        Vector3 GetPos();
+        float GetScale_Y();
+        float GetScale_X();
+        float GetVel_X();
+        float GetVel_Y();
 
-		void SetPos_X(int pos_X);
-		void SetPos_Y(int pos_Y);
-		void SetScale_X(int scale_X);
-		void SetScale_Y(int scale_Y);
-		void SetVel_X(int vel_X);
-		void SetVel_Y(int vel_Y);
+		void SetPos_X(float pos_X);
+        void SetPos_Y(float pos_Y);
+        void SetPos(Vector3 pos);
+        void SetScale_X(float scale_X);
+        void SetScale_Y(float scale_Y);
+        void SetVel_X(float vel_X);
+        void SetVel_Y(float vel_Y);
 
         State Monstate;
 	private:

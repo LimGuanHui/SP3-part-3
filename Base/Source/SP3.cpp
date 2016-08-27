@@ -222,6 +222,13 @@ void SP3::Render()
     RenderList();
 
     GameStateRenderText();
+    std::ostringstream ss;
+    ss.str(string());
+    ss.precision(5);
+    ss << "fps" << fps;
+    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 550);
+
+
 }
 
 void SP3::Exit()
@@ -476,6 +483,7 @@ void SP3::Scenetransition()
 
 void SP3::SpawnObjects()
 {
+    Monster_List.clear();
     int m = 0;
     for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
     {
@@ -632,6 +640,10 @@ void SP3::ProjectileCollision(double dt)
         PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
         if (projectile->active)
         {
+            /*if (projectile->GetPos())
+            {
+
+            }*/
             for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
             {
 				Monster* go = (Monster*)*it2;
@@ -647,7 +659,6 @@ void SP3::ProjectileCollision(double dt)
                         Monster_List.erase(it2);
                         break;
                     }
-                    
                 }
             }
             int m = 0;
@@ -682,6 +693,16 @@ void SP3::MonsterUpdate(double dt)
     {
         Monster* go = (Monster*)*it;
         go->update(dt);
+        Vector3 dist(go->Movement->GetPos() - Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
+        if ((dist.LengthSquared() / m_cMap->GetTileSize()) < (m_cMap->GetTileSize() * 2) )
+        {
+            int tsize = ((m_cMap->GetTileSize() * 1 /*character scale*/) - (6 * 1 /*character scale*/)) * 0.5;
+            Vector3 pos1(Character->Movement->GetPos_x() + tsize, Character->Movement->GetPos_y() + tsize, 0);
+            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
+            {
+                Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
+            }
+        }
     }
 }
-
