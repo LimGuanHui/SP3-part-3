@@ -21,6 +21,7 @@ using namespace CHARACTER;
 using namespace MONSTER;
 #include "Projectile.h"
 #include "Collision.h"
+//#include "Panel.h"
 
 
 class SP3 : public SceneBase
@@ -61,7 +62,6 @@ public:
 
     void ProjectileCollision(double dt);
     void MonsterUpdate(double dt);
-
 
     enum Level
     {

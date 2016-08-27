@@ -266,7 +266,8 @@ namespace MOVEMENT
 	{// Update Hero's info
 		int checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
 		int checkPosition_Y = m_cMap->GetNumOfTiles_Height() - (int)((mapOffset_y + theHeroPosition.y) / m_cMap->GetTileSize()) - 1;
-		int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
+        
+        int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
 
 		checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
 		checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
@@ -413,8 +414,6 @@ namespace MOVEMENT
 		{
 			TransitLevel = true;
 		}
-
-
 		ConstrainHero(25, 750, 25, 600, 1.0f);
 		// Calculate the fine offset
 		mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();

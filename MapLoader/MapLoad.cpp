@@ -61,6 +61,7 @@ namespace MAPLOADER
 
 		theScreenMap.clear();
 
+
 		theScreenMap.resize(theNumOfTiles_MapHeight);
 		for (int i = 0; i < theNumOfTiles_MapHeight; ++i)
 			theScreenMap[i].resize(theNumOfTiles_MapWidth);
