@@ -21,6 +21,7 @@ using namespace CHARACTER;
 using namespace MONSTER;
 #include "Projectile.h"
 #include "Collision.h"
+//#include "Panel.h"
 
 
 class SP3 : public SceneBase

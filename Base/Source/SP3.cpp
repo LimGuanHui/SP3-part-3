@@ -640,10 +640,12 @@ void SP3::ProjectileCollision(double dt)
         PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
         if (projectile->active)
         {
-            /*if (projectile->GetPos())
+            if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
+                projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
             {
-
-            }*/
+                projectile->active = false;
+                continue;
+            }
             for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
             {
 				Monster* go = (Monster*)*it2;
@@ -659,6 +661,7 @@ void SP3::ProjectileCollision(double dt)
                         Monster_List.erase(it2);
                         break;
                     }
+                    
                 }
             }
             int m = 0;
@@ -677,6 +680,7 @@ void SP3::ProjectileCollision(double dt)
                         if (Collision::SphericalCollision(pos1, tsize, pos2, tsize, dt))
                         {
                             projectile->active = false;
+                            continue;
                         }
                     }
                     
