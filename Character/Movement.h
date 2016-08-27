@@ -12,8 +12,6 @@ using namespace PROJECTILE;
 #include "Vector3.h"
 #include "Vector2.h"
 #include <vector>
-#include "MapLoad.h"
-using namespace MAPLOADER;
 
 namespace MOVEMENT
 {

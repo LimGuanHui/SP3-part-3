@@ -7,6 +7,8 @@
 #endif
 
 #include "Vector3.h"
+#include "MapLoad.h"
+using namespace MAPLOADER;
 
 namespace MONSTER_MOVEMENT
 {
@@ -25,11 +27,12 @@ namespace MONSTER_MOVEMENT
 		~MMovement();
 
         void Init(Vector3 startpos,
-            Vector3 theMonsterScale,float patrol, float movespeed);
+            Vector3 theMonsterScale, float patrol, float movespeed, MapLoad* map);
         void Init(Vector3 startpos,
-            Vector3 theMonsterScale, float patrol_left,float patrol_right, float movespeed);
+            Vector3 theMonsterScale, float patrol_left,float patrol_right, 
+            float movespeed, MapLoad* map);
 
-        void update(double dt);
+        void update(double dt, Vector3 characterpos);
 
 		float GetPos_X();
         float GetPos_Y();
@@ -57,6 +60,8 @@ namespace MONSTER_MOVEMENT
         float patrol_left, patrol_right;
         float movespeed;
         bool facingleft;
+
+        MapLoad* map;
 	};
 
 	MONSTER_MOVEMENT_API MMovement* N_Monster();

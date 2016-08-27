@@ -510,7 +510,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),3 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY);
+                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
                        newmon->InitAttrib(10, 1);
             }
                 break;
@@ -684,7 +684,7 @@ void SP3::MonsterUpdate(double dt)
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
-        go->update(dt);
+        go->update(dt, Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
         Vector3 dist(go->Movement->GetPos() - Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
         if ((dist.LengthSquared() / m_cMap->GetTileSize()) < (m_cMap->GetTileSize() * 2))
         {

@@ -1,5 +1,4 @@
 #include "MonsterMovement.h"
-
 namespace MONSTER_MOVEMENT
 {
 	MMovement::MMovement()
@@ -14,7 +13,7 @@ namespace MONSTER_MOVEMENT
 	}
 
     void MMovement::Init(Vector3 startpos,
-        Vector3 theMonsterScale, float patrol, float movespeed)
+        Vector3 theMonsterScale, float patrol, float movespeed, MapLoad* map)
     {
         theMonsterPosition = this->startpos = startpos;
         this->theMonsterScale = theMonsterScale;
@@ -24,9 +23,10 @@ namespace MONSTER_MOVEMENT
         theMonsterVel = Vector3(-movespeed, 0, 0);
         Monstate = IDLE;
         facingleft = true;
+        this->map = map;
     }
     void MMovement::Init(Vector3 startpos,
-        Vector3 theMonsterScale, float patrol_left, float patrol_right, float movespeed)
+        Vector3 theMonsterScale, float patrol_left, float patrol_right, float movespeed, MapLoad* map)
     {
         this->startpos = startpos;
         this->theMonsterScale = theMonsterScale;
@@ -35,6 +35,7 @@ namespace MONSTER_MOVEMENT
         this->movespeed = movespeed;
         Monstate = IDLE;
         facingleft = true;
+        this->map = map;
     }
 
 
@@ -108,23 +109,69 @@ namespace MONSTER_MOVEMENT
 		this->theMonsterVel.y = vel_Y;
 	}
 
-    void MMovement::update(double dt)
+    void MMovement::update(double dt, Vector3 characterpos)
     {
         theMonsterPosition += theMonsterVel * dt;
         switch (Monstate)
         {
         case MONSTER_MOVEMENT::MMovement::IDLE:
         {
+            int checkPosition_X = (int)((theMonsterPosition.x + 0.5f) / map->GetTileSize());
+            int checkPosition_Y = map->GetNumOfTiles_Height() - (int)((theMonsterPosition.y) / map->GetTileSize()) - 1;
+
+            //int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
+
+            checkPosition_X = Math::Clamp(checkPosition_X, 0, map->getNumOfTiles_MapWidth());
+            checkPosition_Y = Math::Clamp(checkPosition_Y, 0, map->GetNumOfTiles_Height());
+            /*if (map->theScreenMap[checkPosition_Y - 1][checkPosition_X + 1] == 0)
+            {
+
+            }*/
+            //right
             float test = (theMonsterPosition.x - startpos.x) * (theMonsterPosition.x - startpos.x);
-            if (theMonsterPosition.x <  (startpos.x - patrol_left) && facingleft)//left to right
+
+            if (!facingleft)
             {
-                theMonsterVel.x = -theMonsterVel.x;
-                facingleft = false;
-            }
-            else if (theMonsterPosition.x > (startpos.x + patrol_right) && !facingleft)//right to left
+                if (map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 0 &&
+                    map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 11)
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = true;
+                }
+
+                else if (map->theScreenMap[checkPosition_Y+1][checkPosition_X ] == 0)
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = true;
+                }
+
+                else if (theMonsterPosition.x > (startpos.x + patrol_right))//right to left
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = true;
+                }
+
+            }            
+            //left
+            if (facingleft)
             {
-                theMonsterVel.x = -theMonsterVel.x;
-                facingleft = true;
+                if (map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 0 &&
+                    map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 11)
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = false;
+                }
+                else if (map->theScreenMap[checkPosition_Y + 1][checkPosition_X ] == 0)
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = false;
+                }
+
+                else if (theMonsterPosition.x <  (startpos.x - patrol_left))//left to right
+                {
+                    theMonsterVel.x = -theMonsterVel.x;
+                    facingleft = false;
+                }
             }
         }
             break;
