@@ -863,16 +863,16 @@ void SP3::RenderList()
         switch (go->type)
         {
         case Monster::GASTLY:
-            Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y());
             break;
         case Monster::MONSTER2:
-            Render2DMesh(meshList[GEO_MONSTER2], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_MONSTER2], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y());
             break;
         case Monster::MONSTER3:
-            Render2DMesh(meshList[GEO_MONSTER3], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_MONSTER3], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y());
             break;
 		case Monster::MINIBOSS:
-			Render2DMesh(meshList[GEO_MINIBOSS], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+			Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y());
         default:
             break;
         }
@@ -923,8 +923,9 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             Monster* go = (Monster*)*it2;
             int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
             Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+            int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
+            Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
+            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
             {
                 ProjectileCollisionResponse(projectile, it2);
                 break;
