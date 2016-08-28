@@ -316,6 +316,11 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
+    meshList[GEO_NET] = MeshBuilder::GenerateQuad("Net Projectile", Color(1, 1, 1), 1.f);
+    //meshList[GEO_NET]->textureID = LoadTGA("Image//selectarrow.tga");
+
+
+
     /************************************************************************************************************************
     //Sprite Animation
     *************************************************************************************************************************/
@@ -561,16 +566,14 @@ void SceneBase::SpriteAnimationUpdate()
 
 void SceneBase::RenderParticles(ParticleObject* particles)
 {
-    glUniform1f(m_parameters[U_FOG_ENABLE], 0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     modelStack.PushMatrix();
     modelStack.Translate(particles->pos.x, particles->pos.y, particles->pos.z);
     modelStack.Rotate(particles->rotation, 0, 1, 0);
     modelStack.Scale(particles->scale.x, particles->scale.y, particles->scale.z);
-    RenderMesh(meshList[GEO_PARTICLE_WATER], false);
+    RenderMesh(meshList[GEO_QUAD], false);
     modelStack.PopMatrix();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glUniform1f(m_parameters[U_FOG_ENABLE], 1);
 }
 
 void SceneBase::UpdateParticles(double dt)
@@ -602,15 +605,12 @@ void SceneBase::UpdateParticles(double dt)
                 particle->pos += particle->vel * (float)dt * 10.0f;
                 //particle->rotation += 
             }
-            if (particle->pos.y <
-                (ReadHeightMap(m_heightMap,
-                particle->pos.x / TERRAIN_SCALE.x,
-                particle->pos.z / TERRAIN_SCALE.z) * TERRAIN_SCALE.y))
+            if (particle->pos.y < 0)
             {
                 particle->active = false;
                 m_particleCount--;
             }
-            particle->rotation = Billboard(camera.position, particle->pos) - 180.f;
+            //particle->rotation = Billboard(camera.position, particle->pos) - 180.f;
 
         }
     }

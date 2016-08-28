@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "MapLoad.h"
+#include "Particle.h"
 using namespace MAPLOADER;
 
 
@@ -166,8 +167,10 @@ protected:
 		GEO_RESUMEHOVER,
 		GEO_OKAY,
 		GEO_OKAYHOVER,
-
 		GEO_STARTARROW,
+
+        //plaeyr projectiles
+        GEO_NET,
 
         NUM_GEOMETRY,
     };
@@ -191,6 +194,12 @@ protected:
 	float fps;
 
     MapLoad* m_cMap;
+
+    //particles
+    std::vector<ParticleObject*> particleList;//Used to store particles
+    Vector3 m_gravity;//gravity affecting the particles
+    int m_particleCount;// Count for particles
+    unsigned MAX_PARTICLE; // Max no of particles
 
 
 };

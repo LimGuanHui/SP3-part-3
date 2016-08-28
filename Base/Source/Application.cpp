@@ -162,7 +162,7 @@ void Application::Init()
 	m_dAccumulatedTime_ThreadTwo = 0.0;
 
     theSoundEngine = createIrrKlangDevice();
-    BGM = theSoundEngine->addSoundSourceFromFile("music//bgm.ogg");
+    BGM = theSoundEngine->addSoundSourceFromFile("music//bestsong.ogg");
     BGM->setDefaultVolume(0.1f);
 }
 
