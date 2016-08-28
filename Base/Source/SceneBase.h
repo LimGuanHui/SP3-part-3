@@ -84,7 +84,7 @@ protected:
         GEO_SPHERE,
 
         GEO_QUAD,
-        GEO_CUBE,
+        //GEO_CUBE,
         GEO_RING,
         GEO_CONE,
 
@@ -101,8 +101,8 @@ protected:
         GEO_TILE_KILLZONE,
         GEO_TILE_SAFEZONE,
         GEO_TILEENEMY_FRAME0,
-        GEO_TILE_TREASURECHEST,
-        GEO_OBJECT,
+        //GEO_TILE_TREASURECHEST,
+		//GEO_OBJECT,
         GEO_TEXT,
 
         GEO_STANDING,
@@ -132,6 +132,7 @@ protected:
         GEO_GASTLY,//11
         GEO_MONSTER2,//12
         GEO_MONSTER3,//13
+		GEO_MINIBOSS,
 
 		// UI Stuffs
 		GEO_UI,
