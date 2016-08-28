@@ -225,7 +225,7 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 		
-		std::cout << Character->Attribute->GetActionBar() << endl;
+		//std::cout << Character->Attribute->GetActionBar() << endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
