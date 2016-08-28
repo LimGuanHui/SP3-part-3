@@ -194,8 +194,15 @@ namespace MONSTER_MOVEMENT
         }
     }
 
+    bool MMovement::faceleft()
+    {
+        return facingleft;
+    }
+
 	MMovement* N_Monster()
 	{
 		return new MMovement();
 	}
+
+    
 }
