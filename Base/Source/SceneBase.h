@@ -32,7 +32,7 @@ public:
 	void RenderGO(GameObject *go);
 	void RenderModelOnScreen(Mesh *mesh, bool enableLight, Vector3 size, float x, float y, float z, Vector3 rotation);
     void RenderMeshIn2D(Mesh *mesh, const bool enableLight, const float size, const float x, const float y, const bool rotate);
-
+    void SpriteAnimationUpdate();
 	
     
 	//GameObject* FetchGO();

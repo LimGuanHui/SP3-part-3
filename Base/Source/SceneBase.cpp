@@ -316,6 +316,18 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
+    /************************************************************************************************************************
+    //Sprite Animation
+    *************************************************************************************************************************/
+    //meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("sprite flame", 1, 6);
+    //meshList[GEO_SPRITE_ANIMATION]->textureArray[0] = LoadTGA("Image//flame_sprite.tga");
+    //SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    //if (sa)
+    //{
+    //    sa->m_anim = new Animation();
+    //    sa->m_anim->Set(0, 5, 0, 1.f, true); // startFrame, endFrame, repeat, Time, Enable
+    //}
+
 	m_cMap = LoadMap();
 
 }
@@ -333,6 +345,8 @@ void SceneBase::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('8'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    SpriteAnimationUpdate();
 	
 	fps = (float)(1.f / dt);
 }
@@ -532,6 +546,17 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 void SceneBase::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+}
+
+void SceneBase::SpriteAnimationUpdate()
+{
+    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    if (sa)
+    {
+        sa->Update(dt);
+        sa->m_anim->animActive = true;
+    }*/
+
 }
 
 void SceneBase::Exit()
