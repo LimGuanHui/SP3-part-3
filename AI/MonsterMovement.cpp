@@ -133,13 +133,15 @@ namespace MONSTER_MOVEMENT
             if (!facingleft)
             {
                 if (map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 0 &&
-                    map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 11)
+                    map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 11 &&
+					map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 12 &&
+					map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 13)
                 {
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
                 }
 
-                else if (map->theScreenMap[checkPosition_Y+1][checkPosition_X ] == 0)
+                else if (map->theScreenMap[checkPosition_Y+1][checkPosition_X + 1] == 0)
                 {
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
@@ -156,12 +158,14 @@ namespace MONSTER_MOVEMENT
             if (facingleft)
             {
                 if (map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 0 &&
-                    map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 11)
+                    map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 11 &&
+					map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 12 &&
+					map->theScreenMap[checkPosition_Y][checkPosition_X - 1] != 13)
                 {
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = false;
                 }
-                else if (map->theScreenMap[checkPosition_Y + 1][checkPosition_X ] == 0)
+                else if (map->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 0)
                 {
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = false;
