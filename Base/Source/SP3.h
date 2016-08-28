@@ -98,6 +98,7 @@ public:
 	Buttons Play;
 	MainMenu Main;
 	int m_objectCount = 0;
+
 private:
     float rotateAngle;   
 

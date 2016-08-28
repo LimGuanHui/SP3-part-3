@@ -28,16 +28,16 @@ namespace ATTRIBUTE
 		int GetMaxHP();
 		int GetCurrentHP();
 		int GetDmg();
-        bool getisDead();
-        void setisDead(bool dead);
 
+		void ActionBar(float value);
+		float GetActionBar();
 		//Boss* N_Boss;
 
 	private:
 		int Damage;
 		int MaxHealthPoint;
 		int CurrentHealthPoint;
-        bool isDead;
+		float ActionMeter;
 	};
 }
 
