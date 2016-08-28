@@ -227,7 +227,7 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 		
-		std::cout << Character->Attribute->GetActionBar() << endl;
+		//std::cout << Character->Attribute->GetActionBar() << endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -263,7 +263,6 @@ void SP3::Update(double dt)
 
 void SP3::RenderGO(GameObject *go)
 {
-
 	//rotate code
 	modelStack.Rotate(Math::RadianToDegree(atan2(-go->vel.x, go->vel.y)), 0, 0, 1);
 
@@ -363,7 +362,7 @@ void SP3::RenderGO(GameObject *go)
 
 void SP3::RenderBackground()
 {
-    Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f);
+    Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f,0.f,false,false);
 }
 
 void SP3::Render()
@@ -450,35 +449,35 @@ void SP3::RenderTileMap()
 
 			if (m_cMap->theScreenMap[i][m] == 1)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 			}
 			else if (m_cMap->theScreenMap[i][m] == 2)
 			{
-				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 			}
 
 			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
-				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 			}
 			else if (m_cMap->theScreenMap[i][m] == 11)
 			{
-				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 			}
 
 			if (Level::LEVEL2)
 			{
 				if (m_cMap->theScreenMap[i][m] == 3)
 				{
-					Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 				else if (m_cMap->theScreenMap[i][m] == 4)
 				{
-					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 				else if (m_cMap->theScreenMap[i][m] == 44)
 				{
-					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 			}
 			
@@ -486,11 +485,11 @@ void SP3::RenderTileMap()
 			{
 				if (m_cMap->theScreenMap[i][m] == 5)
 				{
-					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 				else if (m_cMap->theScreenMap[i][m] == 55)
 				{
-					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 			}
 			
@@ -498,16 +497,13 @@ void SP3::RenderTileMap()
 			{
 				if (m_cMap->theScreenMap[i][m] == 6)
 				{
-					Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 				else if (m_cMap->theScreenMap[i][m] == 7)
 				{
-					Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+					Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 			}
-			
-			
-
         }
     }
 }
@@ -536,7 +532,7 @@ void SP3::RenderRearTileMap()
                 break;
             if (m_cRearMap->theScreenMap[i][m] == 3)
             {
-                Render2DMesh(meshList[GEO_TILESTRUCTURE], false, 1.0f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize());
+                Render2DMesh(meshList[GEO_TILESTRUCTURE], false, 1.0f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize(), false);
             }
         }
     }
@@ -668,7 +664,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map3.csv");
+            m_cMap->LoadMap("Map\\Map2.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -692,7 +688,7 @@ void SP3::Scenetransition()
 		switch (CurrLevel)
 		{
 		case SP3::LEVEL2:
-			m_cMap->LoadMap("Map\\Map3B.csv");
+			m_cMap->LoadMap("Map\\Map2B.csv");
 			break;
 		case SP3::LEVEL3:
 			m_cMap->LoadMap("Map\\Map3B.csv");
@@ -808,29 +804,29 @@ void SP3::RenderCharacter()
 	if (Character->Movement->GetAnimationInvert() == false && Moving == true)
 	{
 		if (Character->Movement->GetAnimationCounter() == 1)
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(),Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 2)
-			Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 3)
-			Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 4)
-			Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 5)
-			Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 6)
-			Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 7)
-			Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 8)
-			Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 9)
-			Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 10)
-			Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else if (Character->Movement->GetAnimationCounter() == 11)
-			Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 		else
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y());
+            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
 	}
 	else if (Character->Movement->GetAnimationInvert() == true && Moving == true)
 	{
@@ -874,7 +870,9 @@ void SP3::RenderList()
         switch (go->type)
         {
         case Monster::GASTLY:
-            Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(),!go->Movement->faceleft());
+            Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft(),false);
+            Render2DMesh(meshList[GEO_MON_HP_BAR], false, go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(),-1),0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize()),false,false);
+
             break;
         case Monster::MONSTER2:
             Render2DMesh(meshList[GEO_MONSTER2], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
@@ -910,7 +908,7 @@ void SP3::RenderList()
             modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
             modelStack.Rotate(particle->rotation, 0, 1, 0);
             modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);*/
-            Render2DMesh(meshList[GEO_QUAD], false, particle->scale.x, particle->pos.x, particle->pos.y);
+            Render2DMesh(meshList[GEO_QUAD], false, particle->scale.x, particle->pos.x, particle->pos.y,false,false);
             //modelStack.PopMatrix();
             //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }

@@ -29,8 +29,9 @@ public:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderMesh(Mesh *mesh, bool enableLight);
-	void Render2DMesh(Mesh *mesh, const bool enableLight, const float size = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
-	void RenderGO(GameObject *go);
+    void Render2DMesh(Mesh *mesh, const bool enableLight, const float size = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
+    void Render2DMesh(Mesh *mesh, const bool enableLight, const float sizex = 1.0f, const float sizey = 1.0f, const float x = 0.0f, const float y = 0.0f, const bool rotate = false, const bool flip = false);
+    void RenderGO(GameObject *go);
 	void RenderModelOnScreen(Mesh *mesh, bool enableLight, Vector3 size, float x, float y, float z, Vector3 rotation);
     void RenderMeshIn2D(Mesh *mesh, const bool enableLight, const float size, const float x, const float y, const bool rotate);
 
@@ -169,6 +170,8 @@ protected:
 
         //player projectiles
         //GEO_NET,
+        //Monster Hp bar
+        GEO_MON_HP_BAR,
 
         NUM_GEOMETRY,
     };

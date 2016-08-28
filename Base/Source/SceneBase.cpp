@@ -322,6 +322,10 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
+    meshList[GEO_MON_HP_BAR] = MeshBuilder::Generate2DMesh("GEO_MON_HP_BAR", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 10.0f);
+    //meshList[GEO_MON_HP_BAR]->textureID = LoadTGA("Image//tiles//grass.tga");
+
+
     //meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
     //meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
 
@@ -345,6 +349,8 @@ void SceneBase::Init()
     //}
 
     //Define for particle use................>_<
+
+
 
 	m_cMap = LoadMap();
 
@@ -512,7 +518,7 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Scale(size, size, size);
+	modelStack.Scale(size, size, 1);
 
 	if (rotate)
 	{
@@ -552,6 +558,59 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 	viewStack.PopMatrix();
 	projectionStack.PopMatrix();
 }
+
+void SceneBase::Render2DMesh(Mesh *mesh, const bool enableLight, const float sizex , const float sizey , const float x , const float y , const bool rotate, const bool flip)
+{
+    Mtx44 ortho;
+    ortho.SetToOrtho(0, 800, 0, 600, -10, 10);
+    projectionStack.PushMatrix();
+    projectionStack.LoadMatrix(ortho);
+    viewStack.PushMatrix();
+    viewStack.LoadIdentity();
+    modelStack.PushMatrix();
+    modelStack.LoadIdentity();
+    modelStack.Translate(x, y, 0);
+    modelStack.Scale(sizex, sizey, 1);
+
+    if (rotate)
+    {
+        glFrontFace(GL_CW);
+        modelStack.Translate(m_cMap->GetTileSize(), 0, 0);
+        modelStack.Rotate(180, 0, 1, 0);
+    }
+
+
+    Mtx44 MVP, modelView, modelView_inverse_transpose;
+
+    MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+    glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+    if (mesh->textureID > 0)
+    {
+        glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+        glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+    }
+    else
+    {
+        glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+    }
+    mesh->Render();
+    if (mesh->textureID > 0)
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    if (rotate)
+    {
+        glFrontFace(GL_CCW);
+    }
+    /* if (flip)
+    glEnable(GL_CULL_FACE);*/
+    modelStack.PopMatrix();
+    viewStack.PopMatrix();
+    projectionStack.PopMatrix();
+}
+
 
 void SceneBase::Render()
 {
