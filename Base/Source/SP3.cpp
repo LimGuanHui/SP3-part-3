@@ -163,7 +163,7 @@ void SP3::Update(double dt)
         }
 
 		float ActionIncrease = 0;
-		ActionIncrease += 5 * dt;
+		ActionIncrease += dt;
 
         Character->Movement->HeroUpdate(m_cMap);
 		Character->Attribute->ActionBar(ActionIncrease);
@@ -941,7 +941,8 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
                     m_cMap->theScreenMap[i][m] != 11 &&
                     m_cMap->theScreenMap[i][m] != 10 &&
                     m_cMap->theScreenMap[i][m] != 12 &&
-                    m_cMap->theScreenMap[i][m] != 13)
+                    m_cMap->theScreenMap[i][m] != 13 && 
+					m_cMap->theScreenMap[i][m] != 14)
                 {
                     int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
                     Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
@@ -969,6 +970,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     {
     case Projectile::Bullet:
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+		Character->Attribute->ActionBar(5);
         break;
     case Projectile::ChargeBullet:
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
@@ -981,6 +983,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
 
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
+			Character->Attribute->ActionBar(10);
             return;
         }
         //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
