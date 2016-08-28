@@ -162,8 +162,11 @@ void SP3::Update(double dt)
 
         }
 
+		float ActionIncrease = 0;
+		ActionIncrease += 5 * dt;
+
         Character->Movement->HeroUpdate(m_cMap);
-        
+		Character->Attribute->ActionBar(ActionIncrease);
 
 		firingDebounce += (float)dt;
 		bool KeyUp = true;
@@ -185,8 +188,9 @@ void SP3::Update(double dt)
 
 
 		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp)
+		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
 		{
+			Character->Attribute->ActionBar(-100);
 			chargeTime += 2 * dt;
 			chargeDmg = chargeTime;
 			if (chargeDmg > 2)
@@ -221,7 +225,7 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 		
-		std::cout << Character->Attribute->GetCurrentHP() << endl;
+		std::cout << Character->Attribute->GetActionBar() << endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -647,7 +651,7 @@ void SP3::Scenetransition()
 		case SP3::LEVEL1:
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            m_cMap->LoadMap("Map\\Map4B.csv");
             break;
         case SP3::LEVEL3:
             m_cMap->LoadMap("Map\\Map3.csv");

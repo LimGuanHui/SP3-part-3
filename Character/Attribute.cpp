@@ -6,6 +6,7 @@ namespace ATTRIBUTE
 		: Damage(5)
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
+		, ActionMeter(0)
 	{
 		//N_Boss = new BOSS::Boss();
 	}
@@ -50,6 +51,20 @@ namespace ATTRIBUTE
 	int CAttribute::GetDmg()
 	{
 		return Damage;
+	}
+
+	void CAttribute::ActionBar(float Value)
+	{
+		this->ActionMeter += Value;
+		if (ActionMeter > 100)
+		{
+			ActionMeter = 100;
+		}
+	}
+
+	float CAttribute::GetActionBar()
+	{
+		return ActionMeter;
 	}
 }
 

@@ -29,12 +29,15 @@ namespace ATTRIBUTE
 		int GetCurrentHP();
 		int GetDmg();
 
+		void ActionBar(float value);
+		float GetActionBar();
 		//Boss* N_Boss;
 
 	private:
 		int Damage;
 		int MaxHealthPoint;
 		int CurrentHealthPoint;
+		float ActionMeter;
 	};
 }
 
