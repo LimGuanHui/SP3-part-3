@@ -559,6 +559,89 @@ void SceneBase::SpriteAnimationUpdate()
 
 }
 
+void SceneBase::RenderParticles(ParticleObject* particles)
+{
+    glUniform1f(m_parameters[U_FOG_ENABLE], 0);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    modelStack.PushMatrix();
+    modelStack.Translate(particles->pos.x, particles->pos.y, particles->pos.z);
+    modelStack.Rotate(particles->rotation, 0, 1, 0);
+    modelStack.Scale(particles->scale.x, particles->scale.y, particles->scale.z);
+    RenderMesh(meshList[GEO_PARTICLE_WATER], false);
+    modelStack.PopMatrix();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUniform1f(m_parameters[U_FOG_ENABLE], 1);
+}
+
+void SceneBase::UpdateParticles(double dt)
+{
+    if (m_particleCount < MAX_PARTICLE)
+    {
+        int num_Particles = 1;
+        for (int i = 0; i < num_Particles; i++)
+        {
+            ParticleObject* particle = GetParticle();
+            particle->type = ParticleObject_TYPE::P_WATER;
+            particle->scale.Set(1.5f, 1.5f, 1.5f);
+            particle->vel.Set(Math::RandFloatMinMax(-5, 5), 0, Math::RandFloatMinMax(-5, 5));
+            //particle->rotationSpeed = Math::RandFloatMinMax(20.0f, 40.0f);
+            particle->pos.Set(Math::RandFloatMinMax(camera.position.x + 1200.0f, camera.position.x - 1200.0f), Math::RandFloatMinMax(camera.position.y + 500.0f, camera.position.y + 150.f),
+                Math::RandFloatMinMax(camera.position.z + 1200.0f, camera.position.z - 1200.0f));
+        }
+
+    }
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (particle->active)
+        {
+            if (particle->type == ParticleObject_TYPE::P_WATER)
+            {
+                particle->vel += m_gravity * (float)dt * 0.05f;
+                particle->pos += particle->vel * (float)dt * 10.0f;
+                //particle->rotation += 
+            }
+            if (particle->pos.y <
+                (ReadHeightMap(m_heightMap,
+                particle->pos.x / TERRAIN_SCALE.x,
+                particle->pos.z / TERRAIN_SCALE.z) * TERRAIN_SCALE.y))
+            {
+                particle->active = false;
+                m_particleCount--;
+            }
+            particle->rotation = Billboard(camera.position, particle->pos) - 180.f;
+
+        }
+    }
+}
+ParticleObject* SceneBase::GetParticle(void)
+{
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (!particle->active)
+        {
+            particle->active = true;
+            m_particleCount++;
+            return particle;
+        }
+    }
+
+    for (unsigned i = 0; i <= 10; ++i)
+    {
+        ParticleObject *particle =
+            new ParticleObject(ParticleObject_TYPE::P_WATER);
+        particleList.push_back(particle);
+    }
+    ParticleObject *particle = particleList.back();
+    particle->active = true;
+    m_particleCount++;
+
+    return particle;
+}
+
 void SceneBase::Exit()
 {
 	// Cleanup VBO
