@@ -64,8 +64,14 @@ public:
 	void RenderCharacter();
     void RenderList();
 
-	void ProjectileCollision(double dt);
+	void ProjectileCollision(double dt, Projectile* projectile);
     void MonsterUpdate(double dt);
+
+    void RenderParticles(ParticleObject* particles);
+    void UpdateParticles(double dt);
+    ParticleObject* GetParticle(void);
+    void SpriteAnimationUpdate(double dt);
+
 
     enum Level
     {
@@ -138,6 +144,14 @@ private:
 
     //level transition
     Level CurrLevel;
+
+    //particles
+    std::vector<ParticleObject*> particleList;//Used to store particles
+    Vector3 m_gravity;//gravity affecting the particles
+    int m_particleCount;// Count for particles
+    unsigned MAX_PARTICLE; // Max no of particles
+
+
 };
 
 #endif

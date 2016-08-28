@@ -90,6 +90,18 @@ void SP3::Init()
 
 	Main.Init(&Play, &quitGame);
 
+    m_particleCount = 0;
+    MAX_PARTICLE = 420;
+    m_gravity.Set(0, -9.8f, 0);
+
+    for (unsigned i = 0; i <= 400; ++i)
+    {
+        ParticleObject *particle = new ParticleObject(ParticleObject_TYPE::P_WATER);
+        particleList.push_back(particle);
+    }
+
+
+
 }
 
 void SP3::Update(double dt)
@@ -190,7 +202,7 @@ void SP3::Update(double dt)
 			{
 				//projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
 				projectile->Update(dt);
-				
+                ProjectileCollision(dt,projectile);
 			}
 		}
 		
@@ -203,7 +215,7 @@ void SP3::Update(double dt)
       
     }
     MonsterUpdate(dt);
-    ProjectileCollision(dt);
+    SpriteAnimationUpdate(dt);
 	//std::cout << fps << std::endl;
 }
 
@@ -392,6 +404,7 @@ void SP3::Render()
 void SP3::Exit()
 {
     SceneBase::Exit();
+    particleList.clear();
 	/*while (Character->Movement->m_projectileList.size() > 0)
 	{
 		Projectile *go = Character->Movement->m_projectileList.back();
@@ -824,66 +837,63 @@ void SP3::RenderList()
     }
 }
 
-void SP3::ProjectileCollision(double dt)
-{
-    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+void SP3::ProjectileCollision(double dt, Projectile* projectile)
+{    
+    if (projectile->active)
     {
-        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-        if (projectile->active)
+        if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
+            projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
         {
-            if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
-                projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
+            projectile->active = false;
+            return;
+        }
+        for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+        {
+            Monster* go = (Monster*)*it2;
+            int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+            Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
                 projectile->active = false;
-                continue;
-            }
-            for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
-            {
-                Monster* go = (Monster*)*it2;
-                int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-                if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+                go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+                if (go->Attribute->GetCurrentHP() <= 0)
                 {
-                    projectile->active = false;
-                    go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
-                    if (go->Attribute->GetCurrentHP() <= 0)
-                    {
-                        Monster_List.erase(it2);
-                        break;
-                    }
-
+                    Monster_List.erase(it2);
+                    break;
                 }
-            }
-            int m = 0;
-            for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
-            {
-                for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
-                {
-                    m = tileOffset_x + k;
-                    if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
-                        break;
-                    if (m_cMap->theScreenMap[i][m] != 0 && 
-                        m_cMap->theScreenMap[i][m] != 11 && 
-                        m_cMap->theScreenMap[i][m] != 10 && 
-                        m_cMap->theScreenMap[i][m] != 12 && 
-                        m_cMap->theScreenMap[i][m] != 13 )
-                    {
-                        int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                        Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                        Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
-                        if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
-                        {
-                            projectile->active = false;
-                            continue;
-                        }
-                    }
 
-                }
             }
-
         }
+        int m = 0;
+        for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+        {
+            for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+            {
+                m = tileOffset_x + k;
+                if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                    break;
+                if (m_cMap->theScreenMap[i][m] != 0 &&
+                    m_cMap->theScreenMap[i][m] != 11 &&
+                    m_cMap->theScreenMap[i][m] != 10 &&
+                    m_cMap->theScreenMap[i][m] != 12 &&
+                    m_cMap->theScreenMap[i][m] != 13)
+                {
+                    int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+                    Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                    Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
+                    if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+                    {
+                        projectile->active = false;
+                        return;
+                    }
+                }
+
+            }
+        }
+
     }
+    
 }
 
 void SP3::MonsterUpdate(double dt)
@@ -904,4 +914,93 @@ void SP3::MonsterUpdate(double dt)
             }
         }
     }
+}
+
+void SP3::SpriteAnimationUpdate(double dt)
+{
+    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    if (sa)
+    {
+    sa->Update(dt);
+    sa->m_anim->animActive = true;
+    }*/
+
+}
+
+void SP3::RenderParticles(ParticleObject* particles)
+{
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    modelStack.PushMatrix();
+    modelStack.Translate(particles->pos.x, particles->pos.y, particles->pos.z);
+    modelStack.Rotate(particles->rotation, 0, 1, 0);
+    modelStack.Scale(particles->scale.x, particles->scale.y, particles->scale.z);
+    RenderMesh(meshList[GEO_QUAD], false);
+    modelStack.PopMatrix();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void SP3::UpdateParticles(double dt)
+{
+    if (m_particleCount < MAX_PARTICLE)
+    {
+        int num_Particles = 1;
+        for (int i = 0; i < num_Particles; i++)
+        {
+            ParticleObject* particle = GetParticle();
+            particle->type = ParticleObject_TYPE::P_WATER;
+            particle->scale.Set(1.5f, 1.5f, 1.5f);
+            particle->vel.Set(Math::RandFloatMinMax(-5, 5), 0, Math::RandFloatMinMax(-5, 5));
+            //particle->rotationSpeed = Math::RandFloatMinMax(20.0f, 40.0f);
+            particle->pos.Set(Math::RandFloatMinMax(camera.position.x + 1200.0f, camera.position.x - 1200.0f), Math::RandFloatMinMax(camera.position.y + 500.0f, camera.position.y + 150.f),
+                Math::RandFloatMinMax(camera.position.z + 1200.0f, camera.position.z - 1200.0f));
+        }
+
+    }
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (particle->active)
+        {
+            if (particle->type == ParticleObject_TYPE::P_WATER)
+            {
+                particle->vel += m_gravity * (float)dt * 0.05f;
+                particle->pos += particle->vel * (float)dt * 10.0f;
+                //particle->rotation += 
+            }
+            if (particle->pos.y < 0)
+            {
+                particle->active = false;
+                m_particleCount--;
+            }
+            //particle->rotation = Billboard(camera.position, particle->pos) - 180.f;
+
+        }
+    }
+}
+ParticleObject* SP3::GetParticle(void)
+{
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (!particle->active)
+        {
+            particle->active = true;
+            m_particleCount++;
+            return particle;
+        }
+    }
+
+    for (unsigned i = 0; i <= 10; ++i)
+    {
+        ParticleObject *particle =
+            new ParticleObject(ParticleObject_TYPE::P_WATER);
+        particleList.push_back(particle);
+    }
+    ParticleObject *particle = particleList.back();
+    particle->active = true;
+    m_particleCount++;
+
+    return particle;
 }

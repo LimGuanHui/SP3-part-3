@@ -33,10 +33,6 @@ public:
 	void RenderGO(GameObject *go);
 	void RenderModelOnScreen(Mesh *mesh, bool enableLight, Vector3 size, float x, float y, float z, Vector3 rotation);
     void RenderMeshIn2D(Mesh *mesh, const bool enableLight, const float size, const float x, const float y, const bool rotate);
-    void SpriteAnimationUpdate();
-    void RenderParticles(ParticleObject* particles);
-    void UpdateParticles(double dt);
-    ParticleObject* GetParticle(void);
 
     
 	//GameObject* FetchGO();
@@ -194,12 +190,6 @@ protected:
 	float fps;
 
     MapLoad* m_cMap;
-
-    //particles
-    std::vector<ParticleObject*> particleList;//Used to store particles
-    Vector3 m_gravity;//gravity affecting the particles
-    int m_particleCount;// Count for particles
-    unsigned MAX_PARTICLE; // Max no of particles
 
 
 };
