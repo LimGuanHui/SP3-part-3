@@ -126,6 +126,7 @@ protected:
         // lvl 2 tile 
         GEO_GRASS,
         GEO_DIRT,
+		GEO_CAVE,
 
         //monster
         GEO_GASTLY,//11

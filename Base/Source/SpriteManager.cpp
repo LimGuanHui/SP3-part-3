@@ -54,6 +54,7 @@ SpriteAnimation* SpriteManager::NewSpriteAnimation(Mesh *mesh, Vector3 pos, int 
     go->m_anim = new Animation();
     go->m_anim->Set(start, end, no_of_repeat, speed, false);
     SpriteAnimation_List.push_back(go);
+    return go;
 }
 
 void SpriteManager::PlaySprite(SpriteAnimation* SpriteAnimation)

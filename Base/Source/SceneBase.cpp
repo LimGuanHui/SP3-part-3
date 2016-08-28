@@ -142,8 +142,6 @@ void SceneBase::Init()
     meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
     meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-    meshList[GEO_OBJECT] = MeshBuilder::GenerateOBJ("OBJ1", "OBJ//chair.obj");//MeshBuilder::GenerateCube("cube", 1);
-    // meshList[GEO_OBJECT]->textureID = LoadTGA("Image//chair.tga");
     meshList[GEO_RING] = MeshBuilder::GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
     meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", Color(1, 0, 0), 18, 36, 1.f);
     meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 10.f);
@@ -224,16 +222,23 @@ void SceneBase::Init()
     meshList[GEO_STILE2] = MeshBuilder::Generate2DMesh("GEO_STILE1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_STILE2]->textureID = LoadTGA("Image//tiles//tile2.tga");
 
+	// Tiles
     meshList[GEO_GRASS] = MeshBuilder::Generate2DMesh("GEO_GRASS", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_GRASS]->textureID = LoadTGA("Image//tiles//grass.tga");
 
     meshList[GEO_DIRT] = MeshBuilder::Generate2DMesh("GEO_DIRT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
 
+	meshList[GEO_CAVE] = MeshBuilder::Generate2DMesh("GEO_CAVE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_CAVE]->textureID = LoadTGA("Image//tiles//CaveTile.tga");
+
+	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
 
-    meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	//Monster
+	meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GASTLY]->textureID = LoadTGA("Image//enemy//gastly.tga");
     meshList[GEO_MONSTER2] = MeshBuilder::Generate2DMesh("monster2", Color(1.000f, 0.843f, 0.000f), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MONSTER3] = MeshBuilder::Generate2DMesh("monster3", Color(0.580f, 0.000f, 0.827f), 0.0f, 0.0f, 25.0f, 25.0f);
 
@@ -507,14 +512,6 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
-
-
-	/* if (flip)
-	{
-	glDisable(GL_CULL_FACE);
-	modelStack.Translate(32, 0, 0);
-	modelStack.Rotate(180, 0, 1, 0);
-	}*/
 
 	if (rotate)
 	{

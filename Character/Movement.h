@@ -69,13 +69,12 @@ namespace MOVEMENT
 		int GetAnimationCounter(void);
 
 		void ConstrainHero(const int leftBorder, const int rightBorder,
-			const int topBorder, const int bottomBorder,
-			float timeDiff);
+			const int topBorder, const int bottomBorder);
 
-		bool walking;
 		bool facingRight;
 
 		bool TransitLevel;
+		bool TransitLevel2;
 
 	private:
 		Vector2 theHeroPosition;
