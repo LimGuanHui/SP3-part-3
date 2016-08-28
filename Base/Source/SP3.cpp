@@ -248,6 +248,10 @@ void SP3::Update(double dt)
         SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
 
+        if (Character->Attribute->GetCurrentHP() <= 0)
+            State = End;
+            //Character->Attribute->setisDead(true);
+
     }
 
     
@@ -415,7 +419,9 @@ void SP3::Render()
 
 void SP3::Exit()
 {
+    
     SceneBase::Exit();
+
     particleList.clear();
 	/*while (Character->Movement->m_projectileList.size() > 0)
 	{
@@ -861,16 +867,16 @@ void SP3::RenderList()
         switch (go->type)
         {
         case Monster::GASTLY:
-            Render2DMesh(meshList[GEO_GASTLY], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(),!go->Movement->faceleft());
             break;
         case Monster::MONSTER2:
-            Render2DMesh(meshList[GEO_MONSTER2], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_MONSTER2], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
             break;
         case Monster::MONSTER3:
-            Render2DMesh(meshList[GEO_MONSTER3], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_MONSTER3], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
             break;
 		case Monster::MINIBOSS:
-			Render2DMesh(meshList[GEO_MINIBOSS], false, 1.0f, go->Movement->GetPos_X(), go->Movement->GetPos_Y());
+            Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
         default:
             break;
         }
@@ -921,8 +927,9 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             Monster* go = (Monster*)*it2;
             int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
             Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+            int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
+            Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
+            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
             {
                 ProjectileCollisionResponse(projectile, it2);
                 break;
@@ -981,6 +988,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         {
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
 
+            CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
@@ -1097,7 +1105,7 @@ void SP3::CreateParticles(int number, Vector3 position, float lifetime, float ve
         particle->lifetime = lifetime;
         particle->type = type;
         particle->vel = Vector3(Math::RandFloatMinMax(-vel, vel), Math::RandFloatMinMax(-vel, vel), 0);
-        particle->scale = Vector3(10, 10, 10);
+        particle->scale = Vector3(0.1, 0.1, 1);
         particleList.push_back(particle);
     }
 }
