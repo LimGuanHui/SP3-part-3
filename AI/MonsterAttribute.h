@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MONSTERATTRIBUTE_H
+#define MONSTERATTRIBUTE_H
 
 #ifndef MONSTER_ATTRIBUTE_EXPORTS
 #define MONSTER_ATTRIBUTE_API __declspec(dllexport)
@@ -40,3 +41,5 @@ namespace MONSTER_ATTRIBUTE
 	};
 
 }
+
+#endif

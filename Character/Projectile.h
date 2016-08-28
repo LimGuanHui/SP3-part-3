@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROJECTILE_H
+#define PROJECTILE_H
 
 #ifndef RPOJECTILE_EXPORTS
 #define PROJECTILE_API __declspec(dllexport) 
@@ -56,4 +57,4 @@ namespace PROJECTILE
 
 }
 
-
+#endif

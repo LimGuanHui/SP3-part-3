@@ -35,6 +35,7 @@
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\SP3.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
+    <ClCompile Include="Source\SpriteManager.cpp" />
     <ClCompile Include="Source\Strategy.cpp" />
     <ClCompile Include="Source\Strategy_Kill.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SP3.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
+    <ClInclude Include="Source\SpriteManager.h" />
     <ClInclude Include="Source\Strategy.h" />
     <ClInclude Include="Source\Strategy_Kill.h" />
     <ClInclude Include="Source\Utility.h" />

@@ -100,7 +100,7 @@ void SP3::Init()
         particleList.push_back(particle);
     }
 
-
+    
 
 }
 
@@ -222,6 +222,7 @@ void SP3::Update(double dt)
     }
     MonsterUpdate(dt);
     SpriteAnimationUpdate(dt);
+    UpdateParticles(dt);
 	//std::cout << fps << std::endl;
 }
 
@@ -848,14 +849,14 @@ void SP3::RenderList()
         ParticleObject *particle = (ParticleObject *)*it;
         if (particle->active)
         {
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-            modelStack.PushMatrix();
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            /*modelStack.PushMatrix();
             modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
             modelStack.Rotate(particle->rotation, 0, 1, 0);
-            modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
-            RenderMesh(meshList[GEO_QUAD], false);
-            modelStack.PopMatrix();
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);*/
+            Render2DMesh(meshList[GEO_QUAD], false, particle->scale.x, particle->pos.x, particle->pos.y);
+            //modelStack.PopMatrix();
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 }
@@ -932,7 +933,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     case Projectile::Net:
         if (go->Attribute->Capture())
         {
-            CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
+            //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
+
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
             return;
@@ -978,7 +980,6 @@ void SP3::SpriteAnimationUpdate(double dt)
     sa->Update(dt);
     sa->m_anim->animActive = true;
     }*/
-
 }
 
 void SP3::RenderParticles()
@@ -1049,6 +1050,7 @@ void SP3::CreateParticles(int number, Vector3 position, float lifetime, float ve
         particle->lifetime = lifetime;
         particle->type = type;
         particle->vel = Vector3(Math::RandFloatMinMax(-vel, vel), Math::RandFloatMinMax(-vel, vel), 0);
+        particle->scale = Vector3(10, 10, 10);
         particleList.push_back(particle);
     }
 }
