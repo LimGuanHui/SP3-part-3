@@ -76,6 +76,7 @@ void SP3::Init()
 	Fire = false;
 	chargeTime = 0;
 	chargeFire = false;
+	chargeDmg = 0;
 
 	for (int i = 0; i < 1; ++i)
 	{
@@ -165,41 +166,65 @@ void SP3::Update(double dt)
         
 
 		firingDebounce += (float)dt;
-		bool KeyDown = false;
+		bool KeyUp = true;
+
+		//Normal Projectile
 		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
-			KeyDown = false;
 			firingDebounce = 0;
 			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
             
 		}
-		if (Application::IsKeyPressed('K') && !KeyDown)
+
+		//Net
+		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
+		{
+			firingDebounce = 0;
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+		}
+
+
+		//Charge Projectile
+		if (Application::IsKeyPressed('K') && KeyUp)
 		{
 			chargeTime += 2 * dt;
-			if (chargeTime > 1)
+			chargeDmg = chargeTime;
+			if (chargeDmg > 2)
+			{
+				chargeDmg = 2;
+			}
+			if (chargeTime > 2)
+			{
+				chargeTime = 2;
+				chargeFire = true;
+			}
+			KeyUp = false;
+		}
+		if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
+		{
+			if (chargeTime > 0)
 			{
 				chargeFire = true;
-				KeyDown = true;
+				chargeTime = 0;
 			}
 		}
-		if (!Application::IsKeyPressed('K'))
+		if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
 		{
 			chargeTime = 0;
 		}
-		if (KeyDown && chargeFire)
+		if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
 		{
 			chargeFire = false;
-			KeyDown = false;
+			KeyUp = false;
 			chargeTime = 0;
             Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
+		
 
-        if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
-        {
-            firingDebounce = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
-        }
+       
+
+		std::cout << Character->Attribute->GetCurrentHP() << endl;
 
 		//std::cout << check1 << " " << check2 << " " << firingDebounce << std::endl;
 
@@ -698,7 +723,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
-                       newmon->InitAttrib(50, 1,50,1);
+                       newmon->InitAttrib(10, 1,50,1);
             }
                 break;
             
@@ -927,7 +952,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
+		chargeDmg = 0;
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -949,7 +975,6 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         Monster_List.erase(monsterlist_iterator);        
     }
 }
-
 
 void SP3::MonsterUpdate(double dt)
 {
@@ -1013,6 +1038,7 @@ void SP3::UpdateParticles(double dt)
         }
     }
 }
+
 ParticleObject* SP3::GetParticle(void)
 {
     for (std::vector<ParticleObject*>::iterator it = particleList.begin();
