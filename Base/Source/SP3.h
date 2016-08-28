@@ -65,6 +65,8 @@ public:
     void RenderList();
 
 	void ProjectileCollision(double dt, Projectile* projectile);
+    void ProjectileCollisionResponse(Projectile* projectile,
+        std::vector<Monster*>::iterator monsterlist_iterator);
     void MonsterUpdate(double dt);
 
     void RenderParticles(ParticleObject* particles);

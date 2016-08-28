@@ -39,8 +39,8 @@ namespace PROJECTILE
 		void SetPos(Vector3 pos);
 		void SetScale(Vector3 scale);
 		void SetVel(Vector3 vel);
-	
-		bool active;
+
+        bool active;
 		bool Left;
 
 		void Init();

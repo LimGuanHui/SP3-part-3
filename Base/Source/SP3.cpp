@@ -841,12 +841,14 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 {    
     if (projectile->active)
     {
+        //out of map
         if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
             projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
         {
             projectile->active = false;
             return;
         }
+        //collide with monster
         for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
         {
             Monster* go = (Monster*)*it2;
@@ -855,16 +857,11 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
-                projectile->active = false;
-                go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
-                if (go->Attribute->GetCurrentHP() <= 0)
-                {
-                    Monster_List.erase(it2);
-                    break;
-                }
-
+                ProjectileCollisionResponse(projectile, it2);
+                break;
             }
         }
+        //collide with tile
         int m = 0;
         for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
         {
@@ -895,6 +892,33 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
     }
     
 }
+
+void SP3::ProjectileCollisionResponse(Projectile* projectile,
+    std::vector<Monster*>::iterator monsterlist_iterator)
+{
+    projectile->active = false;
+    Monster* go = (Monster*)*monsterlist_iterator;
+    switch (projectile->type)
+    {
+    case Projectile::Bullet:
+        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        break;
+    case Projectile::ChargeBullet:
+        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        break;
+    case Projectile::Net:
+        break;
+    default:
+        break;
+    }
+    
+    
+    if (go->Attribute->GetCurrentHP() <= 0)
+    {
+        Monster_List.erase(monsterlist_iterator);        
+    }
+}
+
 
 void SP3::MonsterUpdate(double dt)
 {
