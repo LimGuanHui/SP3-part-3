@@ -237,22 +237,16 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_MENU], false);
 		break;
 
-	case(GameObject::GO_MENUHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MENUHOVER], false);
-		break;
+	//case(GameObject::GO_MENUHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_MENUHOVER], false);
+	//	break;
 
 	case(GameObject::GO_EDIT) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_EDIT], false);
-		break;
-
-	case(GameObject::GO_EDITHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EDITHOVER], false);
 		break;
 
 	case(GameObject::GO_LOAD) :
@@ -261,22 +255,10 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_LOAD], false);
 		break;
 
-	case(GameObject::GO_LOADHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_LOADHOVER], false);
-		break;
-
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HIGHSCORE], false);
-		break;
-
-	case(GameObject::GO_HIGHSCOREHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HIGHSCOREHOVER], false);
 		break;
 
 	case(GameObject::GO_SAVE) :
@@ -285,11 +267,11 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_SAVE], false);
 		break;
 
-	case(GameObject::GO_SAVEHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SAVEHOVER], false);
-		break;
+	//case(GameObject::GO_SAVEHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_SAVEHOVER], false);
+	//	break;
 
 	case(GameObject::GO_EXIT) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -309,24 +291,17 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_RESTART], false);
 		break;
 
-	case(GameObject::GO_RESTARTHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_RESTARTHOVER], false);
-		break;
+	//case(GameObject::GO_RESTARTHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_RESTARTHOVER], false);
+	//	break;
 
 	case(GameObject::GO_OKAY) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_OKAY], false);
 		break;
-
-	case(GameObject::GO_OKAYHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_OKAYHOVER], false);
-		break;
-
 
 	default:
 		break;
@@ -432,9 +407,17 @@ void SP3::RenderTileMap()
 			{
 				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
+			else if (m_cMap->theScreenMap[i][m] == 44)
+			{
+				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
 			else if (m_cMap->theScreenMap[i][m] == 5)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 55)
+			{
+				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 6)
 			{
@@ -647,10 +630,10 @@ void SP3::Scenetransition()
 		case SP3::LEVEL1:
 			break;
 		case SP3::LEVEL2:
-			m_cMap->LoadMap("Map\\Map3B.csv");
+			m_cMap->LoadMap("Map\\Map2B.csv");
 			break;
 		case SP3::LEVEL3:
-			m_cMap->LoadMap("Map\\Map2B.csv");
+			m_cMap->LoadMap("Map\\Map3B.csv");
 			break;
 		case SP3::LEVEL4:
 			m_cMap->LoadMap("Map\\Map4B.csv");
@@ -918,10 +901,7 @@ void SP3::MonsterUpdate(double dt)
             Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
-               Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
-			   Character->Movement->SetPos_x(Character->Movement->GetPos_x() - 10);
-			   Character->Movement->SetPos_y(Character->Movement->GetPos_y() + 10);
-			   //Character->Movement->isFreeFall() = true;
+				Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
             } 
         }
     }
