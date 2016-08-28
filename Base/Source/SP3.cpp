@@ -42,10 +42,12 @@ void SP3::Init()
     SceneBase::Init();
 
 	lives = 3;
+	CurrLevel = LEVEL1;
     // Initialise and load the tile map
 	m_cMap = LoadMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800, 25);
-    m_cMap->LoadMap("Map\\Map1.csv");
+	m_cMap->LoadMap("Map\\Map1.csv");
+    
 
     // Initialise and load the REAR tile map
     m_cRearMap = LoadMap();
@@ -83,7 +85,7 @@ void SP3::Init()
 		Character->Movement->m_projectileList.push_back(new Projectile(m_cMap));
 	}
 
-    CurrLevel = LEVEL1;
+    
 
 
 	m_objectCount = 0;
@@ -445,58 +447,66 @@ void SP3::RenderTileMap()
             // If we have reached the right side of the Map, then do not display the extra column of tiles.
             if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                 break;
-            if (m_cMap->theScreenMap[i][m] == 1)
-            {
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-            }
-            else if (m_cMap->theScreenMap[i][m] == 2)
-            {
-				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			} 
-			else if (m_cMap->theScreenMap[i][m] == 3)
-			{
-				Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			}
-			else if (m_cMap->theScreenMap[i][m] == 4)
-			{
-				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			}
-			else if (m_cMap->theScreenMap[i][m] == 44)
-			{
-				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			}
-			else if (m_cMap->theScreenMap[i][m] == 5)
-			{
-				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			}
-			else if (m_cMap->theScreenMap[i][m] == 55)
-			{
-				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-			}
-			else if (m_cMap->theScreenMap[i][m] == 6)
+
+			if (m_cMap->theScreenMap[i][m] == 1)
 			{
 				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
-			else if (m_cMap->theScreenMap[i][m] == 7)
+			else if (m_cMap->theScreenMap[i][m] == 2)
 			{
 				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
-            else if (m_cMap->theScreenMap[i][m] == 10)
-            {
-				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-            }
-            else if (m_cMap->theScreenMap[i][m] == 11)
-            {
-				Render2DMesh(meshList[GEO_TILE_SAFEZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
-            }
-			else if (m_cMap->theScreenMap[i][m] == 21)
+
+			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
 				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
-			else if (m_cMap->theScreenMap[i][m] == 22)
+			else if (m_cMap->theScreenMap[i][m] == 11)
 			{
 				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
+
+			if (Level::LEVEL2)
+			{
+				if (m_cMap->theScreenMap[i][m] == 3)
+				{
+					Render2DMesh(meshList[GEO_GRASS], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+				else if (m_cMap->theScreenMap[i][m] == 4)
+				{
+					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+				else if (m_cMap->theScreenMap[i][m] == 44)
+				{
+					Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+			}
+			
+			if (Level::LEVEL3)
+			{
+				if (m_cMap->theScreenMap[i][m] == 5)
+				{
+					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+				else if (m_cMap->theScreenMap[i][m] == 55)
+				{
+					Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+			}
+			
+			if (Level::LEVEL4)
+			{
+				if (m_cMap->theScreenMap[i][m] == 6)
+				{
+					Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+				else if (m_cMap->theScreenMap[i][m] == 7)
+				{
+					Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				}
+			}
+			
+			
 
         }
     }
@@ -655,11 +665,12 @@ void SP3::Scenetransition()
         switch (CurrLevel)
         {
 		case SP3::LEVEL1:
+			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map4B.csv");
+            m_cMap->LoadMap("Map\\Map3.csv");
             break;
-        case SP3::LEVEL3:
+        case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
             break;
         case SP3::LEVEL4:
@@ -680,10 +691,8 @@ void SP3::Scenetransition()
 		CurrLevel = static_cast<Level>(CurrLevel + 1);
 		switch (CurrLevel)
 		{
-		case SP3::LEVEL1:
-			break;
 		case SP3::LEVEL2:
-			m_cMap->LoadMap("Map\\Map2B.csv");
+			m_cMap->LoadMap("Map\\Map3B.csv");
 			break;
 		case SP3::LEVEL3:
 			m_cMap->LoadMap("Map\\Map3B.csv");
@@ -725,9 +734,7 @@ void SP3::SpawnObjects()
 
             }
                 break;
-            case 10:
-                break;
-            case 11:
+            case 12:
             {
                        Monster* newmon = N_Monster();
                        Monster_List.push_back(newmon);
@@ -739,7 +746,7 @@ void SP3::SpawnObjects()
             }
                 break;
             
-            case 12:
+            case 13:
             {
                        Monster* newmon = N_Monster();
                        Monster_List.push_back(newmon);
@@ -750,7 +757,7 @@ void SP3::SpawnObjects()
                        newmon->InitAttrib(10, 1,50,1);
             }
                 break;
-            case 13:
+            case 14:
             {
                        Monster* newmon = N_Monster();
                        Monster_List.push_back(newmon);
@@ -761,7 +768,7 @@ void SP3::SpawnObjects()
                        newmon->InitAttrib(10, 1,50,1);
             }
 				break;
-			case 14:
+			case 15:
 			{
 					   Monster* newmon = N_Monster();
 					   Monster_List.push_back(newmon);
@@ -949,7 +956,8 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
                     m_cMap->theScreenMap[i][m] != 10 &&
                     m_cMap->theScreenMap[i][m] != 12 &&
                     m_cMap->theScreenMap[i][m] != 13 && 
-					m_cMap->theScreenMap[i][m] != 14)
+					m_cMap->theScreenMap[i][m] != 14 &&
+					m_cMap->theScreenMap[i][m] != 15)
                 {
                     int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
                     Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);

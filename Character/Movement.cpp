@@ -412,7 +412,7 @@ namespace MOVEMENT
 		{
 			TransitLevel = true;
 		}
-		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 21)
+		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 11)
 		{
 			TransitLevel2 = true;
 		}

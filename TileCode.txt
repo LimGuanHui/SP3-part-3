@@ -1,0 +1,14 @@
+Tile Number:
+
+1 & 2 - Guan Hui's Map
+3 - Grass
+4 - Dirt
+5 - Cave
+6 & 7 - Hao Ming's Map
+9 - Character's Spawn Point
+10 - Portal's Spawn Point
+11 - Poratl2's Spawn Point
+12 - Monster 1
+13 - Monster 2
+14 - Monster 3
+15 - Mini Boss
