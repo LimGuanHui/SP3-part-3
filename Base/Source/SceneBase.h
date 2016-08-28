@@ -166,7 +166,7 @@ protected:
 		GEO_OKAYHOVER,
 		GEO_STARTARROW,
 
-        //plaeyr projectiles
+        //player projectiles
         //GEO_NET,
 
         NUM_GEOMETRY,

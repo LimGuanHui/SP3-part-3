@@ -223,6 +223,10 @@ void SP3::Update(double dt)
 		MonsterUpdate(dt);
         SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
+
+        if (Character->Attribute->GetCurrentHP() <= 0)
+            State = End;
+            //Character->Attribute->setisDead(true);
     }
 
     
@@ -934,10 +938,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     case Projectile::Net:
         if (go->Attribute->Capture())
         {
-            //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
-
-            Monster_List.erase(monsterlist_iterator);
-            //particle animation here
+            CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
+            Monster_List.erase(monsterlist_iterator);            
             return;
         }
         //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
@@ -1051,7 +1053,7 @@ void SP3::CreateParticles(int number, Vector3 position, float lifetime, float ve
         particle->lifetime = lifetime;
         particle->type = type;
         particle->vel = Vector3(Math::RandFloatMinMax(-vel, vel), Math::RandFloatMinMax(-vel, vel), 0);
-        particle->scale = Vector3(10, 10, 10);
+        particle->scale = Vector3(0.1, 0.1, 1);
         particleList.push_back(particle);
     }
 }

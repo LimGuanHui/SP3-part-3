@@ -28,6 +28,8 @@ namespace ATTRIBUTE
 		int GetMaxHP();
 		int GetCurrentHP();
 		int GetDmg();
+        bool getisDead();
+        void setisDead(bool dead);
 
 		//Boss* N_Boss;
 
@@ -35,6 +37,7 @@ namespace ATTRIBUTE
 		int Damage;
 		int MaxHealthPoint;
 		int CurrentHealthPoint;
+        bool isDead;
 	};
 }
 

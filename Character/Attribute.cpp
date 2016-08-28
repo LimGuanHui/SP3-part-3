@@ -6,6 +6,7 @@ namespace ATTRIBUTE
 		: Damage(5)
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
+        , isDead(false)
 	{
 		//N_Boss = new BOSS::Boss();
 	}
@@ -51,5 +52,9 @@ namespace ATTRIBUTE
 	{
 		return Damage;
 	}
+    bool CAttribute::getisDead()
+    {
+        return isDead;
+    }
 }
 
