@@ -321,15 +321,15 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
-    meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
-    meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
+    //meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
+    //meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
 
-    SpriteAnimation *sa = static_cast<SpriteAnimation*>(meshList[GEO_NET]);
-    if (sa)
-    {
-        sa->m_anim = new Animation();
-        sa->m_anim->Set(0, 63, 0, 3.f, true); // startFrame, endFrame, repeat, Time, Enable
-    }
+    //SpriteAnimation *sa = static_cast<SpriteAnimation*>(meshList[GEO_NET]);
+    //if (sa)
+    //{
+    //    sa->m_anim = new Animation();
+    //    sa->m_anim->Set(0, 63, 0, 3.f, true); // startFrame, endFrame, repeat, Time, Enable
+    //}
 
     /************************************************************************************************************************
     //Sprite Animation
@@ -565,11 +565,11 @@ void SceneBase::Render()
 void SceneBase::Exit()
 {
 	// Cleanup VBO
-	for(int i = 0; i < NUM_GEOMETRY; ++i)
-	{
-		if(meshList[i])
-			delete meshList[i];
-	}
+    for (int i = 0; i < NUM_GEOMETRY; ++i)
+    {
+        if (meshList[i])
+            delete meshList[i];
+    }
 	glDeleteProgram(m_programID);
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }

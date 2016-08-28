@@ -167,7 +167,7 @@ protected:
 		GEO_STARTARROW,
 
         //plaeyr projectiles
-        GEO_NET,
+        //GEO_NET,
 
         NUM_GEOMETRY,
     };

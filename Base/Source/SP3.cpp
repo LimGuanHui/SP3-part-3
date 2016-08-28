@@ -390,7 +390,9 @@ void SP3::Render()
 
 void SP3::Exit()
 {
+    
     SceneBase::Exit();
+
     particleList.clear();
 	/*while (Character->Movement->m_projectileList.size() > 0)
 	{
