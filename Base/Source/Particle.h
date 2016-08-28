@@ -6,6 +6,7 @@
 enum ParticleObject_TYPE
 {
 	P_WATER,
+    NET,
 	P_TOTAL,
 };
 
@@ -15,6 +16,7 @@ public:
 	ParticleObject(ParticleObject_TYPE = P_WATER);
 	~ParticleObject(void);
 
+    void update(double dt);
 	
 	ParticleObject_TYPE type;//Type of Particle
 	Vector3 pos;//Position of Particle
@@ -22,6 +24,8 @@ public:
 	Vector3 scale;//Scale of Particle
 	float rotation;//Rotation of Particle
 	float rotationSpeed; //Rotational speed of Particle
+    float speed;
+    float lifetime;
 
 	bool active;//Activate Paticle upon use
 

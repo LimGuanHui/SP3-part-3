@@ -32,9 +32,9 @@ namespace MONSTER
         this->map = map;
     }
 
-    void Monster::InitAttrib(int maxhp, int Damage)
+    void Monster::InitAttrib(int maxhp, int Damage, int Catch_PercentHP, int catchrate)
     {
-        Attribute->Init(maxhp, Damage);
+        Attribute->Init(maxhp, Damage, Catch_PercentHP, catchrate);
     }
 
 

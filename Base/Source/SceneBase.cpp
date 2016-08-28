@@ -317,7 +317,7 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
     meshList[GEO_NET] = MeshBuilder::GenerateQuad("Net Projectile", Color(1, 1, 1), 1.f);
-    //meshList[GEO_NET]->textureID = LoadTGA("Image//selectarrow.tga");
+    meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//snowparticle.tga");
 
 
 

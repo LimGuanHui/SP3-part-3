@@ -67,9 +67,12 @@ public:
 	void ProjectileCollision(double dt, Projectile* projectile);
     void ProjectileCollisionResponse(Projectile* projectile,
         std::vector<Monster*>::iterator monsterlist_iterator);
+    void CreateParticles(int number, Vector3 position, float vel,
+        float lifetime, ParticleObject_TYPE type);
+
     void MonsterUpdate(double dt);
 
-    void RenderParticles(ParticleObject* particles);
+    void RenderParticles();
     void UpdateParticles(double dt);
     ParticleObject* GetParticle(void);
     void SpriteAnimationUpdate(double dt);

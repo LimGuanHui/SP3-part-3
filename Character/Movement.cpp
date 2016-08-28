@@ -272,6 +272,9 @@ namespace MOVEMENT
 		checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
 		checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
 
+        if ((checkPosition_X + 1) > m_cMap->theScreenMap[0].size())
+            return;
+
 		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
@@ -414,7 +417,7 @@ namespace MOVEMENT
 		{
 			TransitLevel = true;
 		}
-		ConstrainHero(25, 750, 25, 600, 1.0f);
+		ConstrainHero(25, 775, 25, 600, 1.0f);
 		// Calculate the fine offset
 		mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();
 

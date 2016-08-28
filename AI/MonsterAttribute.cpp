@@ -1,5 +1,5 @@
 #include "MonsterAttribute.h"
-
+#include "MyMath.h"
 namespace MONSTER_ATTRIBUTE
 {
 	MonsterAttribute::MonsterAttribute()
@@ -14,10 +14,14 @@ namespace MONSTER_ATTRIBUTE
 	{
 	}
 
-    void MonsterAttribute::Init(int MaxhealthPoint, int Damage)
+    void MonsterAttribute::Init(int MaxhealthPoint, int Damage, int Catch_PercentHP, int catchrate)
     {
         CurrentHealth = this->MaxhealthPoint = MaxhealthPoint;
         this->Damage = Damage;
+        this->Catch_PercentHP = Catch_PercentHP;
+        capturehp = (Catch_PercentHP / 100) * MaxhealthPoint;
+        this->catchrate = catchrate;
+        
     }
 
 	void MonsterAttribute::SetMonsterMaxHealth(int MaxHealthPoint)
@@ -54,4 +58,14 @@ namespace MONSTER_ATTRIBUTE
 	{
 		return CurrentHealth;
 	}
+
+    bool MonsterAttribute::Capture()
+    {
+        float currhpPC = 0;
+        currhpPC = (float)((CurrentHealth * (pow( MaxhealthPoint,-1))) * 100);
+        int capturechance = Math::RandIntMinMax(0, 100 - currhpPC );
+        if (Math::RandIntMinMax(0, 100) <= 100 - (currhpPC * catchrate))
+            return true;
+        return false;
+    }
 }

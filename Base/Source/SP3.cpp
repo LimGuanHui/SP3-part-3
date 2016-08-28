@@ -193,6 +193,12 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 
+        if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
+        {
+            firingDebounce = 0;
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+        }
+
 		//std::cout << check1 << " " << check2 << " " << firingDebounce << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
@@ -391,12 +397,13 @@ void SP3::Render()
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
+
 		break;
 
 	case End:
 		break;
 	}
-
+    
     GameStateRenderText();
 
 }
@@ -691,7 +698,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(50, 1,50,1);
             }
                 break;
             
@@ -703,7 +710,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(10, 1,50,1);
             }
                 break;
             case 13:
@@ -714,7 +721,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(10, 1,50,1);
             }
                 break;
             default:
@@ -739,8 +746,6 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
 			break;
 	}
-	
-
 }
 
 void SP3::RenderCharacter()
@@ -807,6 +812,7 @@ void SP3::RenderCharacter()
 
 void SP3::RenderList()
 {
+
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
@@ -833,6 +839,23 @@ void SP3::RenderList()
         {
             RenderProjectile(projectile);
             
+        }
+    }
+    //particles
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (particle->active)
+        {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            modelStack.PushMatrix();
+            modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+            modelStack.Rotate(particle->rotation, 0, 1, 0);
+            modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
+            RenderMesh(meshList[GEO_QUAD], false);
+            modelStack.PopMatrix();
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 }
@@ -907,12 +930,19 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
         break;
     case Projectile::Net:
+        if (go->Attribute->Capture())
+        {
+            CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
+            Monster_List.erase(monsterlist_iterator);
+            //particle animation here
+            return;
+        }
+        //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
         break;
     default:
         break;
     }
-    
-    
+        
     if (go->Attribute->GetCurrentHP() <= 0)
     {
         Monster_List.erase(monsterlist_iterator);        
@@ -951,54 +981,35 @@ void SP3::SpriteAnimationUpdate(double dt)
 
 }
 
-void SP3::RenderParticles(ParticleObject* particles)
+void SP3::RenderParticles()
 {
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    modelStack.PushMatrix();
-    modelStack.Translate(particles->pos.x, particles->pos.y, particles->pos.z);
-    modelStack.Rotate(particles->rotation, 0, 1, 0);
-    modelStack.Scale(particles->scale.x, particles->scale.y, particles->scale.z);
-    RenderMesh(meshList[GEO_QUAD], false);
-    modelStack.PopMatrix();
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
 }
 
 void SP3::UpdateParticles(double dt)
 {
-    if (m_particleCount < MAX_PARTICLE)
-    {
-        int num_Particles = 1;
-        for (int i = 0; i < num_Particles; i++)
-        {
-            ParticleObject* particle = GetParticle();
-            particle->type = ParticleObject_TYPE::P_WATER;
-            particle->scale.Set(1.5f, 1.5f, 1.5f);
-            particle->vel.Set(Math::RandFloatMinMax(-5, 5), 0, Math::RandFloatMinMax(-5, 5));
-            //particle->rotationSpeed = Math::RandFloatMinMax(20.0f, 40.0f);
-            particle->pos.Set(Math::RandFloatMinMax(camera.position.x + 1200.0f, camera.position.x - 1200.0f), Math::RandFloatMinMax(camera.position.y + 500.0f, camera.position.y + 150.f),
-                Math::RandFloatMinMax(camera.position.z + 1200.0f, camera.position.z - 1200.0f));
-        }
+    //if (m_particleCount < MAX_PARTICLE)
+    //{
+    //    int num_Particles = 1;
+    //    for (int i = 0; i < num_Particles; i++)
+    //    {
+    //        ParticleObject* particle = GetParticle();
+    //        particle->type = ParticleObject_TYPE::P_WATER;
+    //        particle->scale.Set(1.5f, 1.5f, 1.5f);
+    //        particle->vel.Set(Math::RandFloatMinMax(-5, 5), 0, Math::RandFloatMinMax(-5, 5));
+    //        //particle->rotationSpeed = Math::RandFloatMinMax(20.0f, 40.0f);
+    //        particle->pos.Set(Math::RandFloatMinMax(camera.position.x + 1200.0f, camera.position.x - 1200.0f), Math::RandFloatMinMax(camera.position.y + 500.0f, camera.position.y + 150.f),
+    //            Math::RandFloatMinMax(camera.position.z + 1200.0f, camera.position.z - 1200.0f));
+    //    }
 
-    }
+    //}
     for (std::vector<ParticleObject*>::iterator it = particleList.begin();
         it != particleList.end(); ++it)
     {
         ParticleObject *particle = (ParticleObject *)*it;
         if (particle->active)
         {
-            if (particle->type == ParticleObject_TYPE::P_WATER)
-            {
-                particle->vel += m_gravity * (float)dt * 0.05f;
-                particle->pos += particle->vel * (float)dt * 10.0f;
-                //particle->rotation += 
-            }
-            if (particle->pos.y < 0)
-            {
-                particle->active = false;
-                m_particleCount--;
-            }
-            //particle->rotation = Billboard(camera.position, particle->pos) - 180.f;
-
+            particle->update(dt);
         }
     }
 }
@@ -1027,4 +1038,17 @@ ParticleObject* SP3::GetParticle(void)
     m_particleCount++;
 
     return particle;
+}
+
+void SP3::CreateParticles(int number, Vector3 position, float lifetime, float vel,ParticleObject_TYPE type)
+{
+    for (int i = 0; i < (number - 1); i++)
+    {
+        ParticleObject *particle = GetParticle();
+        particle->pos = position;
+        particle->lifetime = lifetime;
+        particle->type = type;
+        particle->vel = Vector3(Math::RandFloatMinMax(-vel, vel), Math::RandFloatMinMax(-vel, vel), 0);
+        particleList.push_back(particle);
+    }
 }
