@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROJECTILE_H
+#define PROJECTILE_H
 
 #ifndef RPOJECTILE_EXPORTS
 #define PROJECTILE_API __declspec(dllexport) 
@@ -39,8 +40,8 @@ namespace PROJECTILE
 		void SetPos(Vector3 pos);
 		void SetScale(Vector3 scale);
 		void SetVel(Vector3 vel);
-	
-		bool active;
+
+        bool active;
 		bool Left;
 
 		void Init();
@@ -56,4 +57,4 @@ namespace PROJECTILE
 
 }
 
-
+#endif

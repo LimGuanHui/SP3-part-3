@@ -15,9 +15,9 @@ namespace MOVEMENT
 		, mapOffset_y(0)
 		, mapFineOffset_x(0)
 		, mapFineOffset_y(0)
-		, walking(false)
 		, facingRight(true)
 		, TransitLevel(false)
+		, TransitLevel2(false)
 	{
 
 	}
@@ -130,7 +130,6 @@ namespace MOVEMENT
 	{
 		if (mode)//left
 		{
-			walking = true;
 			facingRight = false;
 			theHeroPosition.x = theHeroPosition.x - (int)(5.0f * timeDiff);
 			heroAnimationInvert = true;
@@ -138,9 +137,8 @@ namespace MOVEMENT
 			if (heroAnimationCounter < 1)
 				heroAnimationCounter = 11;
 		}
-		else//right
+		else
 		{
-			walking = true;
 			facingRight = true;
 			theHeroPosition.x = theHeroPosition.x + (int)(5.0f * timeDiff);
 			heroAnimationInvert = false;
@@ -234,22 +232,15 @@ namespace MOVEMENT
 
 	// Constrain the position of the Hero to within the border
 	void CMovement::ConstrainHero(const int leftBorder, const int rightBorder,
-		const int topBorder, const int bottomBorder,
-		float timeDiff)
+		const int topBorder, const int bottomBorder)
 	{
 		if (theHeroPosition.x < leftBorder)
 		{
 			theHeroPosition.x = leftBorder;
-			mapOffset_x = mapOffset_x - (int)(5.0f * timeDiff);
-			if (mapOffset_x < 0)
-				mapOffset_x = 0;
 		}
 		else if (theHeroPosition.x > rightBorder)
 		{
 			theHeroPosition.x = rightBorder;
-			mapOffset_x = mapOffset_x + (int)(5.0f * timeDiff);
-			if (mapOffset_x > 800)	// This must be changed to soft-coded
-				mapOffset_x = 800;
 		}
 
 		if (theHeroPosition.y < topBorder)
@@ -271,6 +262,9 @@ namespace MOVEMENT
 
 		checkPosition_X = Math::Clamp(checkPosition_X, 0, m_cMap->getNumOfTiles_MapWidth());
 		checkPosition_Y = Math::Clamp(checkPosition_Y, 0, m_cMap->GetNumOfTiles_Height());
+
+        if ((checkPosition_X + 1) > m_cMap->theScreenMap[0].size())
+            return;
 
 		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
@@ -301,7 +295,7 @@ namespace MOVEMENT
 		}
 
 		// Update Hero's info
-		if (hero_inMidAir_Up == false && hero_inMidAir_Down == false)
+		if (isOnGround())
 		{
 			int xValue = (int)theHeroPosition.x % 25;
 			if (m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 1 ||
@@ -328,7 +322,7 @@ namespace MOVEMENT
 				hero_inMidAir_Down = true;
 			}
 		}
-		else if (hero_inMidAir_Up == true && hero_inMidAir_Down == false)
+		else if (isJumpUpwards())
 		{
 			// Check if the hero can move up into mid air...
 			checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
@@ -372,7 +366,7 @@ namespace MOVEMENT
 				}
 			}
 		}
-		else if (hero_inMidAir_Up == false && hero_inMidAir_Down == true)
+		else if (isFreeFall())
 		{
 			// Check if the hero is still in mid air...
 			checkPosition_X = (int)((mapOffset_x + theHeroPosition.x) / m_cMap->GetTileSize());
@@ -407,6 +401,10 @@ namespace MOVEMENT
 			{
 				theHeroPosition.y -= jumpspeed;
 				jumpspeed += 1;
+				if (jumpspeed > 15)
+				{
+					jumpspeed = 15;
+				}
 			}
 		}
 
@@ -414,7 +412,13 @@ namespace MOVEMENT
 		{
 			TransitLevel = true;
 		}
-		ConstrainHero(25, 750, 25, 600, 1.0f);
+		if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 21)
+		{
+			TransitLevel2 = true;
+		}
+
+
+		ConstrainHero(10, 765, 25, 600);
 		// Calculate the fine offset
 		mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();
 

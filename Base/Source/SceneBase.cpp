@@ -142,8 +142,6 @@ void SceneBase::Init()
     meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
     meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
-    meshList[GEO_OBJECT] = MeshBuilder::GenerateOBJ("OBJ1", "OBJ//chair.obj");//MeshBuilder::GenerateCube("cube", 1);
-    // meshList[GEO_OBJECT]->textureID = LoadTGA("Image//chair.tga");
     meshList[GEO_RING] = MeshBuilder::GenerateRing("ring", Color(1, 0, 1), 36, 1, 0.5f);
     meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", Color(1, 0, 0), 18, 36, 1.f);
     meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("sphere", Color(1, 0, 0), 18, 36, 10.f);
@@ -224,16 +222,23 @@ void SceneBase::Init()
     meshList[GEO_STILE2] = MeshBuilder::Generate2DMesh("GEO_STILE1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_STILE2]->textureID = LoadTGA("Image//tiles//tile2.tga");
 
+	// Tiles
     meshList[GEO_GRASS] = MeshBuilder::Generate2DMesh("GEO_GRASS", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_GRASS]->textureID = LoadTGA("Image//tiles//grass.tga");
 
     meshList[GEO_DIRT] = MeshBuilder::Generate2DMesh("GEO_DIRT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
 
+	meshList[GEO_CAVE] = MeshBuilder::Generate2DMesh("GEO_CAVE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_CAVE]->textureID = LoadTGA("Image//tiles//CaveTile.tga");
+
+	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
 
-    meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	//Monster
+	meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GASTLY]->textureID = LoadTGA("Image//enemy//gastly.tga");
     meshList[GEO_MONSTER2] = MeshBuilder::Generate2DMesh("monster2", Color(1.000f, 0.843f, 0.000f), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MONSTER3] = MeshBuilder::Generate2DMesh("monster3", Color(0.580f, 0.000f, 0.827f), 0.0f, 0.0f, 25.0f, 25.0f);
 
@@ -316,6 +321,30 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
+    meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
+    meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
+
+    SpriteAnimation *sa = static_cast<SpriteAnimation*>(meshList[GEO_NET]);
+    if (sa)
+    {
+        sa->m_anim = new Animation();
+        sa->m_anim->Set(0, 63, 0, 3.f, true); // startFrame, endFrame, repeat, Time, Enable
+    }
+
+    /************************************************************************************************************************
+    //Sprite Animation
+    *************************************************************************************************************************/
+    //meshList[GEO_SPRITE_ANIMATION] = MeshBuilder::GenerateSpriteAnimation("sprite flame", 1, 6);
+    //meshList[GEO_SPRITE_ANIMATION]->textureArray[0] = LoadTGA("Image//flame_sprite.tga");
+    //SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    //if (sa)
+    //{
+    //    sa->m_anim = new Animation();
+    //    sa->m_anim->Set(0, 5, 0, 1.f, true); // startFrame, endFrame, repeat, Time, Enable
+    //}
+
+    //Define for particle use................>_<
+
 	m_cMap = LoadMap();
 
 }
@@ -333,6 +362,8 @@ void SceneBase::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('8'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
 	
 	fps = (float)(1.f / dt);
 }
@@ -482,14 +513,6 @@ void SceneBase::Render2DMesh(Mesh *mesh, bool enableLight, float size, float x, 
 	modelStack.Translate(x, y, 0);
 	modelStack.Scale(size, size, size);
 
-
-	/* if (flip)
-	{
-	glDisable(GL_CULL_FACE);
-	modelStack.Translate(32, 0, 0);
-	modelStack.Rotate(180, 0, 1, 0);
-	}*/
-
 	if (rotate)
 	{
 		glFrontFace(GL_CW);
@@ -533,6 +556,11 @@ void SceneBase::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 }
+
+
+
+
+
 
 void SceneBase::Exit()
 {

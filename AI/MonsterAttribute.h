@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MONSTERATTRIBUTE_H
+#define MONSTERATTRIBUTE_H
 
 #ifndef MONSTER_ATTRIBUTE_EXPORTS
 #define MONSTER_ATTRIBUTE_API __declspec(dllexport)
@@ -14,7 +15,7 @@ namespace MONSTER_ATTRIBUTE
 		MonsterAttribute();
 		~MonsterAttribute();
 
-        void Init(int MaxhealthPoint, int Damage);
+        void Init(int MaxhealthPoint, int Damage, int Catch_PercentHP, int catchrate);
 
 		void SetMonsterMaxHealth(int HealthPoint);
 		int GetMonsterMaxHealth();
@@ -27,11 +28,18 @@ namespace MONSTER_ATTRIBUTE
 
 		int GetCurrentHP();
 
+        bool Capture();
+
 	private:
 		int MaxhealthPoint;
 		int Damage;
 		int ReceiveDmg;
 		int CurrentHealth;
+        int Catch_PercentHP;
+        int capturehp;
+        int catchrate;
 	};
 
 }
+
+#endif

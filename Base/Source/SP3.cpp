@@ -90,6 +90,18 @@ void SP3::Init()
 
 	Main.Init(&Play, &quitGame);
 
+    m_particleCount = 0;
+    MAX_PARTICLE = 420;
+    m_gravity.Set(0, -9.8f, 0);
+
+    for (unsigned i = 0; i <= 400; ++i)
+    {
+        ParticleObject *particle = new ParticleObject(ParticleObject_TYPE::P_WATER);
+        particleList.push_back(particle);
+    }
+
+    
+
 }
 
 void SP3::Update(double dt)
@@ -118,23 +130,25 @@ void SP3::Update(double dt)
 
     if (State == SP3::Game)
     {
+		Scenetransition();
         // Update the hero
 		if (Application::IsKeyPressed('A'))
 		{
-			Character->Movement->MoveLeftRight(true, 1.0f);
 			Moving = true;
+			Character->Movement->MoveLeftRight(true, 1.0f);
 		}
             
 		if (Application::IsKeyPressed('D'))
 		{
-			Character->Movement->MoveLeftRight(false, 1.0f);
 			Moving = true;
+			Character->Movement->MoveLeftRight(false, 1.0f);
 		}
 
 		if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
 		{
 			Moving = false;
 		}
+
 			
         if (Application::IsKeyPressed(' '))
         {
@@ -148,7 +162,7 @@ void SP3::Update(double dt)
         }
 
         Character->Movement->HeroUpdate(m_cMap);
-        Scenetransition();
+        
 
 		firingDebounce += (float)dt;
 		bool KeyDown = false;
@@ -181,6 +195,12 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 
+        if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
+        {
+            firingDebounce = 0;
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+        }
+
 		//std::cout << check1 << " " << check2 << " " << firingDebounce << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
@@ -190,7 +210,7 @@ void SP3::Update(double dt)
 			{
 				//projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
 				projectile->Update(dt);
-				
+                ProjectileCollision(dt,projectile);
 			}
 		}
 		
@@ -200,10 +220,13 @@ void SP3::Update(double dt)
             tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
 
         // if the hero enters the kill zone, then enemy goes into kill strategy mode
-      
+		MonsterUpdate(dt);
+        SpriteAnimationUpdate(dt);
+        UpdateParticles(dt);
     }
-    MonsterUpdate(dt);
-    ProjectileCollision(dt);
+
+    
+
 	//std::cout << fps << std::endl;
 }
 
@@ -235,22 +258,16 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_MENU], false);
 		break;
 
-	case(GameObject::GO_MENUHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MENUHOVER], false);
-		break;
+	//case(GameObject::GO_MENUHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_MENUHOVER], false);
+	//	break;
 
 	case(GameObject::GO_EDIT) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_EDIT], false);
-		break;
-
-	case(GameObject::GO_EDITHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EDITHOVER], false);
 		break;
 
 	case(GameObject::GO_LOAD) :
@@ -259,22 +276,10 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_LOAD], false);
 		break;
 
-	case(GameObject::GO_LOADHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_LOADHOVER], false);
-		break;
-
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HIGHSCORE], false);
-		break;
-
-	case(GameObject::GO_HIGHSCOREHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HIGHSCOREHOVER], false);
 		break;
 
 	case(GameObject::GO_SAVE) :
@@ -283,11 +288,11 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_SAVE], false);
 		break;
 
-	case(GameObject::GO_SAVEHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SAVEHOVER], false);
-		break;
+	//case(GameObject::GO_SAVEHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_SAVEHOVER], false);
+	//	break;
 
 	case(GameObject::GO_EXIT) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -307,24 +312,17 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_RESTART], false);
 		break;
 
-	case(GameObject::GO_RESTARTHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_RESTARTHOVER], false);
-		break;
+	//case(GameObject::GO_RESTARTHOVER) :
+	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+	//	RenderMesh(meshList[GEO_RESTARTHOVER], false);
+	//	break;
 
 	case(GameObject::GO_OKAY) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_OKAY], false);
 		break;
-
-	case(GameObject::GO_OKAYHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_OKAYHOVER], false);
-		break;
-
 
 	default:
 		break;
@@ -379,12 +377,13 @@ void SP3::Render()
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
+
 		break;
 
 	case End:
 		break;
 	}
-
+    
     GameStateRenderText();
 
 }
@@ -392,6 +391,7 @@ void SP3::Render()
 void SP3::Exit()
 {
     SceneBase::Exit();
+    particleList.clear();
 	/*while (Character->Movement->m_projectileList.size() > 0)
 	{
 		Projectile *go = Character->Movement->m_projectileList.back();
@@ -430,9 +430,17 @@ void SP3::RenderTileMap()
 			{
 				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
+			else if (m_cMap->theScreenMap[i][m] == 44)
+			{
+				Render2DMesh(meshList[GEO_DIRT], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
 			else if (m_cMap->theScreenMap[i][m] == 5)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 55)
+			{
+				Render2DMesh(meshList[GEO_CAVE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
 			}
 			else if (m_cMap->theScreenMap[i][m] == 6)
 			{
@@ -450,13 +458,17 @@ void SP3::RenderTileMap()
             {
 				Render2DMesh(meshList[GEO_TILE_SAFEZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
             }
+			else if (m_cMap->theScreenMap[i][m] == 21)
+			{
+				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
+			else if (m_cMap->theScreenMap[i][m] == 22)
+			{
+				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize());
+			}
 
         }
     }
-
-    
-
-
 }
 
 /********************************************************************************
@@ -526,34 +538,20 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-                            ss.str(string());
-                            ss.precision(5);
-                            ss << "<1>Start Game";
-                            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+       ss.str(string());
+       ss.precision(5);
+       ss << "<1>Start Game";
+       RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
 
         break;
     case SP3::Game:
         //On screen text
     {
-                            /*ss.str(string());
-                            ss.precision(5);
-                            ss << "theEnemy: " << theEnemy->GetPos_x() << ", " << theEnemy->GetPos_y();
-                            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 6);
-                            std::ostringstream sss;
-                            sss.precision(5);
-                            sss << "mapOffset_x: " << theHero->GetMapOffset_x();
-                            RenderTextOnScreen(meshList[GEO_TEXT], sss.str(), Color(0, 1, 0), 30, 0, 30);
-
-                            ss.str(string());
-                            ss.precision(5);
-                            ss << "x: " << theHero->GetPos_x() << " Y:" << theHero->GetPos_y();
-                            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 60);*/
-
-                            ss.str(string());
-                            ss.precision(5);
-                            ss << "Lives: " << fps;
-                            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+        ss.str(string());
+        ss.precision(5);
+        ss << "Lives: " << fps;
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
         break;
     case SP3::End:
@@ -642,7 +640,29 @@ void SP3::Scenetransition()
         SpawnObjects();
         Character->Movement->TransitLevel = false;
     }
-    
+
+	if (Character->Movement->TransitLevel2)
+	{
+		CurrLevel = static_cast<Level>(CurrLevel + 1);
+		switch (CurrLevel)
+		{
+		case SP3::LEVEL1:
+			break;
+		case SP3::LEVEL2:
+			m_cMap->LoadMap("Map\\Map2B.csv");
+			break;
+		case SP3::LEVEL3:
+			m_cMap->LoadMap("Map\\Map3B.csv");
+			break;
+		case SP3::LEVEL4:
+			m_cMap->LoadMap("Map\\Map4B.csv");
+			break;
+		default:
+			break;
+		}
+		SpawnObjects();
+		Character->Movement->TransitLevel2 = false;
+	}
 }
 
 void SP3::SpawnObjects()
@@ -678,7 +698,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(50, 1,50,1);
             }
                 break;
             
@@ -690,7 +710,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(10, 1,50,1);
             }
                 break;
             case 13:
@@ -701,7 +721,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap);
-                       newmon->InitAttrib(10, 1);
+                       newmon->InitAttrib(10, 1,50,1);
             }
                 break;
             default:
@@ -726,8 +746,6 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
 			break;
 	}
-	
-
 }
 
 void SP3::RenderCharacter()
@@ -794,6 +812,7 @@ void SP3::RenderCharacter()
 
 void SP3::RenderList()
 {
+
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
@@ -822,69 +841,115 @@ void SP3::RenderList()
             
         }
     }
-}
-
-void SP3::ProjectileCollision(double dt)
-{
-    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+    //particles
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
     {
-        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-        if (projectile->active)
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (particle->active)
         {
-            if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
-                projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
-            {
-                projectile->active = false;
-                continue;
-            }
-            for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
-            {
-                Monster* go = (Monster*)*it2;
-                int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
-                if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
-                {
-                    projectile->active = false;
-                    go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
-                    if (go->Attribute->GetCurrentHP() <= 0)
-                    {
-                        Monster_List.erase(it2);
-                        break;
-                    }
-
-                }
-            }
-            int m = 0;
-            for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
-            {
-                for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
-                {
-                    m = tileOffset_x + k;
-                    if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
-                        break;
-                    if (m_cMap->theScreenMap[i][m] != 0 && 
-                        m_cMap->theScreenMap[i][m] != 11 && 
-                        m_cMap->theScreenMap[i][m] != 10 && 
-                        m_cMap->theScreenMap[i][m] != 12 && 
-                        m_cMap->theScreenMap[i][m] != 13 )
-                    {
-                        int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                        Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
-                        Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
-                        if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
-                        {
-                            projectile->active = false;
-                            continue;
-                        }
-                    }
-
-                }
-            }
-
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            /*modelStack.PushMatrix();
+            modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
+            modelStack.Rotate(particle->rotation, 0, 1, 0);
+            modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);*/
+            Render2DMesh(meshList[GEO_QUAD], false, particle->scale.x, particle->pos.x, particle->pos.y);
+            //modelStack.PopMatrix();
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 }
+
+void SP3::ProjectileCollision(double dt, Projectile* projectile)
+{    
+    if (projectile->active)
+    {
+        //out of map
+        if (projectile->GetPos().x > (m_cMap->getNumOfTiles_MapWidth() * (m_cMap->GetTileSize() + 2)) ||
+            projectile->GetPos().x < (0 - (m_cMap->GetTileSize() + 2)))
+        {
+            projectile->active = false;
+            return;
+        }
+        //collide with monster
+        for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+        {
+            Monster* go = (Monster*)*it2;
+            int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+            Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+            {
+                ProjectileCollisionResponse(projectile, it2);
+                break;
+            }
+        }
+        //collide with tile
+        int m = 0;
+        for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+        {
+            for (int k = 0; k < m_cMap->GetNumOfTiles_Width() + 1; k++)
+            {
+                m = tileOffset_x + k;
+                if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
+                    break;
+                if (m_cMap->theScreenMap[i][m] != 0 &&
+                    m_cMap->theScreenMap[i][m] != 11 &&
+                    m_cMap->theScreenMap[i][m] != 10 &&
+                    m_cMap->theScreenMap[i][m] != 12 &&
+                    m_cMap->theScreenMap[i][m] != 13)
+                {
+                    int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+                    Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                    Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
+                    if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
+                    {
+                        projectile->active = false;
+                        return;
+                    }
+                }
+
+            }
+        }
+
+    }
+    
+}
+
+void SP3::ProjectileCollisionResponse(Projectile* projectile,
+    std::vector<Monster*>::iterator monsterlist_iterator)
+{
+    projectile->active = false;
+    Monster* go = (Monster*)*monsterlist_iterator;
+    switch (projectile->type)
+    {
+    case Projectile::Bullet:
+        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        break;
+    case Projectile::ChargeBullet:
+        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        break;
+    case Projectile::Net:
+        if (go->Attribute->Capture())
+        {
+            //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
+
+            Monster_List.erase(monsterlist_iterator);
+            //particle animation here
+            return;
+        }
+        //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        break;
+    default:
+        break;
+    }
+        
+    if (go->Attribute->GetCurrentHP() <= 0)
+    {
+        Monster_List.erase(monsterlist_iterator);        
+    }
+}
+
 
 void SP3::MonsterUpdate(double dt)
 {
@@ -900,8 +965,91 @@ void SP3::MonsterUpdate(double dt)
             Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
-                Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
-            }
+				Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
+            } 
         }
+    }
+}
+
+void SP3::SpriteAnimationUpdate(double dt)
+{
+    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    if (sa)
+    {
+    sa->Update(dt);
+    sa->m_anim->animActive = true;
+    }*/
+}
+
+void SP3::RenderParticles()
+{
+    
+}
+
+void SP3::UpdateParticles(double dt)
+{
+    //if (m_particleCount < MAX_PARTICLE)
+    //{
+    //    int num_Particles = 1;
+    //    for (int i = 0; i < num_Particles; i++)
+    //    {
+    //        ParticleObject* particle = GetParticle();
+    //        particle->type = ParticleObject_TYPE::P_WATER;
+    //        particle->scale.Set(1.5f, 1.5f, 1.5f);
+    //        particle->vel.Set(Math::RandFloatMinMax(-5, 5), 0, Math::RandFloatMinMax(-5, 5));
+    //        //particle->rotationSpeed = Math::RandFloatMinMax(20.0f, 40.0f);
+    //        particle->pos.Set(Math::RandFloatMinMax(camera.position.x + 1200.0f, camera.position.x - 1200.0f), Math::RandFloatMinMax(camera.position.y + 500.0f, camera.position.y + 150.f),
+    //            Math::RandFloatMinMax(camera.position.z + 1200.0f, camera.position.z - 1200.0f));
+    //    }
+
+    //}
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (particle->active)
+        {
+            particle->update(dt);
+        }
+    }
+}
+ParticleObject* SP3::GetParticle(void)
+{
+    for (std::vector<ParticleObject*>::iterator it = particleList.begin();
+        it != particleList.end(); ++it)
+    {
+        ParticleObject *particle = (ParticleObject *)*it;
+        if (!particle->active)
+        {
+            particle->active = true;
+            m_particleCount++;
+            return particle;
+        }
+    }
+
+    for (unsigned i = 0; i <= 10; ++i)
+    {
+        ParticleObject *particle =
+            new ParticleObject(ParticleObject_TYPE::P_WATER);
+        particleList.push_back(particle);
+    }
+    ParticleObject *particle = particleList.back();
+    particle->active = true;
+    m_particleCount++;
+
+    return particle;
+}
+
+void SP3::CreateParticles(int number, Vector3 position, float lifetime, float vel,ParticleObject_TYPE type)
+{
+    for (int i = 0; i < (number - 1); i++)
+    {
+        ParticleObject *particle = GetParticle();
+        particle->pos = position;
+        particle->lifetime = lifetime;
+        particle->type = type;
+        particle->vel = Vector3(Math::RandFloatMinMax(-vel, vel), Math::RandFloatMinMax(-vel, vel), 0);
+        particle->scale = Vector3(10, 10, 10);
+        particleList.push_back(particle);
     }
 }

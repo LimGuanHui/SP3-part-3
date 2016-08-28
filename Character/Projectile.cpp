@@ -26,6 +26,7 @@ namespace PROJECTILE
     void Projectile::Update(double dt)
     {
         pos += vel * dt;
+        
     }
 
 	Vector3 Projectile::GetPos()

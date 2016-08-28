@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include <vector>
 #include "MapLoad.h"
+#include "Particle.h"
 using namespace MAPLOADER;
 
 
@@ -33,7 +34,6 @@ public:
 	void RenderModelOnScreen(Mesh *mesh, bool enableLight, Vector3 size, float x, float y, float z, Vector3 rotation);
     void RenderMeshIn2D(Mesh *mesh, const bool enableLight, const float size, const float x, const float y, const bool rotate);
 
-	
     
 	//GameObject* FetchGO();
 protected:
@@ -126,6 +126,7 @@ protected:
         // lvl 2 tile 
         GEO_GRASS,
         GEO_DIRT,
+		GEO_CAVE,
 
         //monster
         GEO_GASTLY,//11
@@ -163,8 +164,10 @@ protected:
 		GEO_RESUMEHOVER,
 		GEO_OKAY,
 		GEO_OKAYHOVER,
-
 		GEO_STARTARROW,
+
+        //plaeyr projectiles
+        GEO_NET,
 
         NUM_GEOMETRY,
     };
