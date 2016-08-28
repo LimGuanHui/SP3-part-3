@@ -132,6 +132,7 @@ protected:
         GEO_GASTLY,//11
         GEO_MONSTER2,//12
         GEO_MONSTER3,//13
+		GEO_MINIBOSS,
 
 		// UI Stuffs
 		GEO_UI,

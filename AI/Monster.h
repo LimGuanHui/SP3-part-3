@@ -17,6 +17,7 @@ namespace MONSTER
             GASTLY,
             MONSTER2,
             MONSTER3,
+			MINIBOSS,
         };
 		Monster();
 		~Monster();

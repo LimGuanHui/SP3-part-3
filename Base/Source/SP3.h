@@ -35,7 +35,6 @@ class SP3 : public SceneBase
         Menu,
         Game,
         End,
-
     };
 
 public:
@@ -84,6 +83,7 @@ public:
         LEVEL2,
         LEVEL3,
         LEVEL4,
+		LEVEL5,
     };
 
 	CCharacter* Character;
@@ -156,7 +156,6 @@ private:
     Vector3 m_gravity;//gravity affecting the particles
     int m_particleCount;// Count for particles
     unsigned MAX_PARTICLE; // Max no of particles
-
 
 };
 
