@@ -258,12 +258,9 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 	if (gamestate == Game)
 	{
 		//button->PlayButton->pos.Set(-20, -20, 0);
-		button->EditButton->pos.Set(-20, -20, 0);
-		button->LoadButton->pos.Set(-20, -20, 0);
 		button->ExitButton->pos.Set(-20, -20, 0);
 		button->RestartButton->pos.Set(-20, -20, 0);
 		button->MenuButton->pos.Set(-20, -20, 0);
-		button->SaveButton->pos.Set(-20, -20, 0);
 	
 		if (playerDead == true)
 		{
@@ -280,16 +277,12 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 			RenderMesh(meshList[GEO_DEATHSCREEN], false);
 			modelStack.PopMatrix();
 
-			button->EditButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-			button->LoadButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 			button->PlayButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 		}
 	}
 
 	if (gamestate == Pause)
 	{
-		button->LoadButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->EditButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 
 		button->PlayButton->active = true;
 		button->PlayButton->pos.Set(m_worldWidth / 2 + camera.position.x, (m_worldHeight - 30.f) / 2 + camera.position.y, 1.f);
@@ -314,8 +307,6 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		modelStack.PopMatrix();
 
 		button->PlayButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->EditButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->LoadButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 		button->RestartButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 
 		button->MenuButton->active = true;
@@ -328,12 +319,9 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 	if (gamestate == Edit)
 	{
 		button->PlayButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->EditButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->LoadButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 		button->ExitButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 		button->RestartButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 		button->MenuButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		button->SaveButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
 
 		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2 + camera.position.x, m_worldHeight / 2 + camera.position.y, -1.f);
@@ -399,30 +387,6 @@ void MainMenu::RenderGO(GameObject* go)
 		RenderMesh(meshList[GEO_MENUHOVER], false);
 		break;
 
-	case(GameObject::GO_EDIT) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EDIT], false);
-		break;
-
-	case(GameObject::GO_EDITHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EDITHOVER], false);
-		break;
-
-	case(GameObject::GO_LOAD) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_LOAD], false);
-		break;
-
-	case(GameObject::GO_LOADHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_LOADHOVER], false);
-		break;
-
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
@@ -433,18 +397,6 @@ void MainMenu::RenderGO(GameObject* go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HIGHSCOREHOVER], false);
-		break;
-
-	case(GameObject::GO_SAVE) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SAVE], false);
-		break;
-
-	case(GameObject::GO_SAVEHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SAVEHOVER], false);
 		break;
 
 	case(GameObject::GO_EXIT) :

@@ -282,25 +282,10 @@ void SceneBase::Init()
 	meshList[GEO_MENUHOVER] = MeshBuilder::GenerateQuad("Menu Hover ", Color(1, 1, 1), 1.f);
 	meshList[GEO_MENUHOVER]->textureID = LoadTGA("Image//buttons//menuhover.tga");
 
-	meshList[GEO_EDIT] = MeshBuilder::GenerateQuad("Edit", Color(1, 1, 1), 1.f);
-	meshList[GEO_EDIT]->textureID = LoadTGA("Image//buttons//edit.tga");
-	meshList[GEO_EDITHOVER] = MeshBuilder::GenerateQuad("Edit Hover But", Color(1, 1, 1), 1.f);
-	meshList[GEO_EDITHOVER]->textureID = LoadTGA("Image//buttons//edithover.tga");
-
-	meshList[GEO_LOAD] = MeshBuilder::GenerateQuad("Load", Color(1, 1, 1), 1.f);
-	meshList[GEO_LOAD]->textureID = LoadTGA("Image//buttons//load.tga");
-	meshList[GEO_LOADHOVER] = MeshBuilder::GenerateQuad("Load Hover But", Color(1, 1, 1), 1.f);
-	meshList[GEO_LOADHOVER]->textureID = LoadTGA("Image//buttons//loadhover.tga");
-
 	meshList[GEO_HIGHSCORE] = MeshBuilder::GenerateQuad("Highscore", Color(1, 1, 1), 1.f);
 	meshList[GEO_HIGHSCORE]->textureID = LoadTGA("Image//buttons//highscore.tga");
 	meshList[GEO_HIGHSCOREHOVER] = MeshBuilder::GenerateQuad("Highscore hover but", Color(1, 1, 1), 1.f);
 	meshList[GEO_HIGHSCOREHOVER]->textureID = LoadTGA("Image//buttons//highscorehover.tga");
-
-	meshList[GEO_SAVE] = MeshBuilder::GenerateQuad("save", Color(1, 1, 1), 1.f);
-	meshList[GEO_SAVE]->textureID = LoadTGA("Image//buttons//save.tga");
-	meshList[GEO_SAVEHOVER] = MeshBuilder::GenerateQuad("save hover ", Color(1, 1, 1), 1.f);
-	meshList[GEO_SAVEHOVER]->textureID = LoadTGA("Image//buttons//savehover.tga");
 
 	meshList[GEO_EXIT] = MeshBuilder::GenerateQuad("Exit", Color(1, 1, 1), 1.f);
 	meshList[GEO_EXIT]->textureID = LoadTGA("Image//buttons//exit.tga");
@@ -331,7 +316,7 @@ void SceneBase::Init()
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");
 
-    meshList[GEO_MON_HP_BAR] = MeshBuilder::Generate2DMesh("GEO_MON_HP_BAR", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 10.0f);
+    meshList[GEO_MON_HP_BAR] = MeshBuilder::Generate2DMesh("GEO_MON_HP_BAR", Color(0, 1, 0), 0.0f, 0.0f, 25.0f, 10.0f);
     //meshList[GEO_MON_HP_BAR]->textureID = LoadTGA("Image//tiles//grass.tga");
 
 
