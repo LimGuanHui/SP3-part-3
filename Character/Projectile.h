@@ -24,6 +24,7 @@ namespace PROJECTILE
 			Bullet,
 			ChargeBullet,
 			Net,
+			BossBullet,
 		};
 
 		Projectile(MapLoad* map);

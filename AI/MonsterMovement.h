@@ -54,9 +54,10 @@ namespace MONSTER_MOVEMENT
 
 		void SetAnimationCounter(int AnimationCounter);
 		int GetAnimationCounter(void);
-		int AnimationCounter;
 
+		int AnimationCounter;
         bool faceleft();
+		bool Float;
 
         State Monstate;
 	private:
