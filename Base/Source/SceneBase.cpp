@@ -281,7 +281,8 @@ void SceneBase::Init()
 	//Monster
 	meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_GASTLY]->textureID = LoadTGA("Image//enemy//gastly.tga");
-    meshList[GEO_MONSTER2] = MeshBuilder::Generate2DMesh("monster2", Color(1.000f, 0.843f, 0.000f), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_HAUNTER] = MeshBuilder::Generate2DMesh("monster2", Color(1.000f, 0.843f, 0.000f), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_HAUNTER]->textureID = LoadTGA("Image//enemy//haunter.tga");
     meshList[GEO_MONSTER3] = MeshBuilder::Generate2DMesh("monster3", Color(0.580f, 0.000f, 0.827f), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_MINIBOSS] = MeshBuilder::Generate2DMesh("MiniBoss", Color(1.f, 0.000f, 0.f), 0.0f, 0.0f, 25.0f, 25.0f);
 
@@ -364,15 +365,15 @@ void SceneBase::Init()
 
 
 
-    //meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
-    //meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
+    meshList[GEO_NET_ANIM] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
+    meshList[GEO_NET_ANIM]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
 
-    //SpriteAnimation *sa = static_cast<SpriteAnimation*>(meshList[GEO_NET]);
-    //if (sa)
-    //{
-    //    sa->m_anim = new Animation();
-    //    sa->m_anim->Set(0, 63, 0, 3.f, true); // startFrame, endFrame, repeat, Time, Enable
-    //}
+    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+    if (sa)
+    {
+        sa->m_anim = new Animation();
+        sa->m_anim->Set(0, 63, 0, 3.f, false); // startFrame, endFrame, repeat, Time, Enable
+    }
 
     /************************************************************************************************************************
     //Sprite Animation

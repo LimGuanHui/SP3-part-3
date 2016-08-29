@@ -194,6 +194,22 @@ namespace MONSTER_MOVEMENT
 				if (AnimationCounter < 1)
 					AnimationCounter = 7;
             }
+
+			if (Float)
+			{
+				float timer = 0;
+				timer += 2;
+				if (theMonsterPosition.y <= startpos.y)
+				{
+					theMonsterPosition.y = startpos.y;
+					theMonsterVel.y += timer;
+				}
+				if (theMonsterPosition.y > startpos.y + 2)
+				{
+					theMonsterVel.y -= timer;
+				}
+			}
+			
         }
             break;
         case MONSTER_MOVEMENT::MMovement::ATTACK:

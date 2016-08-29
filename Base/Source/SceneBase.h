@@ -145,7 +145,7 @@ protected:
 
         //monster
         GEO_GASTLY,//11
-        GEO_MONSTER2,//12
+        GEO_HAUNTER,//12
         GEO_MONSTER3,//13
 		GEO_MINIBOSS,
 
@@ -181,6 +181,8 @@ protected:
         GEO_N_SHOT,
         GEO_C_SHOT,
         GEO_NET,
+        GEO_NET_ANIM,
+
         //Monster Hp bar
         GEO_MON_HP_BAR,
 

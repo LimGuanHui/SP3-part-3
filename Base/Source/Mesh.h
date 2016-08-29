@@ -3,7 +3,6 @@
 
 #include <string>
 #include "Material.h"
-
 class Mesh
 {
 public:
@@ -15,9 +14,9 @@ public:
 		DRAW_MODE_LAST,
 	};
 	Mesh(const std::string &meshName);
-	~Mesh();
-	void Render();
-	void Render(unsigned offset, unsigned count);
+    virtual ~Mesh();
+    virtual void Render();
+    virtual void Render(unsigned offset, unsigned count);
 
 	const std::string name;
 	DRAW_MODE mode;

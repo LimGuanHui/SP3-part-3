@@ -41,17 +41,22 @@ namespace PROJECTILE
 		void SetScale(Vector3 scale);
 		void SetVel(Vector3 vel);
 
+        float getdmg();
+        void setdmg(float dmg);
+        
         bool active;
 		bool Left;
 
 		void Init();
         void Update(double dt);
 
-		Vector3 pos;
-		Vector3 vel;
-		Vector3 scale;
+		
 	private:
+        Vector3 pos;
+        Vector3 vel;
+        Vector3 scale;
 
+        float dmg;
         MapLoad* map;
 	};
 

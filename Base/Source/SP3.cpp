@@ -165,7 +165,7 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, Character->Attribute->GetDmg() ,Projectile::Bullet, m_cMap);
             
 		}
 
@@ -173,19 +173,18 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, 1, Projectile::Net, m_cMap);
 		}
 
 
 		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
+		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
 		{
-			Character->Attribute->ActionBar(-100);
 			chargeTime += 2 * dt;
 			chargeDmg = chargeTime;
-			if (chargeDmg > 2)
+			if (chargeDmg > 1.5)
 			{
-				chargeDmg = 2;
+				chargeDmg = 1.5;
 			}
 			if (chargeTime > 2)
 			{
@@ -208,14 +207,15 @@ void SP3::Update(double dt)
 		}
 		if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
 		{
+			Character->Attribute->ActionBar(-50);
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::ChargeBullet, m_cMap);
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, (Character->Attribute->GetDmg() *  chargeDmg) ,Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
 		
-		std::cout << Character->Attribute->GetActionBar() << std::endl;
+		std::cout << Character->Attribute->GetActionBar() << " " << chargeDmg << " " << chargeTime << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -746,8 +746,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true);
+                       newmon->InitAttrib(25, 1,50,1);
             }
                 break;
             
@@ -758,8 +758,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true);
+                       newmon->InitAttrib(50, 1,50,1);
             }
                 break;
             case 14:
@@ -769,8 +769,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true);
+                       newmon->InitAttrib(75, 1,50,1);
             }
 				break;
 			case 15:
@@ -780,7 +780,7 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap);
+					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false);
 					   newmon->InitAttrib(150, 50, 50, 1);
 			}
                 break;
@@ -803,7 +803,7 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , projectile->Left);
 			break;
 	case Projectile::Net:
-			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
 	}
 }
@@ -869,7 +869,7 @@ void SP3::RenderCharacter()
 		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
 	}
 
-    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, Character->Attribute->GetActionBar() * pow(m_cMap->GetTileSize(),-1), Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
+    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, (Character->Attribute->GetActionBar() / 100.f) * 2 , Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
 
 }
 
@@ -887,7 +887,7 @@ void SP3::RenderList()
 
             break;
         case Monster::MONSTER2:
-            Render2DMesh(meshList[GEO_MONSTER2], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+            Render2DMesh(meshList[GEO_HAUNTER], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
             Render2DMesh(meshList[GEO_MON_HP_BAR], false, go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(), -1), 0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize()), false, false);
             break;
         case Monster::MONSTER3:
@@ -964,14 +964,15 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
         {
             Monster* go = (Monster*)*it2;
             int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-            Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+            Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
             int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
             Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
             {
                 ProjectileCollisionResponse(projectile, it2);
-                break;
+				break;
             }
+
         }
         //collide with tile
         int m = 0;
@@ -992,7 +993,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 					m_cMap->theScreenMap[i][m] != 15)
                 {
                     int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                    Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                    Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
                     Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
                     if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
                     {
@@ -1011,17 +1012,16 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 void SP3::ProjectileCollisionResponse(Projectile* projectile,
     std::vector<Monster*>::iterator monsterlist_iterator)
 {
-    projectile->active = false;
     Monster* go = (Monster*)*monsterlist_iterator;
     switch (projectile->type)
     {
     case Projectile::Bullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
 		Character->Attribute->ActionBar(5);
+		projectile->active = false;
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
-		chargeDmg = 0;
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -1032,9 +1032,10 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
+			projectile->active = false;
             return;
         }
-        //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     default:
         break;
@@ -1071,12 +1072,12 @@ void SP3::MonsterUpdate(double dt)
 
 void SP3::SpriteAnimationUpdate(double dt)
 {
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
     if (sa)
     {
     sa->Update(dt);
-    sa->m_anim->animActive = true;
-    }*/
+    //sa->m_anim->animActive = true;
+    }
 }
 
 void SP3::RenderParticles()
