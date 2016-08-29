@@ -411,6 +411,7 @@ void SP3::Render()
 		RenderCharacter();
 		RenderList();
         spritemanager->spriteRender();
+		Main.RenderMenu(m_cMap);
 		// Render the rear tile map
 		break;
 
