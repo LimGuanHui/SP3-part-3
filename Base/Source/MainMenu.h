@@ -19,7 +19,6 @@ public:
 	void Init(Buttons* button, CCharacter* character);  //(CCharacter* Character, Buttons* button,bool *quitegame);
 	void Update(double dt);
 	void RenderMenu(MapLoad* m_cMap);
-	void RenderGO(GameObject* go);
 
 	GameObject* FetchGO();
 
