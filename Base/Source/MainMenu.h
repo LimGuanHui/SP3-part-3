@@ -16,7 +16,7 @@ public:
 
 	int i;
 
-	void Init(Buttons* button, bool *quitegame);  //(CCharacter* Character, Buttons* button,bool *quitegame);
+	void Init(Buttons* button);  //(CCharacter* Character, Buttons* button,bool *quitegame);
 	void Update(double dt);
 	void RenderMenu(MapLoad* m_cMap);
 	void RenderGO(GameObject* go);
@@ -50,7 +50,7 @@ public:
 	int m_objectCount = 0;
 	bool playerDead;
 	std::vector<GameObject *> m_goList;
-	bool* m_quitgame;
+	bool QuitGame;
 
 protected:
 	float InputDelayTimer;
