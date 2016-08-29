@@ -434,20 +434,6 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 			button->ExitButton->pos.Set(m_worldWidth / 2 + camera.position.x, (m_worldHeight - 60.f) / 2 + camera.position.y, 1.f);
 		}
 
-		if (gamestate == Edit)
-		{
-			button->PlayButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-			button->ExitButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-			button->RestartButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-			button->MenuButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-
-			modelStack.PushMatrix();
-			modelStack.Translate(m_worldWidth / 2 + camera.position.x, m_worldHeight / 2 + camera.position.y, -1.f);
-			modelStack.Scale(180, 110, 0);
-			RenderMesh(meshList[GEO_EDITBACKGROUND], false);
-			modelStack.PopMatrix();
-		}
-
 		if (gamestate == Help)
 		{
 			modelStack.PushMatrix();
@@ -472,95 +458,4 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 		}
 		}*/
-}
-
-void MainMenu::RenderGO(GameObject* go)
-{
-
-	Vector3 temp;
-	switch (go->type)
-	{
-	case(GameObject::GO_PLAY) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		//RenderMesh(meshList[GEO_PLAY], false);
-		Render2DMesh(meshList[GEO_PLAY], false, 10.f, go->pos.x, go->pos.y, false, false);
-		break;
-
-	case(GameObject::GO_PLAYHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_PLAYHOVER], false);
-		break;
-
-	case(GameObject::GO_MENU) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MENU], false);
-		break;
-
-	case(GameObject::GO_MENUHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_MENUHOVER], false);
-		break;
-
-	case(GameObject::GO_HIGHSCORE) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HIGHSCORE], false);
-		break;
-
-	case(GameObject::GO_HIGHSCOREHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HIGHSCOREHOVER], false);
-		break;
-
-	case(GameObject::GO_EXIT) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EXIT], false);
-		break;
-
-	case(GameObject::GO_EXITHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EXITHOVER], false);
-		break;
-
-	case(GameObject::GO_RESTART) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_RESTART], false);
-		break;
-
-	case(GameObject::GO_RESTARTHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_RESTARTHOVER], false);
-		break;
-
-	case(GameObject::GO_OKAYHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_OKAYHOVER], false);
-		break;
-
-	case(GameObject::GO_HELP) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HELP], false);
-		break;
-
-	case(GameObject::GO_HELPHOVER) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_HELPHOVER], false);
-		break;
-
-	default:
-		break;
-	}
-	modelStack.PopMatrix();
 }

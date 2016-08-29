@@ -109,25 +109,6 @@ void SP3::Update(double dt)
     SceneBase::Update(dt);
     
 	Main.Update(dt);
-	//if (Main.gamestate == MainMenu::Game)
-	//{
-	//	State = Game;
-	//}
-
-	//if (Main.gamestate == MainMenu::Pause)
-	//{
-	//	State = Pause;
-	//}
-
-	//if (State == SP3::Menu)
-	//{
-	//	Main.gamestate == Menu;
-	//}
-
-	//if (State == SP3::Pause)
-	//{
-	//	Main.gamestate == Pause;
-	//}
 
    // rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
 
