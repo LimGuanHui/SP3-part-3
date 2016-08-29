@@ -187,6 +187,11 @@ protected:
         //Monster Hp bar
         GEO_MON_HP_BAR,
 
+        //panel
+        GEO_B_PANEL,
+        GEO_M_PANEL,
+        GEO_T_PANEL,
+
         NUM_GEOMETRY,
     };
 

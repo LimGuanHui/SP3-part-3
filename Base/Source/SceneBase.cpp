@@ -376,6 +376,17 @@ void SceneBase::Init()
         sa->m_anim->Set(0, 63, 0, 3.f, false); // startFrame, endFrame, repeat, Time, Enable
     }
 
+    //panels
+    meshList[GEO_B_PANEL] = MeshBuilder::GenerateQuad("bPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_B_PANEL]->textureID = LoadTGA("Image//panels//bPanel.tga");
+
+    meshList[GEO_M_PANEL] = MeshBuilder::GenerateQuad("mPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_M_PANEL]->textureID = LoadTGA("Image//panels//mPanel.tga");
+
+    meshList[GEO_T_PANEL] = MeshBuilder::GenerateQuad("tPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_T_PANEL]->textureID = LoadTGA("Image//panels//tPanel.tga");
+
+
     /************************************************************************************************************************
     //Sprite Animation
     *************************************************************************************************************************/

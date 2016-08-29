@@ -104,6 +104,8 @@ void SP3::Init()
     spritemanager = new SpriteManager();
     spritemanager->Init(800, 600);
 
+    Battle = new BattleStage();
+    Battle->Init(800, 600, 25);
 }
 
 void SP3::Update(double dt)
@@ -126,6 +128,8 @@ void SP3::Update(double dt)
 		Scenetransition();
         //sprite update
         spritemanager->update(dt);
+        //battlestage update
+        Battle->Update(dt);
         // Update the hero
 		if (Application::IsKeyPressed('A'))
 		{
@@ -411,7 +415,8 @@ void SP3::Render()
 		RenderCharacter();
 		RenderList();
         spritemanager->spriteRender();
-		// Render the rear tile map
+        Battle->RenderObjects(meshList[GEO_MON_HP_BAR]/*top panel*/, meshList[GEO_MON_HP_BAR]/*middle panel*/, meshList[GEO_MON_HP_BAR]/*bottom panel*/, 
+            meshList[GEO_MON_HP_BAR]/*player */, meshList[GEO_MON_HP_BAR]/*enemy */);
 		break;
 
 	case MainMenu::GameState::Pause:

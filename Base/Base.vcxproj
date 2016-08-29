@@ -33,6 +33,7 @@
     <ClCompile Include="Source\PlayerInfo.cpp" />
     <ClCompile Include="Source\P_Enemy.cpp" />
     <ClCompile Include="Source\P_Player.cpp" />
+    <ClCompile Include="Source\P_Projectile.cpp" />
     <ClCompile Include="Source\SceneBase.cpp" />
     <ClCompile Include="Source\SceneText.cpp" />
     <ClCompile Include="Source\shader.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Source\PlayerInfo.h" />
     <ClInclude Include="Source\P_Enemy.h" />
     <ClInclude Include="Source\P_Player.h" />
+    <ClInclude Include="Source\P_Projectile.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneBase.h" />
     <ClInclude Include="Source\SceneText.h" />

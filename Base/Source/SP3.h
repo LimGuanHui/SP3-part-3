@@ -28,7 +28,7 @@ using namespace AI;
 #include "Buttons.h"
 #include "GameObject.h"
 #include "SpriteManager.h"
-
+#include "BattleStage.h"
 class SP3 : public SceneBase
 {
     enum GameState
@@ -162,6 +162,9 @@ private:
 
     //sprite manager
     SpriteManager* spritemanager;
+
+    //battestage
+    BattleStage* Battle;
 
 };
 

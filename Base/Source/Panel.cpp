@@ -10,12 +10,13 @@ Panel::~Panel()
 {
 }
 
-void Panel::Init(int panelNo, Vector3 startpos, float offset, PanelType panel_type)
+void Panel::Init(int panelNo, Vector3 startpos, Vector3 scale, 
+    float offset_X, float offset_Y, PanelType panel_type, BELONGS_TO who)
 {
     this->panel_type = panel_type;
-    this->offset = offset;
+    this->who = who;
     panel_state = Empty;
-    Scale = Vector3(10, 15, 1);
+    Scale = scale;
     switch (panelNo)
     {
     case 0:
@@ -24,42 +25,42 @@ void Panel::Init(int panelNo, Vector3 startpos, float offset, PanelType panel_ty
         panel_pos = Bottom;
         break;
     case 1:
-        Pos = Vector3(startpos.x, startpos.y + offset, startpos.z);
+        Pos = Vector3(startpos.x, startpos.y + offset_Y, startpos.z);
         PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 2:
-        Pos = Vector3(startpos.x, startpos.y + offset * 2, startpos.z);
+        Pos = Vector3(startpos.x, startpos.y + offset_Y * 2, startpos.z);
         PanelNo = panelNo;
         panel_pos = Top;
         break;
     case 3:
-        Pos = Vector3(startpos.x + offset * 1.5f, startpos.y, startpos.z);
+        Pos = Vector3(startpos.x + offset_X , startpos.y, startpos.z);
         PanelNo = panelNo;
         panel_pos = Bottom;
         break;
     case 4:
-        Pos = Vector3(startpos.x + offset * 1.5f, startpos.y + offset, startpos.z);
+        Pos = Vector3(startpos.x + offset_X, startpos.y + offset_Y, startpos.z);
         PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 5:
-        Pos = Vector3(startpos.x + offset * 1.5f, startpos.y + offset * 2, startpos.z);
+        Pos = Vector3(startpos.x + offset_X, startpos.y + offset_Y * 2, startpos.z);
         PanelNo = panelNo;
         panel_pos = Top;
         break;
     case 6:
-        Pos = Vector3(startpos.x + offset * 2 * 1.5f, startpos.y, startpos.z);
+        Pos = Vector3(startpos.x + offset_X * 2, startpos.y, startpos.z);
         PanelNo = panelNo;
         panel_pos = Bottom;
         break;
     case 7:
-        Pos = Vector3(startpos.x + offset * 2 * 1.5f, startpos.y + offset, startpos.z);
+        Pos = Vector3(startpos.x + offset_X * 2, startpos.y + offset_Y, startpos.z);
         PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 8:
-        Pos = Vector3(startpos.x + offset * 2 * 1.5f, startpos.y + offset * 2, startpos.z);
+        Pos = Vector3(startpos.x + offset_X * 2 , startpos.y + offset_Y * 2, startpos.z);
         PanelNo = panelNo;
         panel_pos = Top;
         break;
@@ -82,3 +83,9 @@ Vector3 Panel::getscale()
 {
     return Scale;
 }
+
+int Panel::getPanelNo()
+{
+    return PanelNo;
+}
+

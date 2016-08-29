@@ -111,6 +111,9 @@
     <ClCompile Include="Source\P_Enemy.cpp">
       <Filter>Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Source\P_Projectile.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -216,6 +219,9 @@
       <Filter>Panel</Filter>
     </ClInclude>
     <ClInclude Include="Source\P_Enemy.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\P_Projectile.h">
       <Filter>Panel</Filter>
     </ClInclude>
   </ItemGroup>
