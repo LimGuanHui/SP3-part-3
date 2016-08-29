@@ -859,7 +859,7 @@ void SP3::RenderCharacter()
 		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
 	}
 
-    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, Character->Attribute->GetActionBar() * pow(m_cMap->GetTileSize(),-1), Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
+    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, (Character->Attribute->GetActionBar() / 100.f) * 2 , Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
 
 }
 
