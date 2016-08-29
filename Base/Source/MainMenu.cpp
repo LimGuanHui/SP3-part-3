@@ -67,14 +67,6 @@ void MainMenu::Update(double dt)
 	if (InputDelayTimer > 0)
 		InputDelayTimer -= dt;
 
-	if (gamestate == Game)
-	{
-		if (Character->Attribute->GetCurrentHP() >= 0)
-		{
-			playerDead = false;
-		}
-	}
-
 	if (gamestate == Menu)
 	{
 		button->PlayButton->active = true;
@@ -195,6 +187,11 @@ void MainMenu::Update(double dt)
 		{
 			InputDelayTimer = InputDelay;
 			gamestate = Pause;
+		}
+
+		if (Character->Attribute->GetCurrentHP() >= 0)
+		{
+			playerDead = false;
 		}
 	}
 
@@ -322,39 +319,25 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 			modelStack.PopMatrix();
 			break;
 		}
-
 	}
 
 	if (gamestate == Game)
 	{
-		if (playerDead == false)
+		modelStack.PushMatrix();
+		//modelStack.Translate(50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f);
+		//modelStack.Scale(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f);
+		RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 0.f, Vector3(0.f, 0.f, 0.f));
+		//RenderMesh(meshList[GEO_PLAYERHP], false);
+		modelStack.PopMatrix();
+
+		/*if (playerDead == true)
 		{
-			modelStack.PushMatrix();
-			//modelStack.Translate(50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f);
-			//modelStack.Scale(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f);
-			RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 0.f, Vector3(0.f, 0.f, 0.f));
-			//RenderMesh(meshList[GEO_PLAYERHP], false);
-			modelStack.PopMatrix();
-		}
-
-
-		if (playerDead == true)
-		{
-			button->RestartButton->active = true;
-			button->RestartButton->pos.Set(m_worldWidth / 2 + camera.position.x, (m_worldHeight - 30.f) / 2 + camera.position.y, 1.f);
-			button->MenuButton->active = true;
-			button->MenuButton->pos.Set(m_worldWidth / 2 + camera.position.x, (m_worldHeight - 60.f) / 2 + camera.position.y, 1.f);
-			button->ExitButton->active = true;
-			button->ExitButton->pos.Set(16.f + camera.position.x, 94.f + camera.position.y, 1.f);
-
-			modelStack.PushMatrix();
-			modelStack.Translate(m_worldWidth / 2 + camera.position.x, m_worldHeight / 2 + camera.position.y, -1.f);
-			modelStack.Scale(180, 110, 0);
-			RenderMesh(meshList[GEO_DEATHSCREEN], false);
-			modelStack.PopMatrix();
-
-			button->PlayButton->pos.Set(-20 + camera.position.x, -20 + camera.position.y, 1);
-		}
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2 + camera.position.x, m_worldHeight / 2 + camera.position.y, -1.f);
+		modelStack.Scale(180, 110, 0);
+		RenderMesh(meshList[GEO_DEATHSCREEN], false);
+		modelStack.PopMatrix();
+		}*/
 	}
 
 	if (gamestate == Pause)

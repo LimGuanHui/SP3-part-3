@@ -417,6 +417,7 @@ void SP3::Render()
         spritemanager->spriteRender();
         Battle->RenderObjects(meshList[GEO_MON_HP_BAR]/*top panel*/, meshList[GEO_MON_HP_BAR]/*middle panel*/, meshList[GEO_MON_HP_BAR]/*bottom panel*/, 
             meshList[GEO_MON_HP_BAR]/*player */, meshList[GEO_MON_HP_BAR]/*enemy */);
+		Main.RenderMenu(m_cMap);
 		break;
 
 	case MainMenu::GameState::Pause:
