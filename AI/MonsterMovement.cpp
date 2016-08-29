@@ -65,6 +65,11 @@ namespace MONSTER_MOVEMENT
 		return theMonsterScale.y;
 	}
 
+    Vector3 MMovement::GetScale()
+    {
+        return theMonsterScale;
+    }
+
     float MMovement::GetVel_X()
 	{
 		return theMonsterVel.x;

@@ -100,7 +100,8 @@ void SP3::Init()
         particleList.push_back(particle);
     }
 
-    
+    spritemanager = new SpriteManager();
+    spritemanager->Init(800, 600);
 
 }
 
@@ -141,6 +142,8 @@ void SP3::Update(double dt)
     if (Main.gamestate == Main.Game)
     {
 		Scenetransition();
+        //sprite update
+        spritemanager->update(dt);
         // Update the hero
 		if (Application::IsKeyPressed('A'))
 		{
@@ -424,6 +427,7 @@ void SP3::Render()
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
+        spritemanager->spriteRender();
 		// Render the rear tile map
 		break;
 
@@ -1036,7 +1040,11 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     {
     case Projectile::Bullet:
         go->Attribute->ReceiveDamage(projectile->getdmg());
-		Character->Attribute->ActionBar(5);
+        Character->Attribute->ActionBar(5);
+        {            
+            Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
+            spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
+        }
         break;
     case Projectile::ChargeBullet:
         go->Attribute->ReceiveDamage(projectile->getdmg());
@@ -1090,12 +1098,12 @@ void SP3::MonsterUpdate(double dt)
 
 void SP3::SpriteAnimationUpdate(double dt)
 {
-    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
     if (sa)
     {
-    sa->Update(dt);
+    sa->Update(dt);*/
     //sa->m_anim->animActive = true;
-    }
+    
 }
 
 void SP3::RenderParticles()

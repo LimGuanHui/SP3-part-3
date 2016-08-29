@@ -39,6 +39,7 @@ namespace MONSTER_MOVEMENT
         Vector3 GetPos();
         float GetScale_Y();
         float GetScale_X();
+        Vector3 GetScale();
         float GetVel_X();
         float GetVel_Y();
 

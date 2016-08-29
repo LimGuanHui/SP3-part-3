@@ -27,6 +27,7 @@ using namespace AI;
 #include "MainMenu.h"
 #include "Buttons.h"
 #include "GameObject.h"
+#include "SpriteManager.h"
 
 class SP3 : public SceneBase
 {
@@ -157,6 +158,9 @@ private:
     Vector3 m_gravity;//gravity affecting the particles
     int m_particleCount;// Count for particles
     unsigned MAX_PARTICLE; // Max no of particles
+
+    //sprite manager
+    SpriteManager* spritemanager;
 
 };
 
