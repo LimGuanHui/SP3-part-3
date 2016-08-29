@@ -317,10 +317,16 @@ void SceneBase::Init()
 	meshList[GEO_RESUMEHOVER] = MeshBuilder::GenerateQuad("resume hover ", Color(1, 1, 1), 1.f);
 	meshList[GEO_RESUMEHOVER]->textureID = LoadTGA("Image//buttons//resumehover.tga");
 
-	meshList[GEO_OKAY] = MeshBuilder::GenerateQuad("okay", Color(1, 1, 1), 1.f);
-	meshList[GEO_OKAY]->textureID = LoadTGA("Image//buttons//okay.tga");
 	meshList[GEO_OKAYHOVER] = MeshBuilder::GenerateQuad("Okay hover", Color(1, 1, 1), 1.f);
 	meshList[GEO_OKAYHOVER]->textureID = LoadTGA("Image//buttons//okayhover.tga");
+
+	meshList[GEO_HELP] = MeshBuilder::GenerateQuad("help", Color(1, 1, 1), 1.f);
+	meshList[GEO_HELP]->textureID = LoadTGA("Image//buttons//help.tga");
+	meshList[GEO_HELPHOVER] = MeshBuilder::GenerateQuad("help hover", Color(1, 1, 1), 1.f);
+	meshList[GEO_HELPHOVER]->textureID = LoadTGA("Image//buttons//helphover.tga");
+
+	meshList[GEO_INSTRUCTIONS] = MeshBuilder::GenerateQuad("instructions", Color(1, 1, 1), 1.f);
+	meshList[GEO_INSTRUCTIONS]->textureID = LoadTGA("Image//instructions.tga");
 
 	meshList[GEO_STARTARROW] = MeshBuilder::GenerateQuad("Start Arrow", Color(1, 1, 1), 1.f);
 	meshList[GEO_STARTARROW]->textureID = LoadTGA("Image//selectarrow.tga");

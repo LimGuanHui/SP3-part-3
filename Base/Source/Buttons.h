@@ -15,13 +15,7 @@ public:
 	Buttons();
 	~Buttons();
 
-	void Init(vector<GameObject *> *buttonList, MapLoad* m_cMap);
-	void Update(Vector3 mousepos, float dt, vector<GameObject *> *buttonList);
-	
-	bool isClick;
-	bool isHover;
-
-	
+	void Init(vector<GameObject *> *buttonList, MapLoad* m_cMap);	
 
 	GameObject* button;
 	GameObject* PlayButton;
@@ -32,8 +26,11 @@ public:
 	GameObject* SaveButton;
 	GameObject* ExitButton;
 	GameObject* RestartButton;
+	GameObject* HelpButton;
+	GameObject* OkayButton;
 
 	Camera camera;
+	bool isClick;
 private:
 
 };

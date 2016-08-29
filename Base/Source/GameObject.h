@@ -30,8 +30,9 @@ struct GameObject
 		GO_EXITHOVER,
 		GO_RESTART,
 		GO_RESTARTHOVER,
-		GO_OKAY,
 		GO_OKAYHOVER,
+		GO_HELP,
+		GO_HELPHOVER,
 
 		GO_TOTAL, //must be last
 	};

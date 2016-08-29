@@ -4,7 +4,7 @@
 
 #define InputDelay 0.1f
 
-MainMenu::MainMenu()
+MainMenu::MainMenu() : QuitGame(false)
 {
 
 }
@@ -15,7 +15,7 @@ MainMenu::~MainMenu()
 }
 
 //void MainMenu::Init(CCharacter* Character, Buttons* button, bool *quitegame)
-void MainMenu::Init(Buttons* button, bool *quitegame)
+void MainMenu::Init(Buttons* button)
 {
 	SceneBase::Init();
 
@@ -27,22 +27,23 @@ void MainMenu::Init(Buttons* button, bool *quitegame)
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	gamestate = Menu;
 	InputDelayTimer = 0;
-	quitGame = false;
 	//this->Character = Character;
 	this->button = button;
-	m_quitgame = quitegame;
 
 	button->PlayButton->active = true;
     button->PlayButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 13, 0.f);
   
-//  button->EditButton->active = true;
-//  button->EditButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 26, 0.f);
+	button->HelpButton->active = true;
+	button->HelpButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 26, 0.f);
   
-//  button->LoadButton->active = true;
-//  button->LoadButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 39, 0.f);
-  
-//  button->ExitButton->active = true;
-//  button->ExitButton->pos.Set(m_worldWidth / 14, m_worldHeight - 10, 0.f);
+	button->ExitButton->active = true;
+	button->ExitButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 39, 0.f);
+
+	if (gamestate == Help)
+	{
+		button->OkayButton->active = true;
+		button->OkayButton->pos.Set(m_worldWidth / 2, (m_worldHeight / 2) - 39, 0.f);
+	}
 }
 
 GameObject* MainMenu::FetchGO()
@@ -96,129 +97,56 @@ void MainMenu::Update(double dt)
 			startArrow = END - 1;
 	}
 
-	switch (startArrow)
+	switch (gamestate)
 	{
-	case Start:
+	case Menu:
+	{
+		switch (startArrow)
+		{
+		case Start:
+		{
+			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
+			{
+				InputDelayTimer = InputDelay;
+				button->isClick = true;
+				gamestate = Game;
+			}
+		}
+		break;
+
+		case Instructions:
+		{
+			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
+			{
+				InputDelayTimer = InputDelay;
+				button->isClick = true;
+				gamestate = Help;
+			}
+		}
+		break;
+
+		case Quit:
+		{
+			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
+			{
+				InputDelayTimer = InputDelay;
+				//button->isClick = true;
+				QuitGame = true;
+			}
+		}
+		break;
+		}
+	}
+
+	case Help:
+	{
 		if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 		{
 			InputDelayTimer = InputDelay;
-			gamestate = Game;
+			gamestate = Menu;
 		}
-		break;
 	}
 
-	switch (gamestate)
-	{
-	case Edit:
-		break;
-
-	case Menu:
-		if (button->isClick == true && InputDelayTimer <= 0)
-		{
-			InputDelayTimer = InputDelay;
-
-			switch (button->button->type)
-			{
-			case(GameObject::GO_PLAYHOVER) :
-				gamestate = Game;
-				break;
-
-			case(GameObject::GO_LOADHOVER) :
-				break;
-
-			case(GameObject::GO_EDITHOVER) :
-				gamestate = Edit;
-				break;
-
-			case(GameObject::GO_EXITHOVER) :
-				*m_quitgame = true;
-				//Application::Exit();
-				break;
-			}
-		}
-		break;
-
-	case Load:
-		break;
-
-	case Pause:
-		if (button->isClick == true && InputDelayTimer <= 0)
-		{
-			InputDelayTimer = InputDelay;
-
-			switch (button->button->type)
-			{
-			case(GameObject::GO_PLAYHOVER) :
-				gamestate = Game;
-				break;
-
-			case(GameObject::GO_MENUHOVER) :
-				gamestate = Menu;
-				break;
-				
-			case(GameObject::GO_EXITHOVER) :
-				*m_quitgame = true;
-				break;
-			}
-		}
-		break;
-
-	case Game:
-		if (playerDead == true)
-		{
-			if (button->isClick == true && InputDelayTimer <= 0)
-			{
-				InputDelayTimer = InputDelay;
-
-				switch (button->button->type)
-				{
-				case(GameObject::GO_RESTARTHOVER) :
-					playerDead = false;
-					gamestate = Game;
-					break;
-
-				case(GameObject::GO_MENUHOVER) :
-					playerDead = false;
-					gamestate = Menu;
-					break;
-
-				case(GameObject::GO_EXITHOVER) :
-					playerDead = false;
-					*m_quitgame = true;
-					break;
-				}
-			}
-		}
-
-		if (Application::IsKeyPressed('P') && InputDelayTimer <= 0)
-		{
-			InputDelayTimer = InputDelay;
-			gamestate = Pause;
-		}
-
-		if (Application::IsKeyPressed('O') && InputDelayTimer <= 0)
-		{
-			InputDelayTimer = InputDelay;
-			gamestate = End;
-		}
-		break;
-
-	case End:
-		if (button->isClick == true && InputDelayTimer <= 0)
-		{
-			InputDelayTimer = InputDelay;
-
-			switch (button->button->type)
-			{
-			case(GameObject::GO_MENUHOVER) :
-				gamestate = Menu;
-				break;
-
-			case(GameObject::GO_EXITHOVER) :
-				*m_quitgame = true;
-				break;
-			}
-		}
 	}
 }
 
@@ -274,6 +202,12 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		RenderMesh(meshList[GEO_EXIT], false);
 		modelStack.PopMatrix();
 
+		modelStack.PushMatrix();
+		modelStack.Translate(button->HelpButton->pos.x, button->HelpButton->pos.y, 0.f);
+		modelStack.Scale(25.f, 10.f, 0.f);
+		RenderMesh(meshList[GEO_HELP], false);
+		modelStack.PopMatrix();
+
 		switch (startArrow)
 		{
 		case(Start) :
@@ -292,17 +226,29 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 		case(Instructions) :
 			modelStack.PushMatrix();
-			modelStack.Translate(30.f, 25.f, 0.f);
-			modelStack.Scale(5.f, 5.f, 0.f);
+			modelStack.Translate((m_worldWidth / 2) - 20.f, (m_worldHeight / 2) - 26.f, 0.f);
+			modelStack.Scale(10.f, 10.f, 0.f);
 			RenderMesh(meshList[GEO_STARTARROW], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(button->HelpButton->pos.x, button->HelpButton->pos.y, 0.f);
+			modelStack.Scale(27.f, 12.f, 0.f);
+			RenderMesh(meshList[GEO_HELPHOVER], false);
 			modelStack.PopMatrix();
 			break;
 
 		case (Quit) :
 			modelStack.PushMatrix();
-			modelStack.Translate(30.f, 20.f, 0.f);
-			modelStack.Scale(5.f, 5.f, 0.f);
+			modelStack.Translate((m_worldWidth / 2) - 20.f, (m_worldHeight / 2) - 39.f, 0.f);
+			modelStack.Scale(10.f, 10.f, 0.f);
 			RenderMesh(meshList[GEO_STARTARROW], false);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			modelStack.Translate(button->ExitButton->pos.x, button->ExitButton->pos.y, 0.f);
+			modelStack.Scale(27.f, 12.f, 0.f);
+			RenderMesh(meshList[GEO_EXITHOVER], false);
 			modelStack.PopMatrix();
 			break;
 		}
@@ -393,6 +339,21 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		modelStack.Translate(m_worldWidth / 2 + camera.position.x, m_worldHeight / 2 + camera.position.y, -1.f);
 		modelStack.Scale(180, 110, 0);
 		RenderMesh(meshList[GEO_EDITBACKGROUND], false);
+		modelStack.PopMatrix();
+	}
+
+	if (gamestate == Help)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.f);
+		modelStack.Scale(180, 100, 0);
+		RenderMesh(meshList[GEO_INSTRUCTIONS], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(m_worldWidth / 2, (m_worldHeight / 2) - 39, 0.f);
+		modelStack.Scale(27.f, 12.f, 0.f);
+		RenderMesh(meshList[GEO_OKAYHOVER], false);
 		modelStack.PopMatrix();
 	}
 
@@ -510,18 +471,23 @@ void MainMenu::RenderGO(GameObject* go)
 		RenderMesh(meshList[GEO_RESTARTHOVER], false);
 		break;
 
-	case(GameObject::GO_OKAY) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_OKAY], false);
-		break;
-
 	case(GameObject::GO_OKAYHOVER) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_OKAYHOVER], false);
 		break;
 
+	case(GameObject::GO_HELP) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_HELP], false);
+		break;
+
+	case(GameObject::GO_HELPHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_HELPHOVER], false);
+		break;
 
 	default:
 		break;
