@@ -880,7 +880,7 @@ void SP3::RenderList()
 
             break;
         case Monster::MONSTER2:
-            Render2DMesh(meshList[GEO_MONSTER2], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+            Render2DMesh(meshList[GEO_HAUNTER], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
             Render2DMesh(meshList[GEO_MON_HP_BAR], false, go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(), -1), 0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize()), false, false);
             break;
         case Monster::MONSTER3:
