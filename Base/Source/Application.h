@@ -5,6 +5,7 @@
 #include "timer.h"
 //#include "SceneText.h"
 #include "SP3.h"
+#include "MainMenu.h"
 #include <irrKlang.h>
 using namespace irrklang;
 class Application
@@ -45,6 +46,7 @@ private:
 
 	// The handler for the scene
 	SP3 *scene;
+	MainMenu *Main;
 };
 
 #endif

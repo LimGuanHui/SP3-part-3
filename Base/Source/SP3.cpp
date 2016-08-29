@@ -85,13 +85,10 @@ void SP3::Init()
 		Character->Movement->m_projectileList.push_back(new Projectile(m_cMap));
 	}
 
-    
-
-
 	m_objectCount = 0;
 	Play.Init(&m_goList, m_cMap);
 
-	Main.Init(&Play, &quitGame);
+	Main.Init(&Play);
 
     m_particleCount = 0;
     MAX_PARTICLE = 420;
@@ -348,10 +345,22 @@ void SP3::RenderGO(GameObject *go)
 	//	RenderMesh(meshList[GEO_RESTARTHOVER], false);
 	//	break;
 
-	case(GameObject::GO_OKAY) :
+	case(GameObject::GO_OKAYHOVER) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_OKAY], false);
+		RenderMesh(meshList[GEO_OKAYHOVER], false);
+		break;
+
+	case(GameObject::GO_HELP) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_HELP], false);
+		break;
+
+	case(GameObject::GO_HELPHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_HELPHOVER], false);
 		break;
 
 	default:
@@ -420,7 +429,6 @@ void SP3::Render()
 
 void SP3::Exit()
 {
-    
     SceneBase::Exit();
 
     particleList.clear();
