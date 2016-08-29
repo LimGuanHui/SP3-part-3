@@ -4,9 +4,9 @@
 #include "SceneBase.h"
 #include "Buttons.h"
 #include "GameObject.h"
-//#include "Character.h"
+#include "Character.h"
 #include <vector>
-//using namespace CHARACTER;
+using namespace CHARACTER;
 
 class MainMenu : public SceneBase
 {
@@ -16,7 +16,7 @@ public:
 
 	int i;
 
-	void Init(Buttons* button);  //(CCharacter* Character, Buttons* button,bool *quitegame);
+	void Init(Buttons* button, CCharacter* character);  //(CCharacter* Character, Buttons* button,bool *quitegame);
 	void Update(double dt);
 	void RenderMenu(MapLoad* m_cMap);
 	void RenderGO(GameObject* go);
@@ -56,7 +56,7 @@ public:
 
 	GameState gamestate;
 	Buttons* button;
-	//CCharacter* Character;
+	CCharacter* Character;
 	int m_objectCount = 0;
 	bool playerDead;
 	std::vector<GameObject *> m_goList;

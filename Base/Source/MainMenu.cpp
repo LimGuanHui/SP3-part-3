@@ -15,7 +15,7 @@ MainMenu::~MainMenu()
 }
 
 //void MainMenu::Init(CCharacter* Character, Buttons* button, bool *quitegame)
-void MainMenu::Init(Buttons* button)
+void MainMenu::Init(Buttons* button, CCharacter* character)
 {
 	SceneBase::Init();
 
@@ -30,9 +30,9 @@ void MainMenu::Init(Buttons* button)
 	m_worldWidth = m_worldHeight * (float)Application::GetWindowWidth() / Application::GetWindowHeight();
 	gamestate = Menu;
 	InputDelayTimer = 0;
-	//this->Character = Character;
+	this->Character = character;
 	this->button = button;
-
+	playerDead = false;
 }
 
 GameObject* MainMenu::FetchGO()
@@ -66,6 +66,14 @@ void MainMenu::Update(double dt)
 {
 	if (InputDelayTimer > 0)
 		InputDelayTimer -= dt;
+
+	if (gamestate == Game)
+	{
+		if (Character->Attribute->GetCurrentHP() >= 0)
+		{
+			playerDead = false;
+		}
+	}
 
 	if (gamestate == Menu)
 	{
@@ -245,12 +253,6 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 	if (gamestate == Menu)
 	{
-		modelStack.PushMatrix();
-		//RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f, Vector3(0.f, 0.f, 0.f));
-		//modelStack.Translate(50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f);
-		//modelStack.Scale(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f);
-		//RenderMesh(meshList[GEO_PLAYERHP], false);
-		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.f);
@@ -325,6 +327,17 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 	if (gamestate == Game)
 	{
+		if (playerDead == false)
+		{
+			modelStack.PushMatrix();
+			//modelStack.Translate(50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f);
+			//modelStack.Scale(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f);
+			RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 0.f, Vector3(0.f, 0.f, 0.f));
+			//RenderMesh(meshList[GEO_PLAYERHP], false);
+			modelStack.PopMatrix();
+		}
+		
+
 		if (playerDead == true)
 		{
 			button->RestartButton->active = true;
@@ -472,6 +485,7 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 		}
 		}*/
+		std::cout << gamestate << std::endl;
 }
 
 void MainMenu::RenderGO(GameObject* go)

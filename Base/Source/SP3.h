@@ -136,6 +136,7 @@ private:
 	bool chargeFire;
 	float chargeTime;
 	float chargeDmg;
+	float BossFiringDebounce;
     int lives;
 	bool Moving;
 

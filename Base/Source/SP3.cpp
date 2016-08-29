@@ -79,6 +79,7 @@ void SP3::Init()
 	chargeTime = 0;
 	chargeFire = false;
 	chargeDmg = 0;
+	BossFiringDebounce = 0;
 
 	for (int i = 0; i < 1; ++i)
 	{
@@ -88,7 +89,7 @@ void SP3::Init()
 	m_objectCount = 0;
 	Play.Init(&m_goList, m_cMap);
 
-	Main.Init(&Play);
+	Main.Init(&Play, Character);
 
     m_particleCount = 0;
     MAX_PARTICLE = 420;
@@ -184,7 +185,7 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Character->Attribute->GetDmg() ,Projectile::Bullet, m_cMap);
+			Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg() ,Projectile::Bullet, m_cMap);
             
 		}
 
@@ -192,9 +193,8 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, 1, Projectile::Net, m_cMap);
+			Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
 		}
-
 
 		//Charge Projectile
 		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
@@ -230,11 +230,13 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, (Character->Attribute->GetDmg() *  chargeDmg) ,Projectile::ChargeBullet, m_cMap);
+            Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg) ,Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
+
 		
-		std::cout << Character->Attribute->GetActionBar() << " " << chargeDmg << " " << chargeTime << std::endl;
+		
+		std::cout << AI->Monster->Movement->GetPos() << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -692,7 +694,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map2.csv");
+            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -824,6 +826,9 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 	case Projectile::Net:
 			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
+	case Projectile::BossBullet:
+			Render2DMesh(meshList[GEO_BOSS_PROJECTILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
+			break;
 	}
 }
 
@@ -894,7 +899,15 @@ void SP3::RenderCharacter()
 
 void SP3::RenderList()
 {
+	for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+	{
+		PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+		if (projectile->active)
+		{
+			RenderProjectile(projectile);
 
+		}
+	}
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
@@ -939,15 +952,7 @@ void SP3::RenderList()
         }
     }
 
-    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
-    {
-        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-        if (projectile->active)
-        {
-            RenderProjectile(projectile);
-            
-        }
-    }
+    
     //particles
     for (std::vector<ParticleObject*>::iterator it = particleList.begin();
         it != particleList.end(); ++it)
@@ -1080,13 +1085,25 @@ void SP3::MonsterUpdate(double dt)
             Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
-				float AttackFrame = 0;
-				AttackFrame += dt;
-				if (AttackFrame > 2)
 					Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
             } 
         }
+
+		if (go->type == Monster::MINIBOSS)
+		{
+			BossFiringDebounce += dt;
+			if (BossFiringDebounce > 10.f / fireRate)
+			{
+				BossFiringDebounce = 0;
+				//int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
+				Character->Movement->BossProjectileUpdate(dt, 1, 20, Projectile::BossBullet, m_cMap, Vector3(go->Movement->GetPos().x + (m_cMap->GetTileSize() * go->Movement->GetScale_X()) * 0.5, go->Movement->GetPos().y + m_cMap->GetTileSize() * 0.5, 0), go->Movement->faceleft());
+				std::cout << "SHADOW BALL" << std::endl;
+			}
+		}
+
     }
+
+
 }
 
 void SP3::SpriteAnimationUpdate(double dt)
