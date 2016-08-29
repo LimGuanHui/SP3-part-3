@@ -128,6 +128,7 @@ protected:
         GEO_GRASS,
         GEO_DIRT,
 		GEO_CAVE,
+		GEO_CAVEBACKGROUND,
 
         //monster
         GEO_GASTLY,//11

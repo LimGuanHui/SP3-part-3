@@ -418,7 +418,7 @@ namespace MOVEMENT
 		}
 
 
-		ConstrainHero(10, 765, 25, 600);
+		ConstrainHero(25, 765, 25, 600);
 		// Calculate the fine offset
 		mapFineOffset_x = mapOffset_x % m_cMap->GetTileSize();
 

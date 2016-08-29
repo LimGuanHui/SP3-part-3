@@ -20,7 +20,7 @@ SceneBase::~SceneBase()
 void SceneBase::Init()
 {
     // Blue background
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     // Enable depth test
     //	glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
@@ -230,7 +230,10 @@ void SceneBase::Init()
     meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
 
 	meshList[GEO_CAVE] = MeshBuilder::Generate2DMesh("GEO_CAVE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
-	meshList[GEO_CAVE]->textureID = LoadTGA("Image//tiles//CaveTile.tga");
+	meshList[GEO_CAVE]->textureID = LoadTGA("Image//tiles//Cave3.tga");
+
+	meshList[GEO_CAVEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CAVEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+	meshList[GEO_CAVEBACKGROUND]->textureID = LoadTGA("Image//background//CaveBG2.tga");
 
 	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
