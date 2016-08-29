@@ -20,10 +20,7 @@ public:
 	GameObject* button;
 	GameObject* PlayButton;
 	GameObject* MenuButton;
-	GameObject* EditButton;
-	GameObject* LoadButton;
 	GameObject* HighscoreButton;
-	GameObject* SaveButton;
 	GameObject* ExitButton;
 	GameObject* RestartButton;
 	GameObject* HelpButton;

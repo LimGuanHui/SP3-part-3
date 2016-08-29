@@ -151,14 +151,8 @@ protected:
 		GEO_PLAYHOVER,
 		GEO_MENU,
 		GEO_MENUHOVER,
-		GEO_EDIT,
-		GEO_EDITHOVER,
-		GEO_LOAD,
-		GEO_LOADHOVER,
 		GEO_HIGHSCORE,
 		GEO_HIGHSCOREHOVER,
-		GEO_SAVE,
-		GEO_SAVEHOVER,
 		GEO_EXIT,
 		GEO_EXITHOVER,
 		GEO_RESTART,
@@ -172,7 +166,9 @@ protected:
 		GEO_STARTARROW,
 
         //player projectiles
-        //GEO_NET,
+        GEO_N_SHOT,
+        GEO_C_SHOT,
+        GEO_NET,
         //Monster Hp bar
         GEO_MON_HP_BAR,
 
