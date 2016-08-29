@@ -19,37 +19,40 @@ void SpriteManager::Init(float ortho_X, float ortho_Y)
 
 void SpriteManager::update(double dt)
 {
-    for (std::vector<SpriteAnimation*>::iterator it = SpriteAnimation_ListRender.begin(); it != SpriteAnimation_ListRender.end(); ++it)
+    if (spritelist.size() != 0)
     {
-        SpriteAnimation* go = (SpriteAnimation*)*it;
-        if (!go->m_anim->animActive)
+        for (std::vector<sprite*>::iterator it = spritelist.begin(); it != spritelist.end(); ++it)
         {
-            SpriteAnimation_List.erase(it);
-            continue;
+            sprite* go = (sprite*)*it;
+            if (!go->spriteanim->m_anim->animActive)
+            {
+                delete go->spriteanim->m_anim;
+                go->spriteanim->m_anim = NULL;
+                delete go->spriteanim;
+                go->spriteanim = NULL;
+                spritelist.erase(it);
+                if (spritelist.size() == 0)
+                    break;
+                 continue;
+            }
+            go->spriteanim->Update(dt);
+            
         }
-        go->Update(dt);
-        
-        /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET]);
-        if (sa)
-        {
-            sa->Update(dt);
-            sa->m_anim->animActive = true;
-        }*/
-
     }
+    
 }
 
 void SpriteManager::RenderSprite(Mesh *mesh, bool enableLight, float size, float x, float y, bool rotate, bool flip)
 {    
-
     Render2DMesh(mesh, enableLight, size, x, y, rotate, flip);
 }
 void SpriteManager::NewSpriteAnimation(Mesh *mesh, Vector3 pos, Vector3 scale, int row, int col,
     int start, int end, float speed, int no_of_repeat, bool flip)
 {
-    SpriteAnimation* go = new SpriteAnimation(mesh->name, row, col);
+    
+    SpriteAnimation *go = dynamic_cast<SpriteAnimation*>(mesh);
     go->m_anim = new Animation();
-    go->m_anim->Set(start, end, no_of_repeat, speed, false);
+    go->m_anim->Set(start, end, no_of_repeat, speed, true);
     sprite* N_sprite = new sprite(go, pos, scale, flip, mesh);
     spritelist.push_back(N_sprite);
     //SpriteAnimation_List.push_back(go);

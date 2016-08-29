@@ -8,7 +8,7 @@
 class sprite
 {
 public:
-    sprite(SpriteAnimation* spriteanim,
+    sprite(SpriteAnimation *spriteanim,
         Vector3 pos,
         Vector3 scale,
         bool flip, Mesh *mesh);
