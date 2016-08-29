@@ -189,7 +189,6 @@ void SP3::Update(double dt)
 		//Charge Projectile
 		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
 		{
-			Character->Attribute->ActionBar(-100);
 			chargeTime += 2 * dt;
 			chargeDmg = chargeTime;
 			if (chargeDmg > 2)
@@ -217,6 +216,7 @@ void SP3::Update(double dt)
 		}
 		if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
 		{
+			Character->Attribute->ActionBar(-100);
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
@@ -224,7 +224,7 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 		
-		std::cout << Character->Attribute->GetActionBar() << std::endl;
+		std::cout << Character->Attribute->GetActionBar() << " " << chargeDmg << " " << chargeTime << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -666,7 +666,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            m_cMap->LoadMap("Map\\Map2.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -739,7 +739,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap);
+                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true);
                        newmon->InitAttrib(10, 1,50,1);
             }
                 break;
@@ -751,7 +751,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true);
                        newmon->InitAttrib(10, 1,50,1);
             }
                 break;
@@ -762,7 +762,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true);
                        newmon->InitAttrib(10, 1,50,1);
             }
 				break;
@@ -773,7 +773,7 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap);
+					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false);
 					   newmon->InitAttrib(150, 50, 50, 1);
 			}
                 break;
@@ -963,8 +963,9 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
             {
                 ProjectileCollisionResponse(projectile, it2);
-                break;
+				break;
             }
+
         }
         //collide with tile
         int m = 0;
@@ -1004,17 +1005,16 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 void SP3::ProjectileCollisionResponse(Projectile* projectile,
     std::vector<Monster*>::iterator monsterlist_iterator)
 {
-    projectile->active = false;
     Monster* go = (Monster*)*monsterlist_iterator;
     switch (projectile->type)
     {
     case Projectile::Bullet:
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
 		Character->Attribute->ActionBar(5);
+		projectile->active = false;
         break;
     case Projectile::ChargeBullet:
         go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
-		chargeDmg = 0;
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -1025,6 +1025,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
+			projectile->active = false;
             return;
         }
         //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());

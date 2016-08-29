@@ -14,22 +14,24 @@ namespace MONSTER
 	}
 
     void Monster::Init(Vector3 startpos, Vector3 scale, float patrol, 
-        float detectionradius, float movementspd, MON_TYPE type, MapLoad* map)
+        float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats)
     {
 		Movement->SetPos_X(startpos.x);
 		Movement->SetPos_Y(startpos.y);
         Movement->Init(startpos, scale,patrol, movementspd,map);
         this->type = type;
         this->map = map;
+		Movement->Float = Floats;
     }
     void Monster::Init(Vector3 startpos, Vector3 scale, float left_patrol, float right_patrol, 
-        float detectionradius, float movementspd, MON_TYPE type, MapLoad* map)
+		float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats)
     {
         Movement->SetPos_X(startpos.x);
         Movement->SetPos_Y(startpos.y); 
         Movement->Init(startpos, scale, left_patrol, right_patrol, movementspd, map);
         this->type = type;
         this->map = map;
+		Movement->Float = Floats;
     }
 
     void Monster::InitAttrib(int maxhp, int Damage, int Catch_PercentHP, int catchrate)
