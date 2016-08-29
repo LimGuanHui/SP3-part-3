@@ -46,7 +46,7 @@ void SP3::Init()
     // Initialise and load the tile map
 	m_cMap = LoadMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800, 25);
-	m_cMap->LoadMap("Map\\Map1.csv");
+	m_cMap->LoadMap("Map\\MapMiniBoss.csv");
     
 
     // Initialise and load the REAR tile map
@@ -190,7 +190,7 @@ void SP3::Update(double dt)
 
 
 		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
+		if (Application::IsKeyPressed('K') && KeyUp) //&& Character->Attribute->GetActionBar() >= 100)
 		{
 			Character->Attribute->ActionBar(-100);
 			chargeTime += 2 * dt;
@@ -803,13 +803,13 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 	switch (projectile->type)
 	{
 	case Projectile::Bullet:
-			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			Render2DMesh(meshList[GEO_N_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
 	case Projectile::ChargeBullet:
-			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , !projectile->Left);
+			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , projectile->Left);
 			break;
 	case Projectile::Net:
-			Render2DMesh(meshList[GEO_MISSILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
 			break;
 	}
 }
@@ -899,7 +899,7 @@ void SP3::RenderList()
             break;
 		case Monster::MINIBOSS:
             Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
-            Render2DMesh(meshList[GEO_MON_HP_BAR], false, go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(), -1), 0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize()), false, false);
+            Render2DMesh(meshList[GEO_MON_HP_BAR], false, (go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(), -1)) * go->Movement->GetScale_X(), 0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize() * go->Movement->GetScale_Y()), false, false);
             break;
         default:
             break;

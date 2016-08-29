@@ -170,7 +170,9 @@ protected:
 		GEO_STARTARROW,
 
         //player projectiles
-        //GEO_NET,
+        GEO_N_SHOT,
+        GEO_C_SHOT,
+        GEO_NET,
         //Monster Hp bar
         GEO_MON_HP_BAR,
 

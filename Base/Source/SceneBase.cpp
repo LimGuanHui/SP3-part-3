@@ -328,6 +328,14 @@ void SceneBase::Init()
     meshList[GEO_MON_HP_BAR] = MeshBuilder::Generate2DMesh("GEO_MON_HP_BAR", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 10.0f);
     //meshList[GEO_MON_HP_BAR]->textureID = LoadTGA("Image//tiles//grass.tga");
 
+    meshList[GEO_NET] = MeshBuilder::Generate2DMesh("net", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_NET]->textureID = LoadTGA("Image//Projectiles//net.tga");
+    meshList[GEO_N_SHOT] = MeshBuilder::Generate2DMesh("N_SHOT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_N_SHOT]->textureID = LoadTGA("Image//Projectiles//NormalShot.tga");
+    meshList[GEO_C_SHOT] = MeshBuilder::Generate2DMesh("C_SHOT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_C_SHOT]->textureID = LoadTGA("Image//Projectiles//ChargeShot.tga");
+
+
 
     //meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
     //meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
