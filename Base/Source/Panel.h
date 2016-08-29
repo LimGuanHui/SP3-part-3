@@ -25,6 +25,12 @@ public:
         Occupied_and_HasDMG,
     };
 
+    enum BELONGS_TO
+    {
+        PLAYER,
+        ENEMY,
+    };
+
     Panel();
     ~Panel();
     void Init(int panelNo, Vector3 startpos, float offset, PanelType panel_type);

@@ -234,7 +234,7 @@ void SceneBase::Init()
 
 	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
-    meshList[GEO_MISSILE]->textureID = LoadTGA("Image//enemy//missile.tga");
+    meshList[GEO_MISSILE]->textureID = LoadTGA("Image//Projectiles//net.tga");
 
 	//Monster
 	meshList[GEO_GASTLY] = MeshBuilder::Generate2DMesh("gastly", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
