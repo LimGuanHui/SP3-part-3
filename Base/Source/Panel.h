@@ -1,4 +1,5 @@
-
+#ifndef PANEL_H
+#define PANEL_H
 
 #include "Vector3.h"
 
@@ -51,3 +52,4 @@ private:
 
 
 
+#endif

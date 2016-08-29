@@ -15,7 +15,7 @@ void Panel::Init(int panelNo, Vector3 startpos, float offset, PanelType panel_ty
     this->panel_type = panel_type;
     this->offset = offset;
     panel_state = Empty;
-    Scale = Vector3(22.5, 15.f, 1);
+    Scale = Vector3(10, 15, 1);
     switch (panelNo)
     {
     case 0:
