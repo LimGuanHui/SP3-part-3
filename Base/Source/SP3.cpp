@@ -174,7 +174,7 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1,2 ,Projectile::Bullet, m_cMap);
             
 		}
 
@@ -182,7 +182,7 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1,1, Projectile::Net, m_cMap);
 		}
 
 
@@ -220,7 +220,7 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::ChargeBullet, m_cMap);
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, chargeDmg,Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
 		
@@ -793,7 +793,7 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , projectile->Left);
 			break;
 	case Projectile::Net:
-			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
 	}
 }
@@ -937,7 +937,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
         {
             Monster* go = (Monster*)*it2;
             int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-            Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+            Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
             int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
             Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
@@ -964,7 +964,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 					m_cMap->theScreenMap[i][m] != 15)
                 {
                     int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                    Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                    Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
                     Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
                     if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
                     {
@@ -988,11 +988,11 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     switch (projectile->type)
     {
     case Projectile::Bullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
 		Character->Attribute->ActionBar(5);
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
+        go->Attribute->ReceiveDamage(projectile->getdmg());
 		chargeDmg = 0;
         break;
     case Projectile::Net:
@@ -1006,7 +1006,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
 			Character->Attribute->ActionBar(10);
             return;
         }
-        //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     default:
         break;
@@ -1040,12 +1040,12 @@ void SP3::MonsterUpdate(double dt)
 
 void SP3::SpriteAnimationUpdate(double dt)
 {
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
     if (sa)
     {
     sa->Update(dt);
-    sa->m_anim->animActive = true;
-    }*/
+    //sa->m_anim->animActive = true;
+    }
 }
 
 void SP3::RenderParticles()

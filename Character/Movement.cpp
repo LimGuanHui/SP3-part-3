@@ -448,26 +448,17 @@ namespace MOVEMENT
 		return projectile;
 	}
 
-    void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale, PROJECTILE::Projectile::ProjType type, MapLoad* m_cMap)
+    void CMovement::ProjectileUpdate(const float timeDiff, double dt, int scale,int dmg, PROJECTILE::Projectile::ProjType type, MapLoad* m_cMap)
 	{
-
-		if (heroAnimationInvert == false)
-		{
-            Projectile = FetchProjectile(m_cMap);
-			Projectile->SetPos(Vector3 (theHeroPosition.x, theHeroPosition.y, 10));
-			Projectile->SetVel(Vector3(500, 0, 0));
-			Projectile->SetScale(Vector3(scale, scale, 1));
-			Projectile->Left = heroAnimationInvert;
-			Projectile->type = type;
-		}
-		else if (heroAnimationInvert == true)
-		{
             Projectile = FetchProjectile(m_cMap);
 			Projectile->SetPos(Vector3(theHeroPosition.x, theHeroPosition.y, 10));
+            if (heroAnimationInvert)
 			Projectile->SetVel(Vector3(-500, 0, 0));
+            else
+                Projectile->SetVel(Vector3(500, 0, 0));
 			Projectile->SetScale(Vector3(scale, scale, 1));
 			Projectile->Left = heroAnimationInvert;
 			Projectile->type = type;
-		}
+            Projectile->setdmg(dmg);
 	}
 }

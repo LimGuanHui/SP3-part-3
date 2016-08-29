@@ -328,15 +328,15 @@ void SceneBase::Init()
 
 
 
-    //meshList[GEO_NET] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
-    //meshList[GEO_NET]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
+    meshList[GEO_NET_ANIM] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
+    meshList[GEO_NET_ANIM]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
 
-    //SpriteAnimation *sa = static_cast<SpriteAnimation*>(meshList[GEO_NET]);
-    //if (sa)
-    //{
-    //    sa->m_anim = new Animation();
-    //    sa->m_anim->Set(0, 63, 0, 3.f, true); // startFrame, endFrame, repeat, Time, Enable
-    //}
+    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+    if (sa)
+    {
+        sa->m_anim = new Animation();
+        sa->m_anim->Set(0, 63, 0, 3.f, false); // startFrame, endFrame, repeat, Time, Enable
+    }
 
     /************************************************************************************************************************
     //Sprite Animation

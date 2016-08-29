@@ -58,5 +58,14 @@ namespace PROJECTILE
 	{
 		this->vel = vel;
 	}
+    float Projectile::getdmg()
+    {
+        return dmg;
+    }
+    void Projectile::setdmg(float dmg)
+    {
+        this->dmg = dmg;
+    }
+
 }
 
