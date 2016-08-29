@@ -178,7 +178,7 @@ void SceneBase::Init()
     meshList[GEO_TILEENEMY_FRAME0] = MeshBuilder::Generate2DMesh("GEO_TILEENEMY_FRAME0", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILEENEMY_FRAME0]->textureID = LoadTGA("Image//tile20_enemy.tga");
 
-
+	//Character Frame
     meshList[GEO_WALK_FRAME1] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_WALK_FRAME1]->textureID = LoadTGA("Image//tiles//walk1.tga");
 
@@ -212,6 +212,7 @@ void SceneBase::Init()
     meshList[GEO_WALK_FRAME11] = MeshBuilder::Generate2DMesh("WALK11", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_WALK_FRAME11]->textureID = LoadTGA("Image//tiles//walk11.tga");
 
+	//Boss Frames
 	meshList[GEO_GENGAR_FRAME0] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_GENGAR_FRAME0]->textureID = LoadTGA("Image//enemy//gengar1.tga");
 
@@ -253,6 +254,9 @@ void SceneBase::Init()
     meshList[GEO_DIRT] = MeshBuilder::Generate2DMesh("GEO_DIRT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
 
+	meshList[GEO_FORESTBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+	meshList[GEO_FORESTBACKGROUND]->textureID = LoadTGA("Image//background//forest.tga");
+
 	meshList[GEO_CAVE] = MeshBuilder::Generate2DMesh("GEO_CAVE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_CAVE]->textureID = LoadTGA("Image//tiles//Cave3.tga");
 
@@ -267,6 +271,8 @@ void SceneBase::Init()
 	
 	meshList[GEO_CASTLEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_CASTLEBACKGROUND]->textureID = LoadTGA("Image//background//bg_castle.tga");
+
+
 
 	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);

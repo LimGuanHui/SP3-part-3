@@ -352,14 +352,11 @@ void SP3::RenderBackground()
 	if (CurrLevel == SP3::LEVEL1)
 		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL2)
-		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+		Render2DMesh(meshList[GEO_FORESTBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL3)
 		Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL4)
-	{
 		Render2DMesh(meshList[GEO_CASTLEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
-		std::cout << "test" << std::endl;
-	}
 	else if (CurrLevel == SP3::LEVEL5)
 		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 }

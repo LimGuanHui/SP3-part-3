@@ -134,13 +134,14 @@ protected:
         GEO_MISSILE,
 
         // lvl 2 tile 
+        GEO_GRASS,
+        GEO_DIRT,
+		GEO_FORESTBACKGROUND,
+		GEO_CAVE,
+		GEO_CAVEBACKGROUND,
 		GEO_CASTLE,
 		GEO_CASTLEGROUND,
 		GEO_CASTLEBACKGROUND,
-        GEO_GRASS,
-        GEO_DIRT,
-		GEO_CAVE,
-		GEO_CAVEBACKGROUND,
 
         //monster
         GEO_GASTLY,//11
