@@ -185,12 +185,6 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		modelStack.Translate(10.f, 10.f, 0.f);
-		modelStack.Scale(10.f, 13.f, 0.f);
-		RenderMesh(meshList[GEO_PRINCESS], false);
-		modelStack.PopMatrix();
-
-		modelStack.PushMatrix();
 		modelStack.Translate(button->PlayButton->pos.x, button->PlayButton->pos.y, 0.f);
 		modelStack.Scale(25.f, 10.f, 0.f);
 		RenderMesh(meshList[GEO_PLAY], false);

@@ -172,7 +172,7 @@ void SceneBase::Init()
     meshList[GEO_TILEHERO_FRAME3]->textureID = LoadTGA("Image//tile2_hero_frame_3.tga");
 
     meshList[GEO_TILE_KILLZONE] = MeshBuilder::Generate2DMesh("GEO_TILE_KILLZONE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
-    meshList[GEO_TILE_KILLZONE]->textureID = LoadTGA("Image//tile10_killzone.tga");
+    meshList[GEO_TILE_KILLZONE]->textureID = LoadTGA("Image//door.tga");
     meshList[GEO_TILE_SAFEZONE] = MeshBuilder::Generate2DMesh("GEO_TILE_SAFEZONE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILE_SAFEZONE]->textureID = LoadTGA("Image//tile11_safezone.tga");
     meshList[GEO_TILEENEMY_FRAME0] = MeshBuilder::Generate2DMesh("GEO_TILEENEMY_FRAME0", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
@@ -235,6 +235,15 @@ void SceneBase::Init()
 	meshList[GEO_CAVEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CAVEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_CAVEBACKGROUND]->textureID = LoadTGA("Image//background//CaveBG2.tga");
 
+	meshList[GEO_CASTLE] = MeshBuilder::Generate2DMesh("GEO_CASTLE", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_CASTLE]->textureID = LoadTGA("Image//tiles//castle.tga");
+
+	meshList[GEO_CASTLEGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_CASTLEGROUND]->textureID = LoadTGA("Image//tiles//castleground.tga");
+	
+	meshList[GEO_CASTLEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+	meshList[GEO_CASTLEBACKGROUND]->textureID = LoadTGA("Image//background//bg_castle.tga");
+
 	//Projectile
     meshList[GEO_MISSILE] = MeshBuilder::Generate2DMesh("Missile", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_MISSILE]->textureID = LoadTGA("Image//Projectiles//net.tga");
@@ -252,9 +261,6 @@ void SceneBase::Init()
 
 	meshList[GEO_PAUSEUI] = MeshBuilder::GenerateQuad("PauseUI", Color(0, 1, 0), 1.f);
 	meshList[GEO_PAUSEUI]->textureID = LoadTGA("Image//pauseui.tga");
-
-	meshList[GEO_PRINCESS] = MeshBuilder::GenerateQuad("Princess", Color(0, 0, 0), 1.f);
-	meshList[GEO_PRINCESS]->textureID = LoadTGA("Image//princess.tga");
 
 	meshList[GEO_PLAYERHP] = MeshBuilder::GenerateQuad("Player HP", Color(0, 1, 0), 1.f);
 

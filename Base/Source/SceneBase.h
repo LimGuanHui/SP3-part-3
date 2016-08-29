@@ -125,6 +125,9 @@ protected:
         GEO_MISSILE,
 
         // lvl 2 tile 
+		GEO_CASTLE,
+		GEO_CASTLEGROUND,
+		GEO_CASTLEBACKGROUND,
         GEO_GRASS,
         GEO_DIRT,
 		GEO_CAVE,
@@ -139,7 +142,6 @@ protected:
 		// UI Stuffs
 		GEO_UI,
 		GEO_PAUSEUI,
-		GEO_PRINCESS,
 		GEO_BACKGROUND2,
 		GEO_EDITBACKGROUND,
 		GEO_PLAYERHP,
