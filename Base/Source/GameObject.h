@@ -27,6 +27,8 @@ struct GameObject
 		GO_OKAYHOVER,
 		GO_HELP,
 		GO_HELPHOVER,
+		GO_RESUME,
+		GO_RESUMEHOVER,
 
 		GO_TOTAL, //must be last
 	};

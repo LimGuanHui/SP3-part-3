@@ -109,15 +109,25 @@ void SP3::Update(double dt)
     SceneBase::Update(dt);
     
 	Main.Update(dt);
-	if (Main.gamestate == MainMenu::Game)
-	{
-		State = Game;
-	}
+	//if (Main.gamestate == MainMenu::Game)
+	//{
+	//	State = Game;
+	//}
 
-	if (State == SP3::Menu)
-	{
-		Main.gamestate == Menu;
-	}
+	//if (Main.gamestate == MainMenu::Pause)
+	//{
+	//	State = Pause;
+	//}
+
+	//if (State == SP3::Menu)
+	//{
+	//	Main.gamestate == Menu;
+	//}
+
+	//if (State == SP3::Pause)
+	//{
+	//	Main.gamestate == Pause;
+	//}
 
    // rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
 
@@ -128,7 +138,7 @@ void SP3::Update(double dt)
     if (jumpsoundtimer > 0)
         jumpsoundtimer -= dt;
 
-    if (State == SP3::Game)
+    if (Main.gamestate == Main.Game)
     {
 		Scenetransition();
         // Update the hero
@@ -284,11 +294,11 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_MENU], false);
 		break;
 
-	//case(GameObject::GO_MENUHOVER) :
-	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[GEO_MENUHOVER], false);
-	//	break;
+	case(GameObject::GO_MENUHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MENUHOVER], false);
+		break;
 
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -338,6 +348,18 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_HELPHOVER], false);
 		break;
 
+	case(GameObject::GO_RESUME) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESUME], false);
+		break;
+
+	case(GameObject::GO_RESUMEHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESUMEHOVER], false);
+		break;
+
 	default:
 		break;
 	}
@@ -353,10 +375,7 @@ void SP3::RenderBackground()
 	else if (CurrLevel == SP3::LEVEL3)
 		Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL4)
-	{
 		Render2DMesh(meshList[GEO_CASTLEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
-		std::cout << "test" << std::endl;
-	}
 	else if (CurrLevel == SP3::LEVEL5)
 		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 }
@@ -389,13 +408,13 @@ void SP3::Render()
 		}
 	}
 
-	switch (State)
+	switch (Main.gamestate)
 	{
-	case Menu:
+	case MainMenu::GameState::Menu:
 		Main.RenderMenu(m_cMap);
 		break;
 
-	case Game:
+	case MainMenu::GameState::Game:
 		RenderBackground();
 		//RenderRearTileMap();
 		// Render the tile map
@@ -403,13 +422,17 @@ void SP3::Render()
 		RenderCharacter();
 		RenderList();
 		// Render the rear tile map
-		
-		
-		
-
 		break;
 
-	case End:
+	case MainMenu::GameState::Pause:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::Help:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::End:
 		break;
 	}
     
