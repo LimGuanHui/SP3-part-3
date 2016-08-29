@@ -290,35 +290,11 @@ void SP3::RenderGO(GameObject *go)
 	//	RenderMesh(meshList[GEO_MENUHOVER], false);
 	//	break;
 
-	case(GameObject::GO_EDIT) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_EDIT], false);
-		break;
-
-	case(GameObject::GO_LOAD) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_LOAD], false);
-		break;
-
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HIGHSCORE], false);
 		break;
-
-	case(GameObject::GO_SAVE) :
-		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-		RenderMesh(meshList[GEO_SAVE], false);
-		break;
-
-	//case(GameObject::GO_SAVEHOVER) :
-	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[GEO_SAVEHOVER], false);
-	//	break;
 
 	case(GameObject::GO_EXIT) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
