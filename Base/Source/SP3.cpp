@@ -46,7 +46,7 @@ void SP3::Init()
     // Initialise and load the tile map
 	m_cMap = LoadMap();
     m_cMap->Init(600, 800, 24, 32, 600, 800, 25);
-	m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+	m_cMap->LoadMap("Map\\Map1.csv");
     
 
     // Initialise and load the REAR tile map
@@ -187,7 +187,7 @@ void SP3::Update(double dt)
 
 
 		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp) //&& Character->Attribute->GetActionBar() >= 100)
+		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
 		{
 			Character->Attribute->ActionBar(-100);
 			chargeTime += 2 * dt;
