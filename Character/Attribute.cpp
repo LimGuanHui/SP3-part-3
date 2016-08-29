@@ -6,7 +6,7 @@ namespace ATTRIBUTE
 		: Damage(5)
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
-		, ActionMeter(100)
+		, ActionMeter(0)
 	{
 		//N_Boss = new BOSS::Boss();
 	}
