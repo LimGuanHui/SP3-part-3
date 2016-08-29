@@ -356,7 +356,10 @@ void SP3::RenderBackground()
 	else if (CurrLevel == SP3::LEVEL3)
 		Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL4)
-		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+	{
+		Render2DMesh(meshList[GEO_CASTLEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+		std::cout << "test" << std::endl;
+	}
 	else if (CurrLevel == SP3::LEVEL5)
 		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 }
@@ -397,7 +400,7 @@ void SP3::Render()
 
 	case Game:
 		RenderBackground();
-		RenderRearTileMap();
+		//RenderRearTileMap();
 		// Render the tile map
 		RenderTileMap();
 		RenderCharacter();
@@ -495,11 +498,11 @@ void SP3::RenderTileMap()
 			{
 				if (m_cMap->theScreenMap[i][m] == 6)
 				{
-					Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+					Render2DMesh(meshList[GEO_CASTLE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 				else if (m_cMap->theScreenMap[i][m] == 7)
 				{
-					Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+					Render2DMesh(meshList[GEO_CASTLEGROUND], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 				}
 			}
         }
