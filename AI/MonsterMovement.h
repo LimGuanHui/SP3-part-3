@@ -50,6 +50,11 @@ namespace MONSTER_MOVEMENT
         void SetVel_X(float vel_X);
         void SetVel_Y(float vel_Y);
 
+
+		void SetAnimationCounter(int AnimationCounter);
+		int GetAnimationCounter(void);
+		int AnimationCounter;
+
         bool faceleft();
 
         State Monstate;

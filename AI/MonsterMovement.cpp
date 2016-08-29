@@ -3,8 +3,9 @@ namespace MONSTER_MOVEMENT
 {
 	MMovement::MMovement()
 		: theMonsterPosition(0, 0, 0)
-		, theMonsterScale(1,1, 1)
-		, theMonsterVel(0,0,0)
+		, theMonsterScale(1, 1, 1)
+		, theMonsterVel(0, 0, 0)
+		, AnimationCounter(1)
 	{
 	}
 
@@ -109,6 +110,11 @@ namespace MONSTER_MOVEMENT
 		this->theMonsterVel.y = vel_Y;
 	}
 
+	int MMovement::GetAnimationCounter()
+	{
+		return AnimationCounter;
+	}
+
     void MMovement::update(double dt, Vector3 characterpos)
     {
         theMonsterPosition += theMonsterVel * dt;
@@ -140,6 +146,7 @@ namespace MONSTER_MOVEMENT
 					map->theScreenMap[checkPosition_Y][checkPosition_X + 1] != 14)
                 {
                     theMonsterVel.x = -theMonsterVel.x;
+					
                     facingleft = true;
                 }
 
@@ -154,6 +161,9 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
                 }
+				AnimationCounter++;
+				if (AnimationCounter > 3)
+					AnimationCounter = 1;
 
             }            
             //left
@@ -180,6 +190,9 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = false;
                 }
+				AnimationCounter--;
+				if (AnimationCounter < 1)
+					AnimationCounter = 3;
             }
         }
             break;

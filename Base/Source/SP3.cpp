@@ -224,7 +224,8 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 		
-		//std::cout << Character->Attribute->GetActionBar() << endl;
+		std::cout << AI->Monster->Movement->AnimationCounter << std::endl;
+
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
 			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
@@ -663,7 +664,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map2.csv");
+            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -884,6 +885,23 @@ void SP3::RenderList()
 		case Monster::MINIBOSS:
             Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
             Render2DMesh(meshList[GEO_MON_HP_BAR], false, (go->Attribute->GetCurrentHP() * pow(go->Attribute->GetMonsterMaxHealth(), -1)) * go->Movement->GetScale_X(), 0.8, go->Movement->GetPos_X(), go->Movement->GetPos_Y() + (m_cMap->GetTileSize() * go->Movement->GetScale_Y()), false, false);
+			if (go->Movement->GetAnimationCounter() == 0)
+				Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 1)
+				Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 2)
+				Render2DMesh(meshList[GEO_MONSTER3], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 3)
+				Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 4)
+				Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 5)
+				Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 6)
+				Render2DMesh(meshList[GEO_MINIBOSS], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+			else if (go->Movement->GetAnimationCounter() == 7)
+				Render2DMesh(meshList[GEO_GASTLY], false, go->Movement->GetScale_X(), go->Movement->GetPos_X(), go->Movement->GetPos_Y(), !go->Movement->faceleft());
+
             break;
         default:
             break;
@@ -953,6 +971,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
                 if ((tileOffset_x + k) >= m_cMap->getNumOfTiles_MapWidth())
                     break;
                 if (m_cMap->theScreenMap[i][m] != 0 &&
+					m_cMap->theScreenMap[i][m] != 9 &&
                     m_cMap->theScreenMap[i][m] != 11 &&
                     m_cMap->theScreenMap[i][m] != 10 &&
                     m_cMap->theScreenMap[i][m] != 12 &&
