@@ -228,7 +228,6 @@ void SP3::Update(double dt)
 		}
 		
 		//std::cout << Character->Attribute->GetActionBar() << endl;
-
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
 			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
@@ -362,7 +361,16 @@ void SP3::RenderGO(GameObject *go)
 
 void SP3::RenderBackground()
 {
-    Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f,0.f,false,false);
+	if (CurrLevel == SP3::LEVEL1)
+		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+	else if (CurrLevel == SP3::LEVEL2)
+		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+	else if (CurrLevel == SP3::LEVEL3)
+		Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+	else if (CurrLevel == SP3::LEVEL4)
+		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+	else if (CurrLevel == SP3::LEVEL5)
+		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 }
 
 void SP3::Render()
@@ -401,12 +409,15 @@ void SP3::Render()
 
 	case Game:
 		RenderBackground();
-		// Render the rear tile map
 		RenderRearTileMap();
 		// Render the tile map
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
+		// Render the rear tile map
+		
+		
+		
 
 		break;
 
@@ -534,6 +545,10 @@ void SP3::RenderRearTileMap()
             {
                 Render2DMesh(meshList[GEO_TILESTRUCTURE], false, 1.0f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize(), false);
             }
+			if (m_cRearMap->theScreenMap[i][m] == 93)
+			{
+				Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize(), false);
+			}
         }
     }
 }
@@ -664,7 +679,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map2.csv");
+            m_cMap->LoadMap("Map\\Map4B.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
