@@ -67,14 +67,6 @@ void MainMenu::Update(double dt)
 	if (InputDelayTimer > 0)
 		InputDelayTimer -= dt;
 
-	if (gamestate == Game)
-	{
-		if (Character->Attribute->GetCurrentHP() >= 0)
-		{
-			playerDead = false;
-		}
-	}
-
 	if (gamestate == Menu)
 	{
 		button->PlayButton->active = true;
@@ -195,6 +187,11 @@ void MainMenu::Update(double dt)
 		{
 			InputDelayTimer = InputDelay;
 			gamestate = Pause;
+		}
+
+		if (Character->Attribute->GetCurrentHP() >= 0)
+		{
+			playerDead = false;
 		}
 	}
 
