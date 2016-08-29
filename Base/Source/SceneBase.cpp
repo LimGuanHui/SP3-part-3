@@ -212,6 +212,30 @@ void SceneBase::Init()
     meshList[GEO_WALK_FRAME11] = MeshBuilder::Generate2DMesh("WALK11", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_WALK_FRAME11]->textureID = LoadTGA("Image//tiles//walk11.tga");
 
+	meshList[GEO_GENGAR_FRAME0] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME0]->textureID = LoadTGA("Image//enemy//gengar1.tga");
+
+	meshList[GEO_GENGAR_FRAME1] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME1]->textureID = LoadTGA("Image//enemy//gengar2.tga");
+
+	meshList[GEO_GENGAR_FRAME2] = MeshBuilder::Generate2DMesh("WALK2", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME2]->textureID = LoadTGA("Image//enemy//gengar3.tga");
+
+	meshList[GEO_GENGAR_FRAME3] = MeshBuilder::Generate2DMesh("WALK3", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME3]->textureID = LoadTGA("Image//enemy//gengar4.tga");
+
+	meshList[GEO_GENGAR_FRAME4] = MeshBuilder::Generate2DMesh("WALK4", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME4]->textureID = LoadTGA("Image//enemy//gengar5.tga");
+
+	meshList[GEO_GENGAR_FRAME5] = MeshBuilder::Generate2DMesh("WALK5", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME5]->textureID = LoadTGA("Image//enemy//gengar6.tga");
+
+	meshList[GEO_GENGAR_FRAME6] = MeshBuilder::Generate2DMesh("WALK6", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME6]->textureID = LoadTGA("Image//enemy//gengar7.tga");
+
+	meshList[GEO_GENGAR_FRAME7] = MeshBuilder::Generate2DMesh("WALK7", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+	meshList[GEO_GENGAR_FRAME7]->textureID = LoadTGA("Image//enemy//gengar8.tga");
+
     meshList[GEO_STANDING] = MeshBuilder::Generate2DMesh("standing", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_STANDING]->textureID = LoadTGA("Image//tiles//stand.tga");
 

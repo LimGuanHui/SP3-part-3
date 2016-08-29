@@ -162,7 +162,7 @@ namespace MONSTER_MOVEMENT
                     facingleft = true;
                 }
 				AnimationCounter++;
-				if (AnimationCounter > 3)
+				if (AnimationCounter > 7)
 					AnimationCounter = 1;
 
             }            
@@ -192,7 +192,7 @@ namespace MONSTER_MOVEMENT
                 }
 				AnimationCounter--;
 				if (AnimationCounter < 1)
-					AnimationCounter = 3;
+					AnimationCounter = 7;
             }
         }
             break;
