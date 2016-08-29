@@ -33,6 +33,7 @@ class SP3 : public SceneBase
     enum GameState
     {
         Menu,
+		Pause,
         Game,
         End,
     };

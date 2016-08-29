@@ -25,6 +25,7 @@ public:
 	GameObject* RestartButton;
 	GameObject* HelpButton;
 	GameObject* OkayButton;
+	GameObject* ResumeButton;
 
 	Camera camera;
 	bool isClick;

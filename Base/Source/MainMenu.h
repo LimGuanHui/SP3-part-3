@@ -44,6 +44,16 @@ public:
 	StartOptions StartOp;
 	int startArrow;
 
+	enum PauseOptions
+	{
+		Resume,
+		ReturnMenu,
+		Quit2,
+		END2,
+	};
+	PauseOptions PauseOp;
+	int pauseArrow;
+
 	GameState gamestate;
 	Buttons* button;
 	//CCharacter* Character;
