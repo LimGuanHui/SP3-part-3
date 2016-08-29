@@ -109,15 +109,25 @@ void SP3::Update(double dt)
     SceneBase::Update(dt);
     
 	Main.Update(dt);
-	if (Main.gamestate == MainMenu::Game)
-	{
-		State = Game;
-	}
+	//if (Main.gamestate == MainMenu::Game)
+	//{
+	//	State = Game;
+	//}
 
-	if (State == SP3::Menu)
-	{
-		Main.gamestate == Menu;
-	}
+	//if (Main.gamestate == MainMenu::Pause)
+	//{
+	//	State = Pause;
+	//}
+
+	//if (State == SP3::Menu)
+	//{
+	//	Main.gamestate == Menu;
+	//}
+
+	//if (State == SP3::Pause)
+	//{
+	//	Main.gamestate == Pause;
+	//}
 
    // rotateAngle -= Application::camera_yaw;// += (float)(10 * dt);
 
@@ -128,7 +138,7 @@ void SP3::Update(double dt)
     if (jumpsoundtimer > 0)
         jumpsoundtimer -= dt;
 
-    if (State == SP3::Game)
+    if (Main.gamestate == Main.Game)
     {
 		Scenetransition();
         // Update the hero
@@ -174,7 +184,7 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Bullet, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, Character->Attribute->GetDmg() ,Projectile::Bullet, m_cMap);
             
 		}
 
@@ -182,18 +192,18 @@ void SP3::Update(double dt)
 		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
 		{
 			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::Net, m_cMap);
+			Character->Movement->ProjectileUpdate(2.f, dt, 1, 1, Projectile::Net, m_cMap);
 		}
 
 
 		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 100)
+		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
 		{
 			chargeTime += 2 * dt;
 			chargeDmg = chargeTime;
-			if (chargeDmg > 2)
+			if (chargeDmg > 1.5)
 			{
-				chargeDmg = 2;
+				chargeDmg = 1.5;
 			}
 			if (chargeTime > 2)
 			{
@@ -216,11 +226,11 @@ void SP3::Update(double dt)
 		}
 		if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
 		{
-			Character->Attribute->ActionBar(-100);
+			Character->Attribute->ActionBar(-50);
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(2.f, dt, 1, Projectile::ChargeBullet, m_cMap);
+            Character->Movement->ProjectileUpdate(2.f, dt, 1, (Character->Attribute->GetDmg() *  chargeDmg) ,Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
 		
@@ -287,11 +297,11 @@ void SP3::RenderGO(GameObject *go)
 		RenderMesh(meshList[GEO_MENU], false);
 		break;
 
-	//case(GameObject::GO_MENUHOVER) :
-	//	modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
-	//	modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
-	//	RenderMesh(meshList[GEO_MENUHOVER], false);
-	//	break;
+	case(GameObject::GO_MENUHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_MENUHOVER], false);
+		break;
 
 	case(GameObject::GO_HIGHSCORE) :
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
@@ -339,6 +349,18 @@ void SP3::RenderGO(GameObject *go)
 		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
 		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
 		RenderMesh(meshList[GEO_HELPHOVER], false);
+		break;
+
+	case(GameObject::GO_RESUME) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESUME], false);
+		break;
+
+	case(GameObject::GO_RESUMEHOVER) :
+		modelStack.Translate(go->pos.x, go->pos.y, go->pos.z);
+		modelStack.Scale(go->scale.x, go->scale.y, go->scale.z);
+		RenderMesh(meshList[GEO_RESUMEHOVER], false);
 		break;
 
 	default:
@@ -389,13 +411,13 @@ void SP3::Render()
 		}
 	}
 
-	switch (State)
+	switch (Main.gamestate)
 	{
-	case Menu:
+	case MainMenu::GameState::Menu:
 		Main.RenderMenu(m_cMap);
 		break;
 
-	case Game:
+	case MainMenu::GameState::Game:
 		RenderBackground();
 		//RenderRearTileMap();
 		// Render the tile map
@@ -403,13 +425,17 @@ void SP3::Render()
 		RenderCharacter();
 		RenderList();
 		// Render the rear tile map
-		
-		
-		
-
 		break;
 
-	case End:
+	case MainMenu::GameState::Pause:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::Help:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::End:
 		break;
 	}
     
@@ -666,7 +692,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\Map2.csv");
+            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -740,7 +766,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->InitAttrib(25, 1,50,1);
             }
                 break;
             
@@ -752,7 +778,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->InitAttrib(50, 1,50,1);
             }
                 break;
             case 14:
@@ -763,7 +789,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true);
-                       newmon->InitAttrib(10, 1,50,1);
+                       newmon->InitAttrib(75, 1,50,1);
             }
 				break;
 			case 15:
@@ -796,7 +822,7 @@ void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , projectile->Left);
 			break;
 	case Projectile::Net:
-			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, !projectile->Left);
+			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
 	}
 }
@@ -862,7 +888,7 @@ void SP3::RenderCharacter()
 		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
 	}
 
-    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, Character->Attribute->GetActionBar() * pow(m_cMap->GetTileSize(),-1), Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
+    Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, (Character->Attribute->GetActionBar() / 100.f) * 2 , Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
 
 }
 
@@ -957,7 +983,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
         {
             Monster* go = (Monster*)*it2;
             int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-            Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+            Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
             int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
             Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
@@ -986,7 +1012,7 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
 					m_cMap->theScreenMap[i][m] != 15)
                 {
                     int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
-                    Vector3 pos1(projectile->pos.x + tsize, projectile->pos.y + tsize, 0);
+                    Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
                     Vector3 pos2(k*m_cMap->GetTileSize() + tsize, 575 - i*m_cMap->GetTileSize() + tsize, 0);
                     if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
                     {
@@ -1009,12 +1035,12 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     switch (projectile->type)
     {
     case Projectile::Bullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
 		Character->Attribute->ActionBar(5);
 		projectile->active = false;
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(Character->Attribute->GetDmg() * chargeDmg);
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -1028,7 +1054,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
 			projectile->active = false;
             return;
         }
-        //go->Attribute->ReceiveDamage(Character->Attribute->GetDmg());
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     default:
         break;
@@ -1065,12 +1091,12 @@ void SP3::MonsterUpdate(double dt)
 
 void SP3::SpriteAnimationUpdate(double dt)
 {
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_SPRITE_ANIMATION]);
+    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
     if (sa)
     {
     sa->Update(dt);
-    sa->m_anim->animActive = true;
-    }*/
+    //sa->m_anim->animActive = true;
+    }
 }
 
 void SP3::RenderParticles()

@@ -21,7 +21,7 @@ namespace MOVEMENT
 		CMovement();
 		~CMovement();
 
-        void ProjectileUpdate(const float timeDiff, double dt, int scale, 
+        void ProjectileUpdate(const float timeDiff, double dt, int scale, int dmg,
             PROJECTILE::Projectile::ProjType type, MapLoad* m_cMap);
 
 		PROJECTILE::Projectile* Projectile;

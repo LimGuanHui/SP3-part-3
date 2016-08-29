@@ -62,4 +62,11 @@ void Buttons::Init(vector<GameObject *>* buttonList, MapLoad* m_cMap)
 	OkayButton->scale.Set(30.f / m_cMap->GetTileSize(), 10.f / m_cMap->GetTileSize(), 0.f);
 	OkayButton->active = false;
 	buttonList->push_back(OkayButton);
+
+	ResumeButton = new GameObject();
+	ResumeButton->type = GameObject::GO_RESUME;
+	ResumeButton->pos.Set(-20.f, -20.f, 1.f);
+	ResumeButton->scale.Set(30.f / m_cMap->GetTileSize(), 10.f / m_cMap->GetTileSize(), 0.f);
+	ResumeButton->active = false;
+	buttonList->push_back(ResumeButton);
 }
