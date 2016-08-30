@@ -27,10 +27,12 @@ namespace CHARACTER
 
 		void Restart();
 		bool active;
-
-
+        void Update(double dt);
+        void IncreaseScore(int score);
+        int getScore();
 	private:
-	
+        int score;
+        int scoreforshow;
 
 	};
 

@@ -129,6 +129,7 @@ void SP3::Update(double dt)
     if (jumpsoundtimer > 0)
         jumpsoundtimer -= dt;
 
+
 	if (Main.gamestate == Main.Game)
 	{
 		if (!battlestage)
@@ -170,6 +171,7 @@ void SP3::Update(double dt)
 
 			Character->Movement->HeroUpdate(m_cMap);
 			Character->Attribute->update(dt);
+            Character->Update(dt);
 		}
 
 		else
@@ -471,6 +473,13 @@ void SP3::Render()
             RenderList();
             //spritemanager->spriteRender();
             Main.RenderMenu(m_cMap);
+
+            std::ostringstream ss;
+            ss.str(string());
+            ss.precision(7);
+            ss << Character->getScore();
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 25, 550);
+
         }
 		break;
 
@@ -1167,6 +1176,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         {
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
+            Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
@@ -1176,6 +1186,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
 				MiniBossAlive = false;
 				std::cout << "DEAD" << std::endl;
 			}
+
             return;
         }
         go->Attribute->ReceiveDamage(projectile->getdmg());
