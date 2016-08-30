@@ -295,6 +295,9 @@ void SceneBase::Init()
 
 	meshList[GEO_PLAYERHP] = MeshBuilder::GenerateQuad("Player HP", Color(0, 1, 0), 1.f);
 
+	meshList[GEO_HPUI] = MeshBuilder::GenerateQuad("HP UI", Color(1, 1, 1), 1.f);
+	meshList[GEO_HPUI]->textureID = LoadTGA("Image//hpui.tga");
+
 	meshList[GEO_BACKGROUND2] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND2", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_BACKGROUND2]->textureID = LoadTGA("Image//heaven.tga");
 

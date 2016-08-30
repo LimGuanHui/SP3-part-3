@@ -126,6 +126,7 @@ void SP3::Update(double dt)
 
     if (Main.gamestate == Main.Game)
     {
+		State = Game;
 		Scenetransition();
         //sprite update
         //spritemanager->update(dt);
@@ -624,29 +625,28 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-		ss.str(string());
+		/*ss.str(string());
 		ss.precision(5);
-		ss << "Lives: " << Character->Attribute->GetCurrentHP();
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss << Character->Attribute->GetCurrentHP();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);*/
     }
-
         break;
     case SP3::Game:
         //On screen text
     {
         ss.str(string());
         ss.precision(5);
-		ss << "Lives: " << Character->Attribute->GetCurrentHP();
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss << Character->Attribute->GetCurrentHP();
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);
     }
         break;
     case SP3::End:
         if (lives <= 0)
         {
-            ss.str(string());
+            /*ss.str(string());
             ss.precision(5);
             ss << "GAME OVER";
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);*/
         }
         else if (lives > 0)
         {
@@ -655,10 +655,10 @@ void SP3::GameStateRenderText()
             //ss << "You win!";
             //RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
 
-			ss.str(string());
+			/*ss.str(string());
 			ss.precision(5);
-			ss << "Lives: " << Character->Attribute->GetCurrentHP();
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+			ss << Character->Attribute->GetCurrentHP();
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 5, 30);*/
         }
 
         break;
