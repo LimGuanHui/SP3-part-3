@@ -318,6 +318,7 @@ void MainMenu::Update(double dt)
 			{
 				InputDelayTimer = InputDelay;
 				gamestate = Menu;
+				RestartGame = true;
 			}
 			break;
 

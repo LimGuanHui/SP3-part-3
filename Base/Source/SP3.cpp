@@ -253,6 +253,10 @@ void SP3::Update(double dt)
 			Main.gamestate = Main.End;
 		}
 
+		if (MiniBossAlive == false)
+		{
+			Main.gamestate = Main.Win;
+		}
             //Character->Attribute->setisDead(true);
     }
 
@@ -278,6 +282,7 @@ void SP3::Update(double dt)
 	if (Main.gamestate == Main.Win)
 	{
 		State = Win;
+		Main.RestartGame = false;
 	}
 	
 	//std::cout << Main.deadArrow << std::endl;
@@ -702,6 +707,7 @@ void SP3::Restart()
 	CurrLevel = LEVEL1;
 	m_cMap->LoadMap("Map\\Map1.csv");
 	Character->Restart();
+	MiniBossAlive = true;
 	SpawnObjects();
 
 }
@@ -1084,6 +1090,11 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             //particle animation here
 			Character->Attribute->ActionBar(10);
 			projectile->active = false;
+			if (go->type == Monster::MINIBOSS)
+			{
+				MiniBossAlive = false;
+				std::cout << "DEAD" << std::endl;
+			}
             return;
         }
         go->Attribute->ReceiveDamage(projectile->getdmg());
