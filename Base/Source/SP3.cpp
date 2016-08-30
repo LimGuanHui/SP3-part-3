@@ -166,7 +166,7 @@ void SP3::Update(double dt)
 
         Character->Movement->HeroUpdate(m_cMap);
 		Character->Attribute->ActionBar(ActionIncrease);
-
+		
 		firingDebounce += (float)dt;
 		bool KeyUp = true;
 
@@ -190,10 +190,6 @@ void SP3::Update(double dt)
 		{
 			chargeTime += 2 * dt;
 			chargeDmg = chargeTime;
-			if (chargeDmg > 1.5)
-			{
-				chargeDmg = 1.5;
-			}
 			if (chargeTime > 2)
 			{
 				chargeTime = 2;
@@ -219,7 +215,7 @@ void SP3::Update(double dt)
 			chargeFire = false;
 			KeyUp = false;
 			chargeTime = 0;
-            Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg) ,Projectile::ChargeBullet, m_cMap);
+            Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  (chargeDmg * 3)) ,Projectile::ChargeBullet, m_cMap);
 			std::cout << "Fire" << std::endl;
 		}
 
@@ -247,12 +243,6 @@ void SP3::Update(double dt)
         //SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
 
-		if (Character->Attribute->GetCurrentHP() <= 0)
-		{
-			State = End;
-			Main.gamestate = Main.End;
-		}
-
 		if (MiniBossAlive == false)
 		{
 			Main.gamestate = Main.Win;
@@ -260,16 +250,24 @@ void SP3::Update(double dt)
             //Character->Attribute->setisDead(true);
     }
 
-	if (Main.gamestate == Main.Restart)
-	{
-		Main.playerDead = true;
-		State = Game;
-		//Restart();
-	}
+	//if (Main.gamestate == Main.Restart)
+	//{
+	//	Main.playerDead = true;
+	//	State = Game;
+	//	//Restart();
+	//}
+
 
 	if (Main.RestartGame)
 	{
 		Restart();
+		Main.RestartGame = false;
+	}
+
+	if (Character->Attribute->GetCurrentHP() <= 0)
+	{
+		State = End;
+		Main.gamestate = Main.End;
 		Main.RestartGame = false;
 	}
 
@@ -707,6 +705,7 @@ void SP3::Restart()
 	CurrLevel = LEVEL1;
 	m_cMap->LoadMap("Map\\Map1.csv");
 	Character->Restart();
+	Character->Attribute->SetCurrentHP(Character->Attribute->GetMaxHP());
 	MiniBossAlive = true;
 	SpawnObjects();
 
@@ -1021,13 +1020,47 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
             int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
             Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
-            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
-            {
-                ProjectileCollisionResponse(projectile, it2);
-				break;
-            }
+
+			int tsize3 = ((m_cMap->GetTileSize() * 1) - (6 * 1)) * 0.5;
+			Vector3 pos3(Character->Movement->GetPos_x() + tsize2, Character->Movement->GetPos_y() + tsize2, 0);
+
+			if (projectile->type == Projectile::BossBullet)
+			{
+				if (Collision::SphericalCollision(pos1, tsize, pos3, tsize3))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+			else
+			{
+				if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+			
 
         }
+		//collide with Character
+		/*for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+		{
+			Monster* go = (Monster*)*it2;
+			if (projectile->type == Projectile::BossBullet)
+			{
+				int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+				Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
+				int tsize2 = ((m_cMap->GetTileSize() * m_cMap->GetTileSize() - (6 * m_cMap->GetTileSize()))) * 0.5;
+				Vector3 pos2(Character->Movement->GetPos_x() + tsize2, Character->Movement->GetPos_y() + tsize2, 0);
+				if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+		}*/
+		
         //collide with tile
         int m = 0;
         for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
@@ -1070,16 +1103,16 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     switch (projectile->type)
     {
     case Projectile::Bullet:
-        go->Attribute->ReceiveDamage(projectile->getdmg());
         Character->Attribute->ActionBar(5);
         {            
             Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
             //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(projectile->getdmg());
+			go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -1098,7 +1131,12 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             return;
         }
         go->Attribute->ReceiveDamage(projectile->getdmg());
+		projectile->active = false;
         break;
+	case Projectile::BossBullet:
+		Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
+		projectile->active = false;
+		break;
     default:
         break;
     }

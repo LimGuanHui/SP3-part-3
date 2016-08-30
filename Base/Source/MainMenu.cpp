@@ -251,6 +251,7 @@ void MainMenu::Update(double dt)
 		{
 			playerDead = false;
 		}
+
 	}
 
 	case Pause:
@@ -291,9 +292,8 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(100);
-				gamestate = Game;
 				RestartGame = true;
+				gamestate = Game;
 			}
 			break;
 
@@ -301,7 +301,6 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(100);
 				gamestate = Menu;
 				RestartGame = true;
 			}

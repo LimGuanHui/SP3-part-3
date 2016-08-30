@@ -45,6 +45,7 @@ namespace MONSTER
     void Monster::update(double dt, Vector3 characterpos)
     {
         Movement->update(dt,characterpos);
+		Attribute->update(dt);
     }
 
 	Monster* N_Monster()

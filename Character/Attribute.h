@@ -23,6 +23,7 @@ namespace ATTRIBUTE
 		void SetDmg(int Dmg);
 		void SetReceivedDamage(int receiveDmg);
 		void SetRecovery(int Recover);
+		void SetCurrentHP(int HP);
 
 		int GetMaxHP();
 		int GetCurrentHP();
