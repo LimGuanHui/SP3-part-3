@@ -4,7 +4,7 @@
 
 #define InputDelay 0.1f
 
-MainMenu::MainMenu() : QuitGame(false)
+MainMenu::MainMenu() : QuitGame(false), RestartGame(false)
 {
 
 }
@@ -293,6 +293,7 @@ void MainMenu::Update(double dt)
 				InputDelayTimer = InputDelay;
 				Character->Attribute->SetRecovery(100);
 				gamestate = Game;
+				RestartGame = true;
 			}
 			break;
 
@@ -302,6 +303,7 @@ void MainMenu::Update(double dt)
 				InputDelayTimer = InputDelay;
 				Character->Attribute->SetRecovery(100);
 				gamestate = Menu;
+				RestartGame = true;
 			}
 			break;
 		}

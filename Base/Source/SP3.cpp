@@ -251,7 +251,6 @@ void SP3::Update(double dt)
 		{
 			State = End;
 			Main.gamestate = Main.End;
-			Main.playerDead = true;
 		}
 
             //Character->Attribute->setisDead(true);
@@ -259,15 +258,21 @@ void SP3::Update(double dt)
 
 	if (Main.gamestate == Main.Restart)
 	{
+		Main.playerDead = true;
 		State = Game;
+		Restart();
+	}
 
-		SpawnObjects();
+	if (Main.RestartGame)
+	{
+		Restart();
+		Main.RestartGame = false;
 	}
 
 	if (Main.gamestate == Main.Menu)
 	{
 		State = Menu;
-		SpawnObjects();
+		Main.RestartGame = false;
 	}
 
 	if (Main.gamestate == Main.Win)
@@ -275,7 +280,7 @@ void SP3::Update(double dt)
 		State = Win;
 	}
 	
-
+	//std::cout << Main.deadArrow << std::endl;
 	//std::cout << fps << std::endl;
 }
 
@@ -694,12 +699,14 @@ void SP3::GameStateRender()
 
 void SP3::Restart()
 {
-	Scenetransition();
-	RenderList();
+	CurrLevel = LEVEL1;
+	m_cMap->LoadMap("Map\\Map1.csv");
+	SpawnObjects();
 }
 
 void SP3::Scenetransition()
 {
+	
     if (Character->Movement->TransitLevel)
     {
         CurrLevel = static_cast<Level>(CurrLevel + 1);

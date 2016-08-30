@@ -79,6 +79,7 @@ public:
 	bool playerDead;
 	std::vector<GameObject *> m_goList;
 	bool QuitGame;
+	bool RestartGame;
 
 protected:
 	float InputDelayTimer;
