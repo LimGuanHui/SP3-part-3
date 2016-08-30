@@ -6,6 +6,7 @@ namespace MONSTER_MOVEMENT
 		, theMonsterScale(1, 1, 1)
 		, theMonsterVel(0, 0, 0)
 		, AnimationCounter(1)
+		, timer(0)
 	{
 	}
 
@@ -115,14 +116,20 @@ namespace MONSTER_MOVEMENT
 		this->theMonsterVel.y = vel_Y;
 	}
 
+	void MMovement::SetAnimationCounter(int AC)
+	{
+		this->AnimationCounter = AC;
+	}
+
 	int MMovement::GetAnimationCounter()
 	{
 		return AnimationCounter;
 	}
 
-    void MMovement::update(double dt, Vector3 characterpos)
+    void MMovement::update(double dt, Vector3 characterpos, MapLoad* map, bool isBoss)
     {
         theMonsterPosition += theMonsterVel * dt;
+		timer += dt;
         switch (Monstate)
         {
         case MONSTER_MOVEMENT::MMovement::IDLE:
@@ -166,10 +173,7 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
                 }
-				AnimationCounter++;
-				if (AnimationCounter > 7)
-					AnimationCounter = 1;
-
+			
             }            
             //left
             if (facingleft)
@@ -195,9 +199,7 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = false;
                 }
-				AnimationCounter--;
-				if (AnimationCounter < 1)
-					AnimationCounter = 7;
+
             }
 
 			if (Float)
@@ -214,12 +216,73 @@ namespace MONSTER_MOVEMENT
 					theMonsterVel.y -= timer;
 				}
 			}
+
+			if (!facingleft)
+			{
+				if (timer > 0.05)
+				{
+					AnimationCounter++;
+					timer = 0;
+				}
+				if (AnimationCounter > 7)
+					AnimationCounter = 1;
+			}
+
+			else if (facingleft)
+			{
+				if (timer > 0.05)
+				{
+					AnimationCounter--;
+					timer = 0;
+				}
+				if (AnimationCounter < 1)
+					AnimationCounter = 7;
+			}
+
+			if (isBoss)
+			{
+				Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
+				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60))
+				{
+					Monstate = ATTACK;
+					facingleft = true;
+				}
+			}
 			
         }
             break;
         case MONSTER_MOVEMENT::MMovement::ATTACK:
         {
-            
+			if (isBoss)
+			{
+				int checkPosition_X = (int)((theMonsterPosition.x + 0.5f) / map->GetTileSize());
+				int checkPosition_Y = map->GetNumOfTiles_Height() - (int)((theMonsterPosition.y) / map->GetTileSize()) - 1;
+
+				//int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
+
+				checkPosition_X = Math::Clamp(checkPosition_X, 0, map->getNumOfTiles_MapWidth());
+				checkPosition_Y = Math::Clamp(checkPosition_Y, 0, map->GetNumOfTiles_Height());
+				/*if (map->theScreenMap[checkPosition_Y - 1][checkPosition_X + 1] == 0)
+				{
+
+				}*/
+				//right
+				float test = (theMonsterPosition.x - startpos.x) * (theMonsterPosition.x - startpos.x);
+
+				if (facingleft)
+				{
+					theMonsterVel = Vector3(0, 0, 0);
+					SetAnimationCounter(4);
+				}
+			}
+
+			Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
+			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60))
+			{
+				Monstate = IDLE;
+				theMonsterVel = Vector3(-movespeed, 0, 0);
+			}
+			
         }
             break;
         case MONSTER_MOVEMENT::MMovement::DIE:
@@ -230,6 +293,9 @@ namespace MONSTER_MOVEMENT
         default:
             break;
         }
+
+		
+		
     }
 
     bool MMovement::faceleft()

@@ -74,7 +74,7 @@ public:
     void CreateParticles(int number, Vector3 position, float vel,
         float lifetime, ParticleObject_TYPE type);
 
-    void MonsterUpdate(double dt);
+    void MonsterUpdate(double dt, MapLoad* map);
 
     void RenderParticles();
     void UpdateParticles(double dt);
@@ -148,6 +148,7 @@ private:
 	float BossFiringDebounce;
     int lives;
 	bool Moving;
+	float winTimer;
 
     GameState State = Menu;
 

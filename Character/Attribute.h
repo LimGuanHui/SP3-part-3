@@ -32,6 +32,10 @@ namespace ATTRIBUTE
 		void ActionBar(float value);
 		float GetActionBar();
 		//Boss* N_Boss;
+		void update(double dt);
+
+		bool invul;
+		float invulTimer;
 
 	private:
 		int Damage;

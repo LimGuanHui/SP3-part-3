@@ -32,7 +32,7 @@ namespace MONSTER_MOVEMENT
             Vector3 theMonsterScale, float patrol_left,float patrol_right, 
             float movespeed, MapLoad* map);
 
-        void update(double dt, Vector3 characterpos);
+        void update(double dt, Vector3 characterpos, MapLoad* map, bool isBoss);
 
 		float GetPos_X();
         float GetPos_Y();
@@ -58,6 +58,7 @@ namespace MONSTER_MOVEMENT
 		int AnimationCounter;
         bool faceleft();
 		bool Float;
+		float timer;
 
         State Monstate;
 	private:
@@ -69,6 +70,11 @@ namespace MONSTER_MOVEMENT
         float patrol_left, patrol_right;
         float movespeed;
         bool facingleft;
+
+
+
+		bool Idle;
+		bool Attack;
 
         MapLoad* map;
 	};

@@ -23,6 +23,7 @@ namespace MONSTER
         this->map = map;
 		Movement->Float = Floats;
 		this->active = active;
+		this->detectionradius = detectionradius;
     }
     void Monster::Init(Vector3 startpos, Vector3 scale, float left_patrol, float right_patrol, 
 		float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats, bool active)
@@ -34,6 +35,7 @@ namespace MONSTER
         this->map = map;
 		Movement->Float = Floats;
 		this->active = active;
+		this->detectionradius = detectionradius;
     }
 
     void Monster::InitAttrib(int maxhp, int Damage, int Catch_PercentHP, int catchrate)
@@ -42,9 +44,9 @@ namespace MONSTER
     }
 
 
-    void Monster::update(double dt, Vector3 characterpos)
+	void Monster::update(double dt, Vector3 characterpos, MapLoad* map, bool isBoss)
     {
-        Movement->update(dt,characterpos);
+        Movement->update(dt,characterpos,map, isBoss);
 		Attribute->update(dt);
     }
 

@@ -7,6 +7,8 @@ namespace ATTRIBUTE
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
 		, ActionMeter(100)
+		, invul(false)
+		, invulTimer(0)
 	{
 		//N_Boss = new BOSS::Boss();
 	}
@@ -45,7 +47,13 @@ namespace ATTRIBUTE
 
 	void CAttribute::SetReceivedDamage(int receiveDmg)
 	{
-		this->CurrentHealthPoint -= receiveDmg;
+		if (!invul)
+		{
+			this->CurrentHealthPoint -= receiveDmg;
+			invulTimer = 0;
+			invul = true;
+		}
+		
 	}
 
 	int CAttribute::GetCurrentHP()
@@ -70,6 +78,16 @@ namespace ATTRIBUTE
 	float CAttribute::GetActionBar()
 	{
 		return ActionMeter;
+	}
+	
+	void CAttribute::update(double dt)
+	{
+		invulTimer += (float)dt;
+		
+		if (invulTimer > 0.2)
+		{
+			invul = false;
+		}
 	}
 }
 
