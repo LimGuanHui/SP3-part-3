@@ -130,7 +130,6 @@ void SP3::Update(double dt)
 
     if (Main.gamestate == Main.Game)
     {
-<<<<<<< HEAD
 		State = Game;
 		Scenetransition();
         //sprite update
@@ -149,14 +148,12 @@ void SP3::Update(double dt)
 			Moving = true;
 			Character->Movement->MoveLeftRight(false, 1.0f);
 		}
-=======
         if (!battlestage)
         {
             Scenetransition();
             //sprite update
             //spritemanager->update(dt);
             //battlestage update
->>>>>>> b20bbd2914f4bcf02a6cf73629418b8a07d629df
 
             // Update the hero
             if (Application::IsKeyPressed('A'))
