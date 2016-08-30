@@ -166,6 +166,7 @@ private:
     //battestage
     BattleStage* Battle;
 
+    bool battlestage;
 };
 
 #endif

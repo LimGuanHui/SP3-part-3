@@ -1,6 +1,8 @@
 #include "P_Enemy.h"
 #include "MyMath.h"
 #define movetimerdelay 0.5f
+#define atktimerdelay 3.5f
+#define atkdelay 1.f
 ENEMY::ENEMY(std::vector<Panel *> *Panel_List) :
 Panel_List(Panel_List)
 {
@@ -15,7 +17,9 @@ void ENEMY::Init()
 {
     panel_no = 4;
     movetimer = movetimerdelay;
-    attacktimer = 
+    attacktimer = atktimerdelay;
+    atk_delay = 0;
+    isAtking = false;
     state = Move;
     panel_pos = Panel::PanelPos::Middle;
 }
@@ -24,7 +28,7 @@ void ENEMY::update(double dt)
     for (std::vector<Panel *>::iterator it = Panel_List->begin(); it != Panel_List->end(); ++it)
     {
         Panel* go = (Panel*)*it;
-        if (panel_no == go->getPanelNo())
+        if (panel_no == go->getPanelNo() && go->who == Panel::BELONGS_TO::ENEMY)
         {
             panel_pos = go->panel_pos;
             pos = go->getpos();
@@ -41,9 +45,16 @@ void ENEMY::update(double dt)
     case ENEMY::Move:
         if (movetimer >= 0)
             movetimer -= dt;
+        if (attacktimer >= 0)
+            attacktimer -= dt;
         if (movetimer < 0)
         {
             movetimer = movetimerdelay;
+            if (attacktimer < 0)
+            {
+                state = Attack;
+                break;
+            }
             int rand = panel_no;
             while (rand == panel_no)
                 rand = Math::RandIntMinMax(0, 8);
@@ -51,6 +62,8 @@ void ENEMY::update(double dt)
         }
         break;
     case ENEMY::Attack:
+
+        attacktimer = atktimerdelay;
         break;
     case ENEMY::Die:
         break;

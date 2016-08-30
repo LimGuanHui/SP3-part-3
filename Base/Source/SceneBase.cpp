@@ -386,6 +386,12 @@ void SceneBase::Init()
     meshList[GEO_T_PANEL] = MeshBuilder::GenerateQuad("tPanel", Color(0, 1, 0), 1.f);
     meshList[GEO_T_PANEL]->textureID = LoadTGA("Image//panels//tPanel.tga");
 
+    meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("GEO_PLAYER", Color(0, 1, 0), 1.f);
+    //meshList[GEO_PLAYER]->textureID = LoadTGA("Image//panels//tPanel.tga");
+    meshList[GEO_PLAYER_CHARGING] = MeshBuilder::GenerateQuad("GEO_PLAYER_CHARGING", Color(1, 0, 0), 1.f);
+    //meshList[GEO_PLAYER_CHARGING]->textureID = LoadTGA("Image//panels//tPanel.tga");
+    meshList[GEO_PLAYER_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_PLAYER_MAXCHARGE", Color(0, 0, 1), 1.f);
+    //meshList[GEO_PLAYER_MAXCHARGE]->textureID = LoadTGA("Image//panels//tPanel.tga");
 
     /************************************************************************************************************************
     //Sprite Animation

@@ -192,6 +192,10 @@ protected:
         GEO_M_PANEL,
         GEO_T_PANEL,
 
+        GEO_PLAYER,
+        GEO_PLAYER_CHARGING,
+        GEO_PLAYER_MAXCHARGE,
+
         NUM_GEOMETRY,
     };
 
