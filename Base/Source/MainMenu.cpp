@@ -454,5 +454,4 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 	}
 	}*/
-	std::cout << gamestate << std::endl;
 }

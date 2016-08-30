@@ -27,7 +27,7 @@ using namespace AI;
 #include "MainMenu.h"
 #include "Buttons.h"
 #include "GameObject.h"
-#include "SpriteManager.h"
+//#include "SpriteManager.h"
 #include "BattleStage.h"
 class SP3 : public SceneBase
 {
@@ -76,7 +76,7 @@ public:
     void RenderParticles();
     void UpdateParticles(double dt);
     ParticleObject* GetParticle(void);
-    void SpriteAnimationUpdate(double dt);
+    //void SpriteAnimationUpdate(double dt);
 
 
     enum Level
@@ -161,7 +161,7 @@ private:
     unsigned MAX_PARTICLE; // Max no of particles
 
     //sprite manager
-    SpriteManager* spritemanager;
+    //SpriteManager* spritemanager;
 
     //battestage
     BattleStage* Battle;

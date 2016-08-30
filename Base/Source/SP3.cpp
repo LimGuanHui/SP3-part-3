@@ -101,8 +101,8 @@ void SP3::Init()
         particleList.push_back(particle);
     }
 
-    spritemanager = new SpriteManager();
-    spritemanager->Init(800, 600);
+    /*spritemanager = new SpriteManager();
+    spritemanager->Init(800, 600);*/
 
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
@@ -127,7 +127,7 @@ void SP3::Update(double dt)
     {
 		Scenetransition();
         //sprite update
-        spritemanager->update(dt);
+        //spritemanager->update(dt);
         //battlestage update
         Battle->Update(dt);
         // Update the hero
@@ -222,9 +222,6 @@ void SP3::Update(double dt)
 			std::cout << "Fire" << std::endl;
 		}
 
-		
-		
-		std::cout << AI->Monster->Movement->GetPos() << std::endl;
 
 		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
 		{
@@ -246,7 +243,7 @@ void SP3::Update(double dt)
 
 		
 		MonsterUpdate(dt);
-        SpriteAnimationUpdate(dt);
+        //SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
 
         if (Character->Attribute->GetCurrentHP() <= 0)
@@ -414,9 +411,9 @@ void SP3::Render()
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
-        spritemanager->spriteRender();
-        Battle->RenderObjects(meshList[GEO_MON_HP_BAR]/*top panel*/, meshList[GEO_MON_HP_BAR]/*middle panel*/, meshList[GEO_MON_HP_BAR]/*bottom panel*/, 
-            meshList[GEO_MON_HP_BAR]/*player */, meshList[GEO_MON_HP_BAR]/*enemy */);
+        //spritemanager->spriteRender();
+        //Battle->RenderObjects(meshList[GEO_MON_HP_BAR]/*top panel*/, meshList[GEO_MON_HP_BAR]/*middle panel*/, meshList[GEO_MON_HP_BAR]/*bottom panel*/, 
+        //    meshList[GEO_MON_HP_BAR]/*player */, meshList[GEO_MON_HP_BAR]/*enemy */);
 		Main.RenderMenu(m_cMap);
 		break;
 
@@ -758,7 +755,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true);
+                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
                        newmon->InitAttrib(25, 1,50,1);
             }
                 break;
@@ -770,7 +767,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
                        newmon->InitAttrib(50, 1,50,1);
             }
                 break;
@@ -781,7 +778,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
                        newmon->InitAttrib(75, 1,50,1);
             }
 				break;
@@ -792,7 +789,7 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false);
+					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
 					   newmon->InitAttrib(150, 50, 50, 1);
 			}
                 break;
@@ -1035,7 +1032,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         Character->Attribute->ActionBar(5);
         {            
             Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
-            spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
+            //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
         break;
@@ -1046,7 +1043,6 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         if (go->Attribute->Capture())
         {
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
-
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
@@ -1062,7 +1058,10 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
-        Monster_List.erase(monsterlist_iterator);        
+        Monster_List.erase(monsterlist_iterator);     
+		go->active = false;
+		if (go->type == Monster::MINIBOSS)
+			std::cout << "DEAD" << std::endl;
     }
 }
 
@@ -1084,7 +1083,7 @@ void SP3::MonsterUpdate(double dt)
             } 
         }
 
-		if (go->type == Monster::MINIBOSS)
+		if (go->type == Monster::MINIBOSS && go->active)
 		{
 			BossFiringDebounce += dt;
 			if (BossFiringDebounce > 10.f / fireRate)
@@ -1101,15 +1100,15 @@ void SP3::MonsterUpdate(double dt)
 
 }
 
-void SP3::SpriteAnimationUpdate(double dt)
-{
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
-    if (sa)
-    {
-    sa->Update(dt);*/
-    //sa->m_anim->animActive = true;
-    
-}
+//void SP3::SpriteAnimationUpdate(double dt)
+//{
+//    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+//    if (sa)
+//    {
+//    sa->Update(dt);*/
+//    //sa->m_anim->animActive = true;
+//    
+//}
 
 void SP3::RenderParticles()
 {

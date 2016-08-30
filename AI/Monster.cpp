@@ -2,7 +2,7 @@
 
 namespace MONSTER
 {
-	Monster::Monster()
+	Monster::Monster() : active(false)
 	{
 		Movement = new MONSTER_MOVEMENT::MMovement();
 		Attribute = new MONSTER_ATTRIBUTE::MonsterAttribute();
@@ -14,7 +14,7 @@ namespace MONSTER
 	}
 
     void Monster::Init(Vector3 startpos, Vector3 scale, float patrol, 
-        float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats)
+        float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats, bool active)
     {
 		Movement->SetPos_X(startpos.x);
 		Movement->SetPos_Y(startpos.y);
@@ -22,9 +22,10 @@ namespace MONSTER
         this->type = type;
         this->map = map;
 		Movement->Float = Floats;
+		this->active = active;
     }
     void Monster::Init(Vector3 startpos, Vector3 scale, float left_patrol, float right_patrol, 
-		float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats)
+		float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats, bool active)
     {
         Movement->SetPos_X(startpos.x);
         Movement->SetPos_Y(startpos.y); 
@@ -32,6 +33,7 @@ namespace MONSTER
         this->type = type;
         this->map = map;
 		Movement->Float = Floats;
+		this->active = active;
     }
 
     void Monster::InitAttrib(int maxhp, int Damage, int Catch_PercentHP, int catchrate)

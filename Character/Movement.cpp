@@ -457,6 +457,7 @@ namespace MOVEMENT
             else
                 Projectile->SetVel(Vector3(500, 0, 0));
 			Projectile->SetScale(Vector3(scale, scale, 1));
+			Projectile->Left = heroAnimationInvert;
 			Projectile->type = type;
             Projectile->setdmg(dmg);
 	}
