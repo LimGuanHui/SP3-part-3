@@ -80,6 +80,7 @@ void SP3::Init()
 	chargeFire = false;
 	chargeDmg = 0;
 	BossFiringDebounce = 0;
+	winTimer = 0;
 
 	for (int i = 0; i < 1; ++i)
 	{
@@ -128,27 +129,9 @@ void SP3::Update(double dt)
     if (jumpsoundtimer > 0)
         jumpsoundtimer -= dt;
 
-    if (Main.gamestate == Main.Game)
-    {
-		State = Game;
-		Scenetransition();
-        //sprite update
-        //spritemanager->update(dt);
-        //battlestage update
-        Battle->Update(dt);
-        // Update the hero
-        Character->Update(dt);
-		if (Application::IsKeyPressed('A'))
-		{
-			Moving = true;
-			Character->Movement->MoveLeftRight(true, 1.0f);
-		}
-            
-		if (Application::IsKeyPressed('D'))
-		{
-			Moving = true;
-			Character->Movement->MoveLeftRight(false, 1.0f);
-		}
+
+	if (Main.gamestate == Main.Game)
+	{
         if (!battlestage)
         {
             Scenetransition();
@@ -163,41 +146,44 @@ void SP3::Update(double dt)
                 Character->Movement->MoveLeftRight(true, 1.0f);
             }
 
-            // Update the hero
-            if (Application::IsKeyPressed('A'))
-            {
-                Moving = true;
-                Character->Movement->MoveLeftRight(true, 1.0f);
-            }
-
             if (Application::IsKeyPressed('D'))
             {
                 Moving = true;
                 Character->Movement->MoveLeftRight(false, 1.0f);
             }
 
-            if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
-            {
-                Moving = false;
-            }
+			if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
+			{
+				Moving = false;
+			}
 
 
-            if (Application::IsKeyPressed(' '))
-            {
-                Character->Movement->SetToJumpUpwards(true);
-                if (jumpsoundtimer <= 0)
-                {
-                    jumpsoundtimer = 0.4f;
-                    //sceneSoundEngine->play2D(jump);
-                }
+			if (Application::IsKeyPressed(' '))
+			{
+				Character->Movement->SetToJumpUpwards(true);
+				if (jumpsoundtimer <= 0)
+				{
+					jumpsoundtimer = 0.4f;
+					//sceneSoundEngine->play2D(jump);
+				}
 
-            }
+			}
+
+			Character->Movement->HeroUpdate(m_cMap);
+			Character->Attribute->update(dt);
+            Character->Update(dt);
+		}
+		
+		else
+		{
+			//battlestage update
+			Battle->Update(dt);
+		}
+		// Update the hero
+		
 
             float ActionIncrease = 0;
             ActionIncrease += dt;
-
-            Character->Movement->HeroUpdate(m_cMap);
-            Character->Attribute->ActionBar(ActionIncrease);
 
             firingDebounce += (float)dt;
             bool KeyUp = true;
@@ -256,7 +242,6 @@ void SP3::Update(double dt)
             }
         
 
-
             std::cout << AI->Monster->Movement->GetPos() << std::endl;
 
             for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
@@ -277,33 +262,21 @@ void SP3::Update(double dt)
 
             // if the hero enters the kill zone, then enemy goes into kill strategy mode
 
-
-            MonsterUpdate(dt);
+            MonsterUpdate(dt, m_cMap);
             //SpriteAnimationUpdate(dt);
             UpdateParticles(dt);
-
-            if (Character->Attribute->GetCurrentHP() <= 0)
-                State = End;
-            //Character->Attribute->setisDead(true);
         }
-        else
-        {
-            //battlestage update
-            Battle->Update(dt);
-        }
+       
 		
-		
-		if (Character->Attribute->GetCurrentHP() <= 0)
-		{
-			State = End;
-			Main.gamestate = Main.End;
-		}
 		if (MiniBossAlive == false)
 		{
-			Main.gamestate = Main.Win;
+			winTimer += (float)dt;
+			if (winTimer > 5)
+			{
+				Main.gamestate = Main.Win;
+				winTimer = 0;
+			}
 		}
-            //Character->Attribute->setisDead(true);
-    }
 
 	//if (Main.gamestate == Main.Restart)
 	//{
@@ -848,6 +821,7 @@ void SP3::Scenetransition()
 void SP3::SpawnObjects()
 {
     Monster_List.clear();
+	Character->Movement->m_projectileList.clear();
     int m = 0;
     for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
     {
@@ -909,8 +883,8 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
-					   newmon->InitAttrib(150, 50, 50, 1);
+					   newmon->Init(temp, Vector3(3, 3, 1), 15 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
+					   newmon->InitAttrib(150, 50, 10, 1);
 			}
                 break;
             default:
@@ -923,21 +897,26 @@ void SP3::SpawnObjects()
 
 void SP3::RenderProjectile(PROJECTILE::Projectile *projectile)
 {
-	switch (projectile->type)
+	if (Main.gamestate == Main.Game)
 	{
-	case Projectile::Bullet:
+		switch (projectile->type)
+		{
+		case Projectile::Bullet:
 			Render2DMesh(meshList[GEO_N_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
-	case Projectile::ChargeBullet:
-			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5 , projectile->Left);
+		case Projectile::ChargeBullet:
+			Render2DMesh(meshList[GEO_C_SHOT], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y - (m_cMap->GetTileSize() * projectile->GetScale().y * 0.5) + m_cMap->GetTileSize() * 0.5, projectile->Left);
 			break;
-	case Projectile::Net:
+		case Projectile::Net:
 			Render2DMesh(meshList[GEO_NET], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
-	case Projectile::BossBullet:
+		case Projectile::BossBullet:
 			Render2DMesh(meshList[GEO_BOSS_PROJECTILE], false, projectile->GetScale().x, projectile->GetPos().x, projectile->GetPos().y, projectile->Left);
 			break;
+		}
+
 	}
+	
 }
 
 void SP3::RenderCharacter()
@@ -1234,28 +1213,39 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     }
 }
 
-void SP3::MonsterUpdate(double dt)
+void SP3::MonsterUpdate(double dt, MapLoad* map)
 {
+
+
     for (std::vector<Monster*>::iterator it = Monster_List.begin(); it != Monster_List.end(); ++it)
     {
         Monster* go = (Monster*)*it;
-        go->update(dt, Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
+		if (go->type == Monster::MINIBOSS)
+		{
+			go->update(dt, Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0), map, true);
+		}
+		else
+		{
+			go->update(dt, Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0), map, false);
+		}
         Vector3 dist(go->Movement->GetPos() - Vector3(Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), 0));
+		int tsize = ((m_cMap->GetTileSize() * 1 /*character scale*/) - (6 * 1 /*character scale*/)) * 0.5;
+		Vector3 pos1(Character->Movement->GetPos_x() + tsize, Character->Movement->GetPos_y() + tsize, 0);
+		Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
+
         if ((dist.LengthSquared() / m_cMap->GetTileSize()) < (m_cMap->GetTileSize() * 2))
         {
-            int tsize = ((m_cMap->GetTileSize() * 1 /*character scale*/) - (6 * 1 /*character scale*/)) * 0.5;
-            Vector3 pos1(Character->Movement->GetPos_x() + tsize, Character->Movement->GetPos_y() + tsize, 0);
-            Vector3 pos2(go->Movement->GetPos_X() + tsize, go->Movement->GetPos_Y() + tsize, 0);
             if (Collision::SphericalCollision(pos1, tsize, pos2, tsize))
             {
 					Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
             } 
         }
 
-		if (go->type == Monster::MINIBOSS && go->active)
+		if (go->type == Monster::MINIBOSS && go->active && go->Movement->Monstate == go->Movement->ATTACK)
 		{
+
 			BossFiringDebounce += dt;
-			if (BossFiringDebounce > 10.f / fireRate)
+			if (BossFiringDebounce > 5.f / fireRate)
 			{
 				BossFiringDebounce = 0;
 				//int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;

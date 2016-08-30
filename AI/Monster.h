@@ -27,8 +27,9 @@ namespace MONSTER
 			float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats, bool active);
         void InitAttrib(int maxhp, int Damage, int Catch_PercentHP, int catchrate);
         
-        void update(double dt, Vector3 characterpos);
+        void update(double dt, Vector3 characterpos, MapLoad* map, bool isBoss);
 		
+		void DetectionRange();
         
         MON_TYPE type;
         MONSTER_ATTRIBUTE::MonsterAttribute* Attribute;
