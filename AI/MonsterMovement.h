@@ -59,6 +59,7 @@ namespace MONSTER_MOVEMENT
         bool faceleft();
 		bool Float;
 		float timer;
+		bool playerDead;
 
         State Monstate;
 	private:

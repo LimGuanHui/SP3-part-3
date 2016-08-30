@@ -7,6 +7,7 @@ namespace MONSTER_MOVEMENT
 		, theMonsterVel(0, 0, 0)
 		, AnimationCounter(1)
 		, timer(0)
+		, playerDead(false)
 	{
 	}
 
@@ -242,7 +243,7 @@ namespace MONSTER_MOVEMENT
 			if (isBoss)
 			{
 				Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60))
+				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60) && !playerDead)
 				{
 					Monstate = ATTACK;
 					facingleft = true;
@@ -277,7 +278,7 @@ namespace MONSTER_MOVEMENT
 			}
 
 			Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60))
+			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60) || playerDead)
 			{
 				Monstate = IDLE;
 				theMonsterVel = Vector3(-movespeed, 0, 0);

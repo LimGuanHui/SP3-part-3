@@ -26,6 +26,7 @@ namespace CHARACTER
 		//AI::ArtInt *AI;
 
 		void Restart();
+		bool active;
 
 
 	private:

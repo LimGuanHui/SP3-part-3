@@ -2,7 +2,7 @@
 
 namespace CHARACTER
 {
-	CCharacter::CCharacter()
+	CCharacter::CCharacter() : active(false)
 	{
 		Movement = new MOVEMENT::CMovement();
 		Skill = new SKILLS::CSkills();
