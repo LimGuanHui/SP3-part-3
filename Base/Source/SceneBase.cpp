@@ -393,6 +393,20 @@ void SceneBase::Init()
     meshList[GEO_PLAYER_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_PLAYER_MAXCHARGE", Color(0, 0, 1), 1.f);
     //meshList[GEO_PLAYER_MAXCHARGE]->textureID = LoadTGA("Image//panels//tPanel.tga");
 
+    meshList[GEO_SNOW_TILE] = MeshBuilder::Generate2DMesh("GEO_SNOW_TILE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_SNOW_TILE]->textureID = LoadTGA("Image//tiles//snow_tile.tga");
+
+    meshList[GEO_SNOW_DIRT_TILE] = MeshBuilder::Generate2DMesh("GEO_SNOW_DIRT_TILE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_SNOW_DIRT_TILE]->textureID = LoadTGA("Image//tiles//snowdirt_tile.tga");
+
+    meshList[GEO_MINIBOSS_TILE1] = MeshBuilder::Generate2DMesh("GEO_MINIBOSS_TILE1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_MINIBOSS_TILE1]->textureID = LoadTGA("Image//tiles//miniboss_stage_tile1.tga");
+
+    meshList[GEO_MINIBOSS_TILE2] = MeshBuilder::Generate2DMesh("GEO_MINIBOSS_TILE2", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
+    meshList[GEO_MINIBOSS_TILE2]->textureID = LoadTGA("Image//tiles//miniboss_stage_tile2.tga");
+
+
+
     /************************************************************************************************************************
     //Sprite Animation
     *************************************************************************************************************************/

@@ -12,3 +12,5 @@ Tile Number:
 13 - Monster 2
 14 - Monster 3
 15 - Mini Boss
+8 - Mini Boss tile
+16 - Mini Boss tile 2
