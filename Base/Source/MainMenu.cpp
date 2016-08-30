@@ -174,7 +174,7 @@ void MainMenu::Update(double dt)
 		if (gamestate ==  End)
 		{
 			if (deadArrow != 0)
-				deadArrow++;
+				deadArrow--;
 			else
 				deadArrow = END3 - 1;
 		}
@@ -182,7 +182,7 @@ void MainMenu::Update(double dt)
 		if (gamestate == Win)
 		{
 			if (winArrow != 0)
-				winArrow++;
+				winArrow--;
 			else
 				winArrow = END3 - 1;
 		}
