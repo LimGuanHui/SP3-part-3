@@ -27,10 +27,10 @@ public:
 		Help,
 		Edit,
 		Menu,
-		Load,
 		Pause,
 		Game,
 		End,
+		Win,
 	};
 
 	enum StartOptions
@@ -38,7 +38,7 @@ public:
 		Start,
 		Instructions,
 		Quit,
-		END
+		END,
 	};
 	StartOptions StartOp;
 	int startArrow;
@@ -53,6 +53,25 @@ public:
 	PauseOptions PauseOp;
 	int pauseArrow;
 
+	enum DeadOptions
+	{
+		Restart,
+		ReturnMenu3,
+		END3,
+	};
+	DeadOptions DeadOp;
+	int deadArrow;
+
+	enum WinOptions
+	{
+		ReturnMenu4,
+		Quit4,
+		END4,
+	};
+	WinOptions WinOp;
+	int winArrow;
+
+
 	GameState gamestate;
 	Buttons* button;
 	CCharacter* Character;
@@ -60,6 +79,7 @@ public:
 	bool playerDead;
 	std::vector<GameObject *> m_goList;
 	bool QuitGame;
+	bool RestartGame;
 
 protected:
 	float InputDelayTimer;

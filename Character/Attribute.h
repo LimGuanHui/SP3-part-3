@@ -20,7 +20,6 @@ namespace ATTRIBUTE
 		~CAttribute();
 
 		void SetMaxHP(int HP);
-		void SetCurrentHP(int HP);
 		void SetDmg(int Dmg);
 		void SetReceivedDamage(int receiveDmg);
 		void SetRecovery(int Recover);

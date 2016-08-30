@@ -101,13 +101,16 @@ void SP3::Init()
         particleList.push_back(particle);
     }
 
-    spritemanager = new SpriteManager();
-    spritemanager->Init(800, 600);
-
+    /*spritemanager = new SpriteManager();
+    spritemanager->Init(800, 600);*/
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
 
+
     battlestage = true;
+
+	MiniBossAlive = true;
+
 }
 
 void SP3::Update(double dt)
@@ -131,8 +134,16 @@ void SP3::Update(double dt)
         {
             Scenetransition();
             //sprite update
-            spritemanager->update(dt);
-            
+            //spritemanager->update(dt);
+            //battlestage update
+
+            // Update the hero
+            if (Application::IsKeyPressed('A'))
+            {
+                Moving = true;
+                Character->Movement->MoveLeftRight(true, 1.0f);
+            }
+
             // Update the hero
             if (Application::IsKeyPressed('A'))
             {
@@ -177,8 +188,8 @@ void SP3::Update(double dt)
             {
                 firingDebounce = 0;
                 Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
-
             }
+
 
             //Net
             if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
@@ -224,7 +235,7 @@ void SP3::Update(double dt)
                 Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
                 std::cout << "Fire" << std::endl;
             }
-
+        
 
 
             std::cout << AI->Monster->Movement->GetPos() << std::endl;
@@ -249,7 +260,7 @@ void SP3::Update(double dt)
 
 
             MonsterUpdate(dt);
-            SpriteAnimationUpdate(dt);
+            //SpriteAnimationUpdate(dt);
             UpdateParticles(dt);
 
             if (Character->Attribute->GetCurrentHP() <= 0)
@@ -261,11 +272,46 @@ void SP3::Update(double dt)
             //battlestage update
             Battle->Update(dt);
         }
-
+		
+		
+		if (Character->Attribute->GetCurrentHP() <= 0)
+		{
+			State = End;
+			Main.gamestate = Main.End;
+		}
+		if (MiniBossAlive == false)
+		{
+			Main.gamestate = Main.Win;
+		}
+            //Character->Attribute->setisDead(true);
     }
 
-    
+	//if (Main.gamestate == Main.Restart)
+	//{
+	//	Main.playerDead = true;
+	//	State = Game;
+	//	Restart();
+	//}
 
+	if (Main.RestartGame)
+	{
+		Restart();
+		Main.RestartGame = false;
+	}
+
+	if (Main.gamestate == Main.Menu)
+	{
+		State = Menu;
+		Main.RestartGame = false;
+	}
+
+	if (Main.gamestate == Main.Win)
+	{
+		State = Win;
+		Main.RestartGame = false;
+	}
+	
+	//std::cout << Main.deadArrow << std::endl;
 	//std::cout << fps << std::endl;
 }
 
@@ -419,51 +465,7 @@ void SP3::Render()
 	case MainMenu::GameState::Game:
         if (battlestage)
         {
-            //Battle->RenderObjects(meshList[GEO_AXES]/*top panel*/, meshList[GEO_M_PANEL]/*middle panel*/, meshList[GEO_B_PANEL]/*bottom panel*/,
-            //    meshList[GEO_QUAD]/*player */, meshList[GEO_QUAD]/*enemy */, meshList[GEO_TEXT]);
-
-            for (std::vector<Panel *>::iterator it = Battle->Panel_List.begin(); it != Battle->Panel_List.end(); ++it)
-            {
-                Panel* go = (Panel*)*it;
-                switch (go->panel_pos)
-                {
-                case Panel::PanelPos::Top:
-                    Render2DMesh(meshList[GEO_T_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-                    break;
-                case Panel::PanelPos::Middle:
-                    Render2DMesh(meshList[GEO_M_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-                    break;
-                case Panel::PanelPos::Bottom:
-                    Render2DMesh(meshList[GEO_B_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-                    break;
-                default:
-                    break;
-                }
-
-            }
-            //render character
-            if (Battle->player->getcharging())
-            {
-                if (!Battle->player->getisFullyCharged())
-                    Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
-                else
-                    Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
-            }
-            else
-                Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
-            std::ostringstream ss;
-            ss.str(string());
-            ss.precision(3);
-            ss << Battle->player->gethp();
-
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->player->getpos().x - 25, Battle->player->getpos().y - 25);
-            //render enemy
-            Render2DMesh(meshList[GEO_QUAD], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y, false, false);
-            ss.str(string());
-            ss.precision(3);
-            ss << Battle->enemy->gethp();
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->enemy->getpos().x - 25, Battle->enemy->getpos().y - 25);
-            
+            renderbattlestage();
         }
         else
         {
@@ -473,11 +475,9 @@ void SP3::Render()
             RenderTileMap();
             RenderCharacter();
             RenderList();
-            spritemanager->spriteRender();
+            //spritemanager->spriteRender();
             Main.RenderMenu(m_cMap);
         }
-
-		
 		break;
 
 	case MainMenu::GameState::Pause:
@@ -489,6 +489,11 @@ void SP3::Render()
 		break;
 
 	case MainMenu::GameState::End:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::Win:
+		Main.RenderMenu(m_cMap);
 		break;
 	}
     
@@ -501,12 +506,6 @@ void SP3::Exit()
     SceneBase::Exit();
 
     particleList.clear();
-	/*while (Character->Movement->m_projectileList.size() > 0)
-	{
-		Projectile *go = Character->Movement->m_projectileList.back();
-		delete go;
-		Character->Movement->m_projectileList.pop_back();
-	}*/
 }
 
 /********************************************************************************
@@ -656,10 +655,10 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-       ss.str(string());
-       ss.precision(5);
-       ss << "<1>Start Game";
-       RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss.str(string());
+		ss.precision(5);
+		ss << "Lives: " << Character->Attribute->GetCurrentHP();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
 
         break;
@@ -668,7 +667,7 @@ void SP3::GameStateRenderText()
     {
         ss.str(string());
         ss.precision(5);
-        ss << "Lives: " << fps;
+		ss << "Lives: " << Character->Attribute->GetCurrentHP();
         RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
         break;
@@ -682,10 +681,15 @@ void SP3::GameStateRenderText()
         }
         else if (lives > 0)
         {
-            ss.str(string());
-            ss.precision(5);
-            ss << "You win!";
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+            //ss.str(string());
+            //ss.precision(5);
+            //ss << "You win!";
+            //RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+
+			ss.str(string());
+			ss.precision(5);
+			ss << "Lives: " << Character->Attribute->GetCurrentHP();
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
         }
 
         break;
@@ -734,8 +738,19 @@ void SP3::GameStateRender()
 
 }
 
+void SP3::Restart()
+{
+	CurrLevel = LEVEL1;
+	m_cMap->LoadMap("Map\\Map1.csv");
+	Character->Restart();
+	MiniBossAlive = true;
+	SpawnObjects();
+
+}
+
 void SP3::Scenetransition()
 {
+	
     if (Character->Movement->TransitLevel)
     {
         CurrLevel = static_cast<Level>(CurrLevel + 1);
@@ -818,7 +833,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true);
+                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
                        newmon->InitAttrib(25, 1,50,1);
             }
                 break;
@@ -830,7 +845,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
                        newmon->InitAttrib(50, 1,50,1);
             }
                 break;
@@ -841,7 +856,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
                        newmon->InitAttrib(75, 1,50,1);
             }
 				break;
@@ -852,7 +867,7 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false);
+					   newmon->Init(temp, Vector3(3, 3, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
 					   newmon->InitAttrib(150, 50, 50, 1);
 			}
                 break;
@@ -1095,7 +1110,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         Character->Attribute->ActionBar(5);
         {            
             Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
-            spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
+            //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
         break;
@@ -1106,12 +1121,16 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         if (go->Attribute->Capture())
         {
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
-
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
 			projectile->active = false;
+			if (go->type == Monster::MINIBOSS)
+			{
+				MiniBossAlive = false;
+				std::cout << "DEAD" << std::endl;
+			}
             return;
         }
         go->Attribute->ReceiveDamage(projectile->getdmg());
@@ -1122,7 +1141,13 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
-        Monster_List.erase(monsterlist_iterator);        
+        Monster_List.erase(monsterlist_iterator);   
+		if (go->type == Monster::MINIBOSS)
+		{
+			MiniBossAlive = false;
+			std::cout << "DEAD" << std::endl;
+		}
+
     }
 }
 
@@ -1144,7 +1169,7 @@ void SP3::MonsterUpdate(double dt)
             } 
         }
 
-		if (go->type == Monster::MINIBOSS)
+		if (go->type == Monster::MINIBOSS && go->active)
 		{
 			BossFiringDebounce += dt;
 			if (BossFiringDebounce > 10.f / fireRate)
@@ -1161,15 +1186,15 @@ void SP3::MonsterUpdate(double dt)
 
 }
 
-void SP3::SpriteAnimationUpdate(double dt)
-{
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
-    if (sa)
-    {
-    sa->Update(dt);*/
-    //sa->m_anim->animActive = true;
-    
-}
+//void SP3::SpriteAnimationUpdate(double dt)
+//{
+//    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+//    if (sa)
+//    {
+//    sa->Update(dt);*/
+//    //sa->m_anim->animActive = true;
+//    
+//}
 
 void SP3::RenderParticles()
 {
@@ -1243,4 +1268,53 @@ void SP3::CreateParticles(int number, Vector3 position, float lifetime, float ve
         particle->scale = Vector3(0.1, 0.1, 1);
         particleList.push_back(particle);
     }
+}
+
+void SP3::renderbattlestage()
+{
+    //Battle->RenderObjects(meshList[GEO_AXES]/*top panel*/, meshList[GEO_M_PANEL]/*middle panel*/, meshList[GEO_B_PANEL]/*bottom panel*/,
+    //    meshList[GEO_QUAD]/*player */, meshList[GEO_QUAD]/*enemy */, meshList[GEO_TEXT]);
+
+    for (std::vector<Panel *>::iterator it = Battle->Panel_List.begin(); it != Battle->Panel_List.end(); ++it)
+    {
+        Panel* go = (Panel*)*it;
+        switch (go->panel_pos)
+        {
+        case Panel::PanelPos::Top:
+            Render2DMesh(meshList[GEO_T_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            break;
+        case Panel::PanelPos::Middle:
+            Render2DMesh(meshList[GEO_M_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            break;
+        case Panel::PanelPos::Bottom:
+            Render2DMesh(meshList[GEO_B_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            break;
+        default:
+            break;
+        }
+
+    }
+    //render character
+    if (Battle->player->getcharging())
+    {
+        if (!Battle->player->getisFullyCharged())
+            Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+        else
+            Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+    }
+    else
+        Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+    std::ostringstream ss;
+    ss.str(string());
+    ss.precision(3);
+    ss << Battle->player->gethp();
+
+    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->player->getpos().x - 25, Battle->player->getpos().y - 25);
+    //render enemy
+    Render2DMesh(meshList[GEO_QUAD], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y, false, false);
+    ss.str(string());
+    ss.precision(3);
+    ss << Battle->enemy->gethp();
+    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->enemy->getpos().x - 25, Battle->enemy->getpos().y - 25);
+
 }

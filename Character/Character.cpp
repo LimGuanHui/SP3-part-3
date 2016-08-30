@@ -15,6 +15,13 @@ namespace CHARACTER
 	{
 	}
 
+	void CCharacter::Restart()
+	{
+		Movement->facingRight = true;
+		Movement->SetAnimationCounter(0);
+		//Attribute->SetRecovery(101);
+	}
+
 	CCharacter* N_Character()
 	{
 		return new CCharacter();
