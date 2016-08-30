@@ -25,6 +25,8 @@ namespace CHARACTER
 		SKILLS::CSkills *Skill;
 		//AI::ArtInt *AI;
 
+		void Restart();
+
 
 	private:
 	

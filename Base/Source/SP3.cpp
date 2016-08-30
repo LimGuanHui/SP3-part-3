@@ -260,7 +260,7 @@ void SP3::Update(double dt)
 	{
 		Main.playerDead = true;
 		State = Game;
-		Restart();
+		//Restart();
 	}
 
 	if (Main.RestartGame)
@@ -701,7 +701,9 @@ void SP3::Restart()
 {
 	CurrLevel = LEVEL1;
 	m_cMap->LoadMap("Map\\Map1.csv");
+	Character->Restart();
 	SpawnObjects();
+
 }
 
 void SP3::Scenetransition()
