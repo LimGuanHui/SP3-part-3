@@ -6,7 +6,7 @@ namespace ATTRIBUTE
 		: Damage(5)
 		, MaxHealthPoint(100)
 		, CurrentHealthPoint(MaxHealthPoint)
-		, ActionMeter(0)
+		, ActionMeter(100)
 	{
 		//N_Boss = new BOSS::Boss();
 	}
@@ -23,6 +23,11 @@ namespace ATTRIBUTE
 	void CAttribute::SetDmg(int Dmg)
 	{
 		this->Damage = Dmg;
+	}
+
+	void CAttribute::SetCurrentHP(int HP)
+	{
+		this->CurrentHealthPoint = HP;
 	}
 
 	void CAttribute::SetRecovery(int Recover)
