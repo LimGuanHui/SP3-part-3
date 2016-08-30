@@ -17,7 +17,7 @@ public:
 
     void Init();
     void Exit();
-    void update(double dt);
+    void update(double dt, Panel::PanelPos player_panel_pos);
 
     int gethp();
     void sethp(int hp);
@@ -28,6 +28,8 @@ public:
 
     void gethit(int dmgtaken);
     Vector3 getpos();
+
+    bool isAttacking();
 
     State state;
     Panel::PanelPos panel_pos;

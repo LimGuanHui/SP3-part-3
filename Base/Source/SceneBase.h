@@ -133,6 +133,10 @@ protected:
         GEO_STILE2,
         GEO_MISSILE,
 
+        //lvl 1 tile
+        GEO_SNOW_TILE,
+        GEO_SNOW_DIRT_TILE,
+
         // lvl 2 tile 
         GEO_GRASS,
         GEO_DIRT,
@@ -142,6 +146,10 @@ protected:
 		GEO_CASTLE,
 		GEO_CASTLEGROUND,
 		GEO_CASTLEBACKGROUND,
+
+        //miniboss stage tile
+        GEO_MINIBOSS_TILE1,
+        GEO_MINIBOSS_TILE2,
 
         //monster
         GEO_GASTLY,//11

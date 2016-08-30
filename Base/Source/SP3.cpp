@@ -523,21 +523,31 @@ void SP3::RenderTileMap()
 
 			if (m_cMap->theScreenMap[i][m] == 1)
 			{
-				Render2DMesh(meshList[GEO_STILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+				Render2DMesh(meshList[GEO_SNOW_DIRT_TILE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize() , false);
 			}
 			else if (m_cMap->theScreenMap[i][m] == 2)
 			{
-				Render2DMesh(meshList[GEO_STILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+                Render2DMesh(meshList[GEO_SNOW_TILE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize() - 0.3f, false);
 			}
 
 			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
 				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
 			}
-			else if (m_cMap->theScreenMap[i][m] == 11)
-			{
-				Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
-			}
+            else if (m_cMap->theScreenMap[i][m] == 11)
+            {
+                Render2DMesh(meshList[GEO_TILE_KILLZONE], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+            }
+            else if (m_cMap->theScreenMap[i][m] == 8)
+            {
+                Render2DMesh(meshList[GEO_MINIBOSS_TILE1], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+            }
+            else if (m_cMap->theScreenMap[i][m] == 16)
+            {
+                Render2DMesh(meshList[GEO_MINIBOSS_TILE2], false, 1.0f, k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x(), 575 - i*m_cMap->GetTileSize(), false);
+            }
+
+
 
 			if (Level::LEVEL2)
 			{

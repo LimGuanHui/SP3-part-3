@@ -271,7 +271,9 @@ namespace MOVEMENT
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
-			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
+            m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
+            m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 8 ||
+            m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 16 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 			theHeroPosition.x = (checkPosition_X - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
 		else if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
@@ -280,6 +282,8 @@ namespace MOVEMENT
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 4 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
+            m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 8 ||
+            m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 16 ||
 			m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5)
 		{
 			if (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 0)
@@ -290,6 +294,8 @@ namespace MOVEMENT
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 16 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 				theHeroPosition.x = (checkPosition_X - 1 - tileOffset_x) * m_cMap->GetTileSize() - mapFineOffset_x;
 		}
@@ -305,13 +311,17 @@ namespace MOVEMENT
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 5 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 7 ||
+                m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 16 ||
 				(m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 1 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 2 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 3 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 4 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 7 ||
-				m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 5) &&
+                m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 16 ||
+                m_cMap->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 5) &&
 				xValue != 0)
 			{
 			}
@@ -340,13 +350,17 @@ namespace MOVEMENT
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
-				(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 16 ||
+                (m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
-				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 16 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 				&& xValue != 0)
 			{
 				// Since the new position does not allow the hero to move into, then go	back to the old position
@@ -383,12 +397,16 @@ namespace MOVEMENT
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 5 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 7 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X] == 16 ||
 				(m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 2 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 3 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 4 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 6 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 7 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 8 ||
+                m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 16 ||
 				m_cMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 5)
 				&& xValue != 0)
 			{

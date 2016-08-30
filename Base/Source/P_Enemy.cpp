@@ -23,7 +23,7 @@ void ENEMY::Init()
     state = Move;
     panel_pos = Panel::PanelPos::Middle;
 }
-void ENEMY::update(double dt)
+void ENEMY::update(double dt, Panel::PanelPos player_panel_pos)
 {
     for (std::vector<Panel *>::iterator it = Panel_List->begin(); it != Panel_List->end(); ++it)
     {
@@ -52,7 +52,12 @@ void ENEMY::update(double dt)
             movetimer = movetimerdelay;
             if (attacktimer < 0)
             {
+                int rand = panel_no;
+                while (rand == panel_no)
+                    rand = Math::RandIntMinMax(0, 8);
+                panel_no = rand;
                 state = Attack;
+                atk_delay = atkdelay;
                 break;
             }
             int rand = panel_no;
@@ -62,8 +67,14 @@ void ENEMY::update(double dt)
         }
         break;
     case ENEMY::Attack:
-
-        attacktimer = atktimerdelay;
+        if (atk_delay >= 0)
+        {
+            atk_delay -= dt;
+        }
+        if (atk_delay < 0)
+        {
+            isAtking = true;
+        }
         break;
     case ENEMY::Die:
         break;
@@ -105,7 +116,21 @@ Vector3 ENEMY::getpos()
     return pos;
 }
 
+
+
 void ENEMY::Exit()
 {
     Projecile_List.clear();
+}
+
+bool ENEMY::isAttacking()
+{
+    if (isAtking)
+    {
+        isAtking = false;
+        state = Move;
+        attacktimer = atktimerdelay;
+        return true;
+    }
+    return isAtking;
 }

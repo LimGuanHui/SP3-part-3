@@ -54,6 +54,9 @@ void BattleStage::Init(float ortho_x, float ortho_y, float panelsize)
     enemy->Init();
     enemy->sethp(200);
     enemy->setatk(20);
+
+    custgauge = 0;
+    MAX_custgauge = 100;
 }
 void BattleStage::Update(double dt)
 {
@@ -66,13 +69,11 @@ void BattleStage::Update(double dt)
         }
     }
     player->update(dt);
-    enemy->update(dt);
+    enemy->update(dt,player->panel_pos);
 }
 
 void BattleStage::RenderObjects(Mesh* tpanel, Mesh* mpanel, Mesh* bpanel, Mesh* player, Mesh* enemy, Mesh* text )
-{
-
-
+{    
 }
 
 float BattleStage::getpanel_sizeX()

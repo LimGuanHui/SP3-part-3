@@ -22,5 +22,6 @@ public:
 private:
     
     float panelsize_x, panelsize_y;
-    
+    float custgauge, MAX_custgauge;
+
 };
