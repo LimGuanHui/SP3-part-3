@@ -82,7 +82,7 @@ namespace MONSTER_ATTRIBUTE
         float currhpPC = 0;
         currhpPC = (float)((CurrentHealth * (pow( MaxhealthPoint,-1))) * 100);
         int capturechance = Math::RandIntMinMax(0, 100 - currhpPC );
-        if (Math::RandIntMinMax(0, 50) <= 100 - (currhpPC * catchrate))
+        if (Math::RandIntMinMax(0, 50) <= (100 - (currhpPC * catchrate)) * 0.3f)
             return true;
         return false;
     }

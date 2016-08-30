@@ -8,7 +8,7 @@ namespace CHARACTER
 		Skill = new SKILLS::CSkills();
 		Attribute = Skill->Attribute;
 		//AI = new AI::ArtInt();
-
+        scoreforshow = score = 0;
 	}
 
 	CCharacter::~CCharacter()
@@ -26,4 +26,19 @@ namespace CHARACTER
 	{
 		return new CCharacter();
 	}
+
+    void CCharacter::Update(double dt)
+    {
+        if (scoreforshow < score)
+            scoreforshow += 1;
+    }
+    void CCharacter::IncreaseScore(int score)
+    {
+        this->score += score;
+    }
+    int CCharacter::getScore()
+    {
+        return scoreforshow;
+    }
+
 }
