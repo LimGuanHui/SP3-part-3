@@ -37,6 +37,7 @@ class SP3 : public SceneBase
 		Pause,
         Game,
         End,
+		Win,
     };
 
 public:
@@ -76,7 +77,7 @@ public:
     void RenderParticles();
     void UpdateParticles(double dt);
     ParticleObject* GetParticle(void);
-    void SpriteAnimationUpdate(double dt);
+    //void SpriteAnimationUpdate(double dt);
 
 
     enum Level
@@ -100,6 +101,8 @@ public:
 	Buttons Play;
 	MainMenu Main;
 	int m_objectCount = 0;
+
+	bool MiniBossAlive;
 
 private:
     float rotateAngle;   
@@ -161,7 +164,7 @@ private:
     unsigned MAX_PARTICLE; // Max no of particles
 
     //sprite manager
-    SpriteManager* spritemanager;
+    //SpriteManager* spritemanager;
 
     //battestage
     BattleStage* Battle;

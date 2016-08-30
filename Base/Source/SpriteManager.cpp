@@ -46,18 +46,18 @@ void SpriteManager::RenderSprite(Mesh *mesh, bool enableLight, float size, float
 {    
     Render2DMesh(mesh, enableLight, size, x, y, rotate, flip);
 }
-void SpriteManager::NewSpriteAnimation(Mesh *mesh, Vector3 pos, Vector3 scale, int row, int col,
-    int start, int end, float speed, int no_of_repeat, bool flip)
-{
-    
-    SpriteAnimation *go = dynamic_cast<SpriteAnimation*>(mesh);
-    go->m_anim = new Animation();
-    go->m_anim->Set(start, end, no_of_repeat, speed, true);
-    sprite* N_sprite = new sprite(go, pos, scale, flip, mesh);
-    spritelist.push_back(N_sprite);
-    //SpriteAnimation_List.push_back(go);
-    //return go;
-}
+//void SpriteManager::NewSpriteAnimation(Mesh *mesh, Vector3 pos, Vector3 scale, int row, int col,
+//    int start, int end, float speed, int no_of_repeat, bool flip)
+//{
+//    
+//    SpriteAnimation *go = dynamic_cast<SpriteAnimation*>(mesh);
+//    go->m_anim = new Animation();
+//    go->m_anim->Set(start, end, no_of_repeat, speed, true);
+//    sprite* N_sprite = new sprite(go, pos, scale, flip, mesh);
+//    spritelist.push_back(N_sprite);
+//    //SpriteAnimation_List.push_back(go);
+//    //return go;
+//}
 
 //void SpriteManager::PlaySprite(SpriteAnimation* Sprite_Animation)
 //{

@@ -101,11 +101,13 @@ void SP3::Init()
         particleList.push_back(particle);
     }
 
-    spritemanager = new SpriteManager();
+  /*  spritemanager = new SpriteManager();
     spritemanager->Init(800, 600);
-
+*/
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
+
+	MiniBossAlive = true;
 }
 
 void SP3::Update(double dt)
@@ -127,7 +129,7 @@ void SP3::Update(double dt)
     {
 		Scenetransition();
         //sprite update
-        spritemanager->update(dt);
+        //spritemanager->update(dt);
         //battlestage update
         Battle->Update(dt);
         // Update the hero
@@ -246,17 +248,34 @@ void SP3::Update(double dt)
 
 		
 		MonsterUpdate(dt);
-        SpriteAnimationUpdate(dt);
+//        SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
 
-        if (Character->Attribute->GetCurrentHP() <= 0)
-            State = End;
+		if (Character->Attribute->GetCurrentHP() <= 0)
+		{
+			State = End;
+			Main.gamestate = Main.End;
+			Main.playerDead = true;
+		}
             //Character->Attribute->setisDead(true);
 
+		if (Main.gamestate == Main.Restart)
+		{
+			State = Game;
+			Main.playerDead = false;
+		}
+
+		if (Main.gamestate == Main.Menu)
+		{
+			State = Menu;
+		}
+
+		if (Main.gamestate == Main.Win)
+		{
+			State = Win;
+		}
+
     }
-
-    
-
 	//std::cout << fps << std::endl;
 }
 
@@ -414,7 +433,7 @@ void SP3::Render()
 		RenderTileMap();
 		RenderCharacter();
 		RenderList();
-        spritemanager->spriteRender();
+        //spritemanager->spriteRender();
         Battle->RenderObjects(meshList[GEO_MON_HP_BAR]/*top panel*/, meshList[GEO_MON_HP_BAR]/*middle panel*/, meshList[GEO_MON_HP_BAR]/*bottom panel*/, 
             meshList[GEO_MON_HP_BAR]/*player */, meshList[GEO_MON_HP_BAR]/*enemy */);
 		Main.RenderMenu(m_cMap);
@@ -429,6 +448,11 @@ void SP3::Render()
 		break;
 
 	case MainMenu::GameState::End:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::Win:
+		Main.RenderMenu(m_cMap);
 		break;
 	}
     
@@ -1035,7 +1059,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         Character->Attribute->ActionBar(5);
         {            
             Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
-            spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
+            //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
         break;
@@ -1062,7 +1086,9 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
-        Monster_List.erase(monsterlist_iterator);        
+        Monster_List.erase(monsterlist_iterator);   
+		if (go->type == Monster::MINIBOSS)
+			MiniBossAlive = false;
     }
 }
 
@@ -1101,15 +1127,15 @@ void SP3::MonsterUpdate(double dt)
 
 }
 
-void SP3::SpriteAnimationUpdate(double dt)
-{
-    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
-    if (sa)
-    {
-    sa->Update(dt);*/
-    //sa->m_anim->animActive = true;
-    
-}
+//void SP3::SpriteAnimationUpdate(double dt)
+//{
+//    /*SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+//    if (sa)
+//    {
+//    sa->Update(dt);*/
+//    //sa->m_anim->animActive = true;
+//    
+//}
 
 void SP3::RenderParticles()
 {
