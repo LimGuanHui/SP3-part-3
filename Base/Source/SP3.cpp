@@ -131,27 +131,31 @@ void SP3::Update(double dt)
 
 	if (Main.gamestate == Main.Game)
 	{
+        if (!battlestage)
+        {
+            Scenetransition();
+            //sprite update
+            //spritemanager->update(dt);
+            //battlestage update
 
-		if (!battlestage)
-		{
-			Scenetransition();
-			// Update the hero
-			if (Application::IsKeyPressed('A'))
-			{
-				Moving = true;
-				Character->Movement->MoveLeftRight(true, 1.0f);
-			}
+            // Update the hero
+            if (Application::IsKeyPressed('A'))
+            {
+                Moving = true;
+                Character->Movement->MoveLeftRight(true, 1.0f);
+            }
 
-			if (Application::IsKeyPressed('D'))
-			{
-				Moving = true;
-				Character->Movement->MoveLeftRight(false, 1.0f);
-			}
+            if (Application::IsKeyPressed('D'))
+            {
+                Moving = true;
+                Character->Movement->MoveLeftRight(false, 1.0f);
+            }
 
 			if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
 			{
 				Moving = false;
 			}
+
 
 			if (Application::IsKeyPressed(' '))
 			{
@@ -163,98 +167,106 @@ void SP3::Update(double dt)
 				}
 
 			}
+
 			Character->Movement->HeroUpdate(m_cMap);
 			Character->Attribute->update(dt);
 		}
+		
 		else
 		{
+			//battlestage update
 			Battle->Update(dt);
 		}
-		
 		// Update the hero
 		
 
-		firingDebounce += (float)dt;
-		bool KeyUp = true;
+            float ActionIncrease = 0;
+            ActionIncrease += dt;
 
-		float ActionIncrease = 0;
-		ActionIncrease += dt;
+            firingDebounce += (float)dt;
+            bool KeyUp = true;
 
-		Character->Attribute->ActionBar(ActionIncrease);
+            //Normal Projectile
+            if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
+            {
+                firingDebounce = 0;
+                Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
+            }
 
-		//Normal Projectile
-		if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
-		{
-			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
-		}
-		//Net
-		if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
-		{
-			firingDebounce = 0;
-			Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
-		}
 
-		//Charge Projectile
-		if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
-		{
-			chargeTime += 2 * dt;
-			chargeDmg = chargeTime;
-			if (chargeDmg > 1.5)
-			{
-				chargeDmg = 1.5;
-			}
-			if (chargeTime > 2)
-			{
-				chargeTime = 2;
-				chargeFire = true;
-			}
-			KeyUp = false;
-		}
-		if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
-		{
-			if (chargeTime > 0)
-			{
-				chargeFire = true;
-				chargeTime = 0;
-			}
-		}
-		if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
-		{
-			chargeTime = 0;
-		}
-		if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
-		{
-			Character->Attribute->ActionBar(-50);
-			chargeFire = false;
-			KeyUp = false;
-			chargeTime = 0;
-			Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  (chargeDmg * 3)), Projectile::ChargeBullet, m_cMap);
-			std::cout << "Fire" << std::endl;
-		}
+            //Net
+            if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
+            {
+                firingDebounce = 0;
+                Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
+            }
 
-		for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
-		{
-			PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-			if (projectile->active)
-			{
-				projectile->Update(dt);
-				ProjectileCollision(dt, projectile);
-			}
-		}
+            //Charge Projectile
+            if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
+            {
+                chargeTime += 2 * dt;
+                chargeDmg = chargeTime;
+                if (chargeDmg > 1.5)
+                {
+                    chargeDmg = 1.5;
+                }
+                if (chargeTime > 2)
+                {
+                    chargeTime = 2;
+                    chargeFire = true;
+                }
+                KeyUp = false;
+            }
+            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
+            {
+                if (chargeTime > 0)
+                {
+                    chargeFire = true;
+                    chargeTime = 0;
+                }
+            }
+            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
+            {
+                chargeTime = 0;
+            }
+            if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
+            {
+                Character->Attribute->ActionBar(-50);
+                chargeFire = false;
+                KeyUp = false;
+                chargeTime = 0;
+                Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
+                std::cout << "Fire" << std::endl;
+            }
+        
 
-		// ReCalculate the tile offsets
-		tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
-		if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
-			tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
 
-		MonsterUpdate(dt, m_cMap);
-		//SpriteAnimationUpdate(dt);
-		UpdateParticles(dt);
+            std::cout << AI->Monster->Movement->GetPos() << std::endl;
 
+            for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+            {
+                PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+                if (projectile->active)
+                {
+                    //projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
+                    projectile->Update(dt);
+                    ProjectileCollision(dt, projectile);
+                }
+            }
+
+            // ReCalculate the tile offsets
+            tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
+            if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
+                tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
+
+            // if the hero enters the kill zone, then enemy goes into kill strategy mode
+
+            MonsterUpdate(dt, m_cMap);
+            //SpriteAnimationUpdate(dt);
+            UpdateParticles(dt);
+        }
+       
 		
-		
-
 		if (MiniBossAlive == false)
 		{
 			winTimer += (float)dt;
@@ -264,8 +276,13 @@ void SP3::Update(double dt)
 				winTimer = 0;
 			}
 		}
-		//Character->Attribute->setisDead(true);
-	}
+
+	//if (Main.gamestate == Main.Restart)
+	//{
+	//	Main.playerDead = true;
+	//	State = Game;
+	//	Restart();
+	//}
 
 	if (Main.RestartGame)
 	{
