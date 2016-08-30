@@ -39,6 +39,8 @@ private:
     int panel_no;
     float movetimer;
     float attacktimer;
+    float atk_delay;
+    bool isAtking;
     Vector3 pos;
 };
 

@@ -1,5 +1,6 @@
 #include "BattleStage.h"
-
+#include "MeshBuilder.h"
+#include "LoadTGA.h"
 BattleStage::BattleStage()
 {
 
@@ -9,26 +10,37 @@ BattleStage::~BattleStage()
     exit();
 }
 
-void BattleStage::Init(float ortho_x, float ortho_y,float panelsize)
+void BattleStage::Init(float ortho_x, float ortho_y, float panelsize)
 {
+    //SceneBase::Init();
+    //panels
+    //meshList[GEO_B_PANEL] = MeshBuilder::GenerateQuad("bPanel", Color(0, 1, 0), 1.f);
+    //meshList[GEO_B_PANEL]->textureID = LoadTGA("Image//panels//bPanel.tga");
+
+    //meshList[GEO_M_PANEL] = MeshBuilder::GenerateQuad("mPanel", Color(0, 1, 0), 1.f);
+    //meshList[GEO_M_PANEL]->textureID = LoadTGA("Image//panels//mPanel.tga");
+
+    //meshList[GEO_T_PANEL] = MeshBuilder::GenerateQuad("tPanel", Color(0, 1, 0), 1.f);
+    //meshList[GEO_T_PANEL]->textureID = LoadTGA("Image//panels//tPanel.tga");
+
     panelsize_x = (ortho_x*0.5) * pow(3, -1);
     panelsize_y = (ortho_y*0.5) * pow(3, -1);
     float panelscale_x = 1;
-    for (int i = 0; i < 7; i++)//player panel
+    for (int i = 0; i < 9; i++)//player panel
     {
-        Panel* NewPanel = new  Panel();
+        Panel* NewPanel = new Panel();
         NewPanel->Init(i, Vector3(panelsize_x *0.5, panelsize_y *0.5, 0),
-            Vector3(panelscale_x* (panelsize_x * pow(panelsize_y, -1)), panelsize_y, 1),
+            Vector3(panelsize_x, panelsize_y, 1),
             panelsize_x, panelsize_y, Panel::PanelType::Normal, Panel::BELONGS_TO::PLAYER);
         Panel_List.push_back(NewPanel);
     }
     float tempx = ortho_x * 0.5;
     float tempy = ortho_y * 0.5;
-    for (int i = 0; i < 7; i++)//enemy panel
+    for (int i = 0; i < 9; i++)//enemy panel
     {
-        Panel* NewPanel = new  Panel();
-        NewPanel->Init(i, Vector3(tempx + panelsize_x *0.5, tempy + panelsize_y *0.5, 0),
-            Vector3(panelscale_x* (panelsize_x * pow(panelsize_y, -1)), panelsize_y, 1),
+        Panel* NewPanel = new Panel();
+        NewPanel->Init(i, Vector3(tempx + panelsize_x *0.5, panelsize_y *0.5, 0),
+            Vector3(panelsize_x, panelsize_y, 1),
             panelsize_x, panelsize_y, Panel::PanelType::Normal, Panel::BELONGS_TO::ENEMY);
         Panel_List.push_back(NewPanel);
     }
@@ -39,6 +51,7 @@ void BattleStage::Init(float ortho_x, float ortho_y,float panelsize)
     player->setatk(10);
     enemy = new ENEMY(&Panel_List);
     //set enemy stats here
+    enemy->Init();
     enemy->sethp(200);
     enemy->setatk(20);
 }
@@ -56,32 +69,19 @@ void BattleStage::Update(double dt)
     enemy->update(dt);
 }
 
-void BattleStage::RenderObjects(Mesh* tpanel, Mesh* mpanel, Mesh* bpanel, Mesh* player, Mesh* enemy )
+void BattleStage::RenderObjects(Mesh* tpanel, Mesh* mpanel, Mesh* bpanel, Mesh* player, Mesh* enemy, Mesh* text )
 {
-    for (std::vector<Panel *>::iterator it = Panel_List.begin(); it != Panel_List.end(); ++it)
-    {
-        Panel* go = (Panel*)*it;
-        switch (go->panel_pos)
-        {
-        case Panel::PanelPos::Top:
-            Render2DMesh(tpanel, false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-            break;
-        case Panel::PanelPos::Middle:
-            Render2DMesh(mpanel, false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-            break;
-        case Panel::PanelPos::Bottom:
-            Render2DMesh(bpanel, false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
-            break;
-        default:
-            break;
-        }
-        
-    }
-    //render character
-    Render2DMesh(player, false,/*player x scale*/ 25, /*player y scale*/ 25, this->player->getpos().x, this->player->getpos().y, false, false);
-    //render enemy
-    Render2DMesh(enemy, false,/*enemy x scale*/ 25, /*enemy y scale*/ 25, this->enemy->getpos().x, this->enemy->getpos().y, false, false);
 
+
+}
+
+float BattleStage::getpanel_sizeX()
+{
+    return panelsize_x;
+}
+float BattleStage::getpanel_sizeY()
+{
+    return panelsize_y;
 }
 
 void BattleStage::exit()

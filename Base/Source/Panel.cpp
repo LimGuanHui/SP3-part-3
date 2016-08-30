@@ -17,51 +17,43 @@ void Panel::Init(int panelNo, Vector3 startpos, Vector3 scale,
     this->who = who;
     panel_state = Empty;
     Scale = scale;
-    switch (panelNo)
+    PanelNo = panelNo;
+    switch (PanelNo)
     {
     case 0:
         Pos = startpos;
-        PanelNo = panelNo;
         panel_pos = Bottom;
         break;
     case 1:
         Pos = Vector3(startpos.x, startpos.y + offset_Y, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 2:
         Pos = Vector3(startpos.x, startpos.y + offset_Y * 2, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Top;
         break;
     case 3:
         Pos = Vector3(startpos.x + offset_X , startpos.y, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Bottom;
         break;
     case 4:
         Pos = Vector3(startpos.x + offset_X, startpos.y + offset_Y, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 5:
         Pos = Vector3(startpos.x + offset_X, startpos.y + offset_Y * 2, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Top;
         break;
     case 6:
         Pos = Vector3(startpos.x + offset_X * 2, startpos.y, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Bottom;
         break;
     case 7:
         Pos = Vector3(startpos.x + offset_X * 2, startpos.y + offset_Y, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Middle;
         break;
     case 8:
         Pos = Vector3(startpos.x + offset_X * 2 , startpos.y + offset_Y * 2, startpos.z);
-        PanelNo = panelNo;
         panel_pos = Top;
         break;
     default:
