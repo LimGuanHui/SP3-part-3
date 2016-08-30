@@ -103,9 +103,10 @@ void SP3::Init()
 
     /*spritemanager = new SpriteManager();
     spritemanager->Init(800, 600);*/
-
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
+
+	MiniBossAlive = true;
 }
 
 void SP3::Update(double dt)
@@ -246,13 +247,34 @@ void SP3::Update(double dt)
         //SpriteAnimationUpdate(dt);
         UpdateParticles(dt);
 
-        if (Character->Attribute->GetCurrentHP() <= 0)
-            State = End;
-            //Character->Attribute->setisDead(true);
+		if (Character->Attribute->GetCurrentHP() <= 0)
+		{
+			State = End;
+			Main.gamestate = Main.End;
+			Main.playerDead = true;
+		}
 
+            //Character->Attribute->setisDead(true);
     }
 
-    
+	if (Main.gamestate == Main.Restart)
+	{
+		State = Game;
+
+		SpawnObjects();
+	}
+
+	if (Main.gamestate == Main.Menu)
+	{
+		State = Menu;
+		SpawnObjects();
+	}
+
+	if (Main.gamestate == Main.Win)
+	{
+		State = Win;
+	}
+	
 
 	//std::cout << fps << std::endl;
 }
@@ -426,6 +448,11 @@ void SP3::Render()
 		break;
 
 	case MainMenu::GameState::End:
+		Main.RenderMenu(m_cMap);
+		break;
+
+	case MainMenu::GameState::Win:
+		Main.RenderMenu(m_cMap);
 		break;
 	}
     
@@ -438,12 +465,6 @@ void SP3::Exit()
     SceneBase::Exit();
 
     particleList.clear();
-	/*while (Character->Movement->m_projectileList.size() > 0)
-	{
-		Projectile *go = Character->Movement->m_projectileList.back();
-		delete go;
-		Character->Movement->m_projectileList.pop_back();
-	}*/
 }
 
 /********************************************************************************
@@ -669,6 +690,12 @@ void SP3::GameStateUpdate()
 void SP3::GameStateRender()
 {
 
+}
+
+void SP3::Restart()
+{
+	Scenetransition();
+	RenderList();
 }
 
 void SP3::Scenetransition()
@@ -1058,10 +1085,13 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
-        Monster_List.erase(monsterlist_iterator);     
-		go->active = false;
+        Monster_List.erase(monsterlist_iterator);   
 		if (go->type == Monster::MINIBOSS)
+		{
+			MiniBossAlive = false;
 			std::cout << "DEAD" << std::endl;
+		}
+
     }
 }
 

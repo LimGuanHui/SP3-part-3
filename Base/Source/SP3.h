@@ -37,6 +37,7 @@ class SP3 : public SceneBase
 		Pause,
         Game,
         End,
+		Win,
     };
 
 public:
@@ -58,6 +59,7 @@ public:
     void GameStateRenderText();
     void GameStateUpdate();
     void GameStateRender();
+	void Restart();
 
     void Scenetransition();
     void SpawnObjects();
@@ -100,6 +102,8 @@ public:
 	Buttons Play;
 	MainMenu Main;
 	int m_objectCount = 0;
+
+	bool MiniBossAlive;
 
 private:
     float rotateAngle;   
