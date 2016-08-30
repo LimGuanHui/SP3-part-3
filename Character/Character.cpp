@@ -19,6 +19,7 @@ namespace CHARACTER
 	{
 		Movement->facingRight = true;
 		Movement->SetAnimationCounter(0);
+		Attribute->SetRecovery(Attribute->GetMaxHP());
 	}
 
 	CCharacter* N_Character()
