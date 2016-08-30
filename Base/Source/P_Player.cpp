@@ -16,7 +16,7 @@ void Player::Init(std::vector<Panel *> *Panel_List)
     inputimer = timerdelay;
     charging = false;
     chargetimer = 0.f;
-    maxcharge = 3.f;
+    maxcharge = 4.f;
     GunState = Normal;
     fireshot = false;
     panel_pos = Panel::PanelPos::Middle;
@@ -27,7 +27,7 @@ void Player::update(double dt)
     for (std::vector<Panel *>::iterator it = Panel_List->begin(); it != Panel_List->end(); ++it)
     {
         Panel* go = (Panel*)*it;
-        if (panel_no == go->getPanelNo())
+        if (panel_no == go->getPanelNo() && go->who == Panel::BELONGS_TO::PLAYER)
         {
             panel_pos = go->panel_pos;
             pos = go->getpos();
@@ -66,15 +66,17 @@ void Player::update(double dt)
         charging = true;
         chargetimer += dt;
     }
-    else
+    else if (!Application::IsKeyPressed('K'))
     {
-        if (chargetimer >= maxcharge)
+        if (charging)
+            fireshot = true;
+        if (chargetimer > maxcharge)
             GunState = Charge;
         else
             GunState = Normal;
         charging = false;
         chargetimer = 0;
-        fireshot = true;
+        
     }
 }
 
@@ -90,7 +92,7 @@ void Player::sethp(int hp)
 int Player::getatk()
 {
     if (GunState == Charge)
-        return atk * 2;
+        return atk * 5;
     return atk;
 }
 void Player::setatk(int atk)
@@ -116,6 +118,16 @@ bool Player::fire()
 Vector3 Player::getpos()
 {
     return pos;
+}
+
+bool Player::getcharging()
+{
+    return charging;
+}
+
+bool Player::getisFullyCharged()
+{
+    return (chargetimer > maxcharge);
 }
 
 void Player::Exit()

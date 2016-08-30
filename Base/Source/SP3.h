@@ -79,6 +79,9 @@ public:
     void RenderParticles();
     void UpdateParticles(double dt);
     ParticleObject* GetParticle(void);
+    void renderbattlestage();
+
+
     //void SpriteAnimationUpdate(double dt);
 
 
@@ -171,6 +174,7 @@ private:
     //battestage
     BattleStage* Battle;
 
+    bool battlestage;
 };
 
 #endif

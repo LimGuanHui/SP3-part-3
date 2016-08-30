@@ -155,6 +155,7 @@ protected:
 		GEO_BACKGROUND2,
 		GEO_EDITBACKGROUND,
 		GEO_PLAYERHP,
+		GEO_HPUI,
 		GEO_DEATHSCREEN,
 		GEO_VICTORY,
 
@@ -191,6 +192,10 @@ protected:
         GEO_B_PANEL,
         GEO_M_PANEL,
         GEO_T_PANEL,
+
+        GEO_PLAYER,
+        GEO_PLAYER_CHARGING,
+        GEO_PLAYER_MAXCHARGE,
 
         NUM_GEOMETRY,
     };

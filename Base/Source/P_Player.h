@@ -27,6 +27,8 @@ public:
     void setatk(int atk);
 
     int getpanelNo();
+    bool getcharging();
+    bool getisFullyCharged();
     
     Vector3 getpos();
 
