@@ -130,6 +130,11 @@ bool Player::getisFullyCharged()
     return (chargetimer > maxcharge);
 }
 
+void Player::gethit(int dmg)
+{
+    hp -= dmg;
+}
+
 void Player::Exit()
 {
     Projecile_List.clear();

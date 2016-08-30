@@ -31,6 +31,7 @@ public:
     bool getisFullyCharged();
     
     Vector3 getpos();
+    void gethit(int dmg);
 
     gunstate GunState;
     Panel::PanelPos panel_pos;

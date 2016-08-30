@@ -68,6 +68,14 @@ void BattleStage::Update(double dt)
             enemy->gethit(player->getatk());
         }
     }
+    if (enemy->isAttacking())
+    {
+        //check if player and enemy on same column
+        if (player->panel_pos == enemy->panel_pos)
+        {
+            player->gethit(enemy->getatk());
+        }
+    }
     player->update(dt);
     enemy->update(dt,player->panel_pos);
 }

@@ -108,7 +108,7 @@ void SP3::Init()
     Battle->Init(800, 600, 25);
 
 
-    battlestage = false;
+    battlestage = true;
 
 	MiniBossAlive = true;
 
