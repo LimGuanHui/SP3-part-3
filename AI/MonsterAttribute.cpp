@@ -7,6 +7,8 @@ namespace MONSTER_ATTRIBUTE
 		, Damage(0)
 		, ReceiveDmg(0)
 		, CurrentHealth(MaxhealthPoint)
+		, invulTimer(0)
+		, invul(false)
 	{
 	}
 
@@ -23,6 +25,16 @@ namespace MONSTER_ATTRIBUTE
         this->catchrate = catchrate;
         
     }
+
+	void MonsterAttribute::update(double dt)
+	{
+		invulTimer += (float)dt;
+		if (invulTimer > 0.2)
+		{
+			invul = false;
+		}
+			
+	}
 
 	void MonsterAttribute::SetMonsterMaxHealth(int MaxHealthPoint)
 	{
@@ -46,7 +58,13 @@ namespace MONSTER_ATTRIBUTE
 
 	void MonsterAttribute::ReceiveDamage(int ReceiveDmg)
 	{
-		this->CurrentHealth -= ReceiveDmg;
+		if (!invul)
+		{
+			this->CurrentHealth -= ReceiveDmg;
+			invulTimer = 0;
+			invul = true;
+		}
+		
 	}
 
 	int MonsterAttribute::GetReceivedDamage()
@@ -64,7 +82,7 @@ namespace MONSTER_ATTRIBUTE
         float currhpPC = 0;
         currhpPC = (float)((CurrentHealth * (pow( MaxhealthPoint,-1))) * 100);
         int capturechance = Math::RandIntMinMax(0, 100 - currhpPC );
-        if (Math::RandIntMinMax(0, 100) <= 100 - (currhpPC * catchrate))
+        if (Math::RandIntMinMax(0, 50) <= 100 - (currhpPC * catchrate))
             return true;
         return false;
     }

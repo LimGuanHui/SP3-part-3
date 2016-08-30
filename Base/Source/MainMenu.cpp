@@ -251,6 +251,7 @@ void MainMenu::Update(double dt)
 		{
 			playerDead = false;
 		}
+
 	}
 
 	case Pause:
@@ -269,8 +270,6 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(Character->Attribute->GetMaxHP() - Character->Attribute->GetCurrentHP());
-				RestartGame = true;
 				gamestate = Menu;
 			}
 			break;
@@ -293,9 +292,8 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(101);
-				gamestate = Game;
 				RestartGame = true;
+				gamestate = Game;
 			}
 			break;
 
@@ -303,7 +301,6 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(101);
 				gamestate = Menu;
 				RestartGame = true;
 			}
@@ -319,7 +316,6 @@ void MainMenu::Update(double dt)
 			if (Application::IsKeyPressed(VK_RETURN) && InputDelayTimer <= 0)
 			{
 				InputDelayTimer = InputDelay;
-				Character->Attribute->SetRecovery(Character->Attribute->GetMaxHP() - Character->Attribute->GetCurrentHP());
 				gamestate = Menu;
 				RestartGame = true;
 			}
@@ -435,10 +431,13 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 	if (gamestate == Game)
 	{
 		modelStack.PushMatrix();
-		//modelStack.Translate(50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 1.f);
-		//modelStack.Scale(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f);
-		RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 50.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, 57.7f, 0.f, Vector3(0.f, 0.f, 0.f));
-		//RenderMesh(meshList[GEO_PLAYERHP], false);
+		modelStack.Translate(m_worldWidth / 5, m_worldHeight / 25, 0.f);
+		modelStack.Scale(65.f, 8.f, 0.f);
+		RenderMesh(meshList[GEO_HPUI], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 24.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, m_worldHeight / 40, 0.f, Vector3(0.f, 0.f, 0.f));
 		modelStack.PopMatrix();
 	}
 

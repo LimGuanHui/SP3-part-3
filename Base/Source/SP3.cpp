@@ -130,6 +130,24 @@ void SP3::Update(double dt)
 
     if (Main.gamestate == Main.Game)
     {
+		State = Game;
+		Scenetransition();
+        //sprite update
+        //spritemanager->update(dt);
+        //battlestage update
+        Battle->Update(dt);
+        // Update the hero
+		if (Application::IsKeyPressed('A'))
+		{
+			Moving = true;
+			Character->Movement->MoveLeftRight(true, 1.0f);
+		}
+            
+		if (Application::IsKeyPressed('D'))
+		{
+			Moving = true;
+			Character->Movement->MoveLeftRight(false, 1.0f);
+		}
         if (!battlestage)
         {
             Scenetransition();
@@ -296,6 +314,13 @@ void SP3::Update(double dt)
 	if (Main.RestartGame)
 	{
 		Restart();
+		Main.RestartGame = false;
+	}
+
+	if (Character->Attribute->GetCurrentHP() <= 0)
+	{
+		State = End;
+		Main.gamestate = Main.End;
 		Main.RestartGame = false;
 	}
 
@@ -665,29 +690,28 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-		ss.str(string());
+		/*ss.str(string());
 		ss.precision(5);
-		ss << "Lives: " << Character->Attribute->GetCurrentHP();
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss << Character->Attribute->GetCurrentHP();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);*/
     }
-
         break;
     case SP3::Game:
         //On screen text
     {
         ss.str(string());
         ss.precision(5);
-		ss << "Lives: " << Character->Attribute->GetCurrentHP();
-        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss << Character->Attribute->GetCurrentHP();
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);
     }
         break;
     case SP3::End:
         if (lives <= 0)
         {
-            ss.str(string());
+            /*ss.str(string());
             ss.precision(5);
             ss << "GAME OVER";
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);*/
         }
         else if (lives > 0)
         {
@@ -696,10 +720,10 @@ void SP3::GameStateRenderText()
             //ss << "You win!";
             //RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
 
-			ss.str(string());
+			/*ss.str(string());
 			ss.precision(5);
-			ss << "Lives: " << Character->Attribute->GetCurrentHP();
-			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+			ss << Character->Attribute->GetCurrentHP();
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 5, 30);*/
         }
 
         break;
@@ -753,6 +777,7 @@ void SP3::Restart()
 	CurrLevel = LEVEL1;
 	m_cMap->LoadMap("Map\\Map1.csv");
 	Character->Restart();
+	Character->Attribute->SetCurrentHP(Character->Attribute->GetMaxHP());
 	MiniBossAlive = true;
 	SpawnObjects();
 
@@ -760,7 +785,6 @@ void SP3::Restart()
 
 void SP3::Scenetransition()
 {
-	
     if (Character->Movement->TransitLevel)
     {
         CurrLevel = static_cast<Level>(CurrLevel + 1);
@@ -1067,13 +1091,47 @@ void SP3::ProjectileCollision(double dt, Projectile* projectile)
             Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
             int tsize2 = ((m_cMap->GetTileSize() * go->Movement->GetScale_X()) - (6 * go->Movement->GetScale_X())) * 0.5;
             Vector3 pos2(go->Movement->GetPos_X() + tsize2, go->Movement->GetPos_Y() + tsize2, 0);
-            if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
-            {
-                ProjectileCollisionResponse(projectile, it2);
-				break;
-            }
+
+			int tsize3 = ((m_cMap->GetTileSize() * 1) - (6 * 1)) * 0.5;
+			Vector3 pos3(Character->Movement->GetPos_x() + tsize2, Character->Movement->GetPos_y() + tsize2, 0);
+
+			if (projectile->type == Projectile::BossBullet)
+			{
+				if (Collision::SphericalCollision(pos1, tsize, pos3, tsize3))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+			else
+			{
+				if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+			
 
         }
+		//collide with Character
+		/*for (std::vector<Monster*>::iterator it2 = Monster_List.begin(); it2 != Monster_List.end(); ++it2)
+		{
+			Monster* go = (Monster*)*it2;
+			if (projectile->type == Projectile::BossBullet)
+			{
+				int tsize = ((m_cMap->GetTileSize() * projectile->GetScale().x) - (6 * projectile->GetScale().x)) * 0.5;
+				Vector3 pos1(projectile->GetPos().x + tsize, projectile->GetPos().y + tsize, 0);
+				int tsize2 = ((m_cMap->GetTileSize() * m_cMap->GetTileSize() - (6 * m_cMap->GetTileSize()))) * 0.5;
+				Vector3 pos2(Character->Movement->GetPos_x() + tsize2, Character->Movement->GetPos_y() + tsize2, 0);
+				if (Collision::SphericalCollision(pos1, tsize, pos2, tsize2))
+				{
+					ProjectileCollisionResponse(projectile, it2);
+					break;
+				}
+			}
+		}*/
+		
         //collide with tile
         int m = 0;
         for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
@@ -1116,16 +1174,16 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     switch (projectile->type)
     {
     case Projectile::Bullet:
-        go->Attribute->ReceiveDamage(projectile->getdmg());
         Character->Attribute->ActionBar(5);
         {            
             Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
             //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
+        go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::ChargeBullet:
-        go->Attribute->ReceiveDamage(projectile->getdmg());
+			go->Attribute->ReceiveDamage(projectile->getdmg());
         break;
     case Projectile::Net:
         if (go->Attribute->Capture())
@@ -1144,7 +1202,12 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             return;
         }
         go->Attribute->ReceiveDamage(projectile->getdmg());
+		projectile->active = false;
         break;
+	case Projectile::BossBullet:
+		Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
+		projectile->active = false;
+		break;
     default:
         break;
     }

@@ -30,6 +30,11 @@ namespace MONSTER_ATTRIBUTE
 
         bool Capture();
 
+		void update(double dt);
+
+		bool invul;
+		float invulTimer;
+
 	private:
 		int MaxhealthPoint;
 		int Damage;

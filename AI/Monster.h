@@ -19,6 +19,7 @@ namespace MONSTER
             MONSTER3,
 			MINIBOSS,
         };
+
 		Monster();
 		~Monster();
 		void Init(Vector3 startpos, Vector3 scale, float patrol, float detectionradius, float movementspd, MON_TYPE type, MapLoad* map, bool Floats, bool active);
