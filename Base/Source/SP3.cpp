@@ -260,12 +260,12 @@ void SP3::Update(double dt)
             //Character->Attribute->setisDead(true);
     }
 
-	if (Main.gamestate == Main.Restart)
-	{
-		Main.playerDead = true;
-		State = Game;
-		//Restart();
-	}
+	//if (Main.gamestate == Main.Restart)
+	//{
+	//	Main.playerDead = true;
+	//	State = Game;
+	//	Restart();
+	//}
 
 	if (Main.RestartGame)
 	{
@@ -624,10 +624,10 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-       ss.str(string());
-       ss.precision(5);
-       ss << "<1>Start Game";
-       RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
+		ss.str(string());
+		ss.precision(5);
+		ss << "Lives: " << Character->Attribute->GetCurrentHP();
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
 
         break;
@@ -636,7 +636,7 @@ void SP3::GameStateRenderText()
     {
         ss.str(string());
         ss.precision(5);
-        ss << "Lives: " << fps;
+		ss << "Lives: " << Character->Attribute->GetCurrentHP();
         RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
     }
         break;
@@ -650,10 +650,15 @@ void SP3::GameStateRenderText()
         }
         else if (lives > 0)
         {
-            ss.str(string());
-            ss.precision(5);
-            ss << "You win!";
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+            //ss.str(string());
+            //ss.precision(5);
+            //ss << "You win!";
+            //RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 20, 30);
+
+			ss.str(string());
+			ss.precision(5);
+			ss << "Lives: " << Character->Attribute->GetCurrentHP();
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 0, 30);
         }
 
         break;
