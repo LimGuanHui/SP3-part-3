@@ -19,6 +19,10 @@ SP3::SP3()
 //, theEnemy(NULL)
 , sceneSoundEngine(NULL)
 , Moving(false)
+, ShootingN(false)
+, ShootingNet(false)
+, CShooting(false)
+, Shooting(false)
 {
 }
 
@@ -123,12 +127,14 @@ void SP3::Init()
 	chargeFire = false;
 	chargeDmg = 0;
 	BossFiringDebounce = 0;
-	winTimer = 0;
+	endScreenTimer = 0;
+	AnimationCounter = 0;
+	AnimationTimer = 0;
 
-	for (int i = 0; i < 1; ++i)
+	/*for (int i = 0; i < 1; ++i)
 	{
 		Character->Movement->m_projectileList.push_back(new Projectile(m_cMap));
-	}
+	}*/
 
 	m_objectCount = 0;
 	Play.Init(&m_goList, m_cMap);
@@ -151,7 +157,7 @@ void SP3::Init()
     Battle->Init(800, 600, 25);
 
 
-    battlestage = true;
+    battlestage = false;
 
 	MiniBossAlive = true;
 
@@ -228,26 +234,54 @@ void SP3::Update(double dt)
             float ActionIncrease = 0;
             ActionIncrease += dt;
 
-            firingDebounce += (float)dt;
+			firingDebounce += (float)dt;
             bool KeyUp = true;
 
-            //Normal Projectile
-            if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
-            {
-                firingDebounce = 0;
-                Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
-            }
+			
 
+            //Normal Projectile
+            if (Application::IsKeyPressed('J'))
+            {
+				ShootingN = true;
+				Shooting = true;
+            }
+			if (ShootingN && Shooting && firingDebounce > 0.5 / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter == 4)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
+					ShootingN = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+			}
 
             //Net
-            if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
-            {
-                firingDebounce = 0;
-                Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
+			if (Application::IsKeyPressed('L'))
+			{
+				ShootingNet = true;
+				Shooting = true;
+				
             }
+			if (ShootingNet && Shooting && firingDebounce > 0.5f / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter == 4)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Net, m_cMap);
+					ShootingNet = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+			}
 
             //Charge Projectile
-            if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
+            if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)//Charging
             {
                 chargeTime += 2 * dt;
                 chargeDmg = chargeTime;
@@ -261,8 +295,22 @@ void SP3::Update(double dt)
                     chargeFire = true;
                 }
                 KeyUp = false;
+				CShooting = true;
+				Shooting = true;
             }
-            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
+
+			if (CShooting && Shooting && firingDebounce > 1.f / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter > 2)
+				{
+					AnimationCounter = 2;
+				}
+			}
+
+            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire) //reset Charge
             {
                 if (chargeTime > 0)
                 {
@@ -270,22 +318,25 @@ void SP3::Update(double dt)
                     chargeTime = 0;
                 }
             }
-            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
-            {
-                chargeTime = 0;
-            }
             if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
             {
                 Character->Attribute->ActionBar(-50);
                 chargeFire = false;
                 KeyUp = false;
                 chargeTime = 0;
-                Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
-                std::cout << "Fire" << std::endl;
+				AnimationCounter = 3;
+				if (AnimationCounter == 3)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
+					std::cout << "Fire" << std::endl;
+					CShooting = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+               
             }
-
-
-            std::cout << AI->Monster->Movement->GetPos() << std::endl;
+        
+			std::cout << AnimationTimer << " " << AnimationCounter << " " << firingDebounce  << std::endl;
 
             for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
             {
@@ -314,11 +365,19 @@ void SP3::Update(double dt)
             }
             if (Character->Attribute->GetCurrentHP() <= 0)
             {
-                State = End;
-                Main.gamestate = Main.End;
-                Main.RestartGame = false;
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2)
+                {
+                    State = End;
+                    Main.gamestate = Main.End;
+                    Main.RestartGame = false;
+                }
             }
         }
+       	if (!MiniBossAlive)
+		{
+            battlestage = true;
+		}
 
         else
         {
@@ -326,11 +385,11 @@ void SP3::Update(double dt)
             Battle->Update(dt);
             if (Battle->player->gethp() > 0 && Battle->enemy->gethp() <= 0 )
             {
-                winTimer += (float)dt;
-                if (winTimer > 2)
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2)
                 {
                     Main.gamestate = Main.Win;
-                    winTimer = 0;
+                    endScreenTimer = 0;
                 }
             }
             else if (Battle->player->gethp() <= 0 )
@@ -360,9 +419,6 @@ void SP3::Update(double dt)
             State = Win;
             Main.RestartGame = false;
         }
-
-        //std::cout << Main.deadArrow << std::endl;
-        //std::cout << fps << std::endl;
 
     }
 		
@@ -536,7 +592,7 @@ void SP3::Render()
             ss.str(string());
             ss.precision(7);
             ss << Character->getScore();
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 25, 550);
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 27, 520);
 
         }
 		break;
@@ -691,10 +747,7 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-		/*ss.str(string());
-		ss.precision(5);
-		ss << Character->Attribute->GetCurrentHP();
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);*/
+
     }
         break;
     case SP3::Game:
@@ -945,62 +998,60 @@ void SP3::RenderCharacter()
 {
 	if (Character->Movement->GetAnimationInvert() == false && Moving == true)
 	{
-		if (Character->Movement->GetAnimationCounter() == 1)
-            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 2)
-            Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 3)
-            Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 4)
-            Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 5)
-            Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 6)
-            Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 7)
-            Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 8)
-            Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 9)
-            Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 10)
-            Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 11)
-            Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else
-            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
+		if (Character->Movement->GetAnimationCounter() == 0)
+			Render2DMesh(meshList[GEO_WALKING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false,false);
+		else if (Character->Movement->GetAnimationCounter() == 1)
+			Render2DMesh(meshList[GEO_JUMPING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		if (Shooting)
+		{
+ 			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		}
 	}
 	else if (Character->Movement->GetAnimationInvert() == true && Moving == true)
 	{
-		if (Character->Movement->GetAnimationCounter() == 1)
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 2)
-			Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 3)
-			Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 4)
-			Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 5)
-			Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 6)
-			Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 7)
-			Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 8)
-			Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 9)
-			Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 10)
-			Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 11)
-			Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		if (Character->Movement->GetAnimationCounter() == 0)
+			Render2DMesh(meshList[GEO_WALKING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		else if (Character->Movement->GetAnimationCounter() == 1)
+			Render2DMesh(meshList[GEO_JUMPING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		if (Shooting)
+		{
+			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		}
+
 	}
 	else if (Moving == false)
 	{
-		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		if (!Shooting)
+			Render2DMesh(meshList[GEO_IDLE_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		else if (Shooting)
+		{
+			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		}
 	}
+	
+
+	
 
     Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, (Character->Attribute->GetActionBar() / 100.f) * 2 , Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
 
@@ -1200,6 +1251,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
+            Monster* go = (Monster*)*monsterlist_iterator;
+            delete go;
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);

@@ -371,6 +371,10 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Escape Dungeon", Color(0, 0, 1), 30, m_worldWidth + 30, m_worldHeight + 400);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
 		modelStack.Translate(button->PlayButton->pos.x, button->PlayButton->pos.y, 0.f);
 		modelStack.Scale(25.f, 10.f, 0.f);
 		RenderMesh(meshList[GEO_PLAY], false);
@@ -437,13 +441,13 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 	if (gamestate == Game)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(m_worldWidth / 5, m_worldHeight / 25, 0.f);
+		modelStack.Translate(m_worldWidth / 4.5, (m_worldHeight / 1) - 5, 0.f);
 		modelStack.Scale(65.f, 8.f, 0.f);
 		RenderMesh(meshList[GEO_HPUI], false);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 24.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, m_worldHeight / 40, 0.f, Vector3(0.f, 0.f, 0.f));
+		RenderModelOnScreen(meshList[GEO_PLAYERHP], false, Vector3(Character->Attribute->GetCurrentHP() * 0.2f, 2.f, 0.f), 26.f - (157.f - (float)Character->Attribute->GetCurrentHP())*0.1f, m_worldHeight - 42.9, 0.f, Vector3(0.f, 0.f, 0.f));
 		modelStack.PopMatrix();
 	}
 
