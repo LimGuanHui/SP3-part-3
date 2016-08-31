@@ -220,6 +220,10 @@ protected:
         GEO_PLAYER_CHARGING,
         GEO_PLAYER_MAXCHARGE,
 
+        GEO_BOSS,
+        GEO_BOSS_CHARGING,
+        GEO_BOSS_MAXCHARGE,
+
         NUM_GEOMETRY,
     };
 

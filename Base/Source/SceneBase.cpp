@@ -435,6 +435,15 @@ void SceneBase::Init()
     meshList[GEO_PLAYER_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_PLAYER_MAXCHARGE", Color(0, 0, 1), 1.f);
     //meshList[GEO_PLAYER_MAXCHARGE]->textureID = LoadTGA("Image//panels//tPanel.tga");
 
+    meshList[GEO_BOSS] = MeshBuilder::GenerateQuad("GEO_BOSS", Color(0, 1, 0), 60.f);
+    meshList[GEO_BOSS]->textureID = LoadTGA("Image//enemy//BOSS1.tga");
+
+    meshList[GEO_BOSS_CHARGING] = MeshBuilder::GenerateQuad("GEO_BOSS_CHARGING", Color(1, 0, 0), 60.f);
+    meshList[GEO_BOSS_CHARGING]->textureID = LoadTGA("Image//enemy//BOSS2.tga");
+
+    meshList[GEO_BOSS_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_BOSS_MAXCHARGE", Color(0, 0, 1), 60.f);
+    meshList[GEO_BOSS_MAXCHARGE]->textureID = LoadTGA("Image//enemy//BOSS3.tga");
+
     meshList[GEO_SNOW_TILE] = MeshBuilder::Generate2DMesh("GEO_SNOW_TILE", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_SNOW_TILE]->textureID = LoadTGA("Image//tiles//snow_tile.tga");
 
