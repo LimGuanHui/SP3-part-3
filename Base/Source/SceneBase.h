@@ -146,6 +146,7 @@ protected:
         //lvl 1 tile
         GEO_SNOW_TILE,
         GEO_SNOW_DIRT_TILE,
+		GEO_SNOWBACKGROUND,
 
         // lvl 2 tile 
         GEO_GRASS,

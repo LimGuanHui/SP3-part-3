@@ -297,6 +297,9 @@ void SceneBase::Init()
 	meshList[GEO_CASTLEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_CASTLEBACKGROUND]->textureID = LoadTGA("Image//background//bg_castle.tga");
 
+	meshList[GEO_SNOWBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_SNOWBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+	meshList[GEO_SNOWBACKGROUND]->textureID = LoadTGA("Image//background//SnowBG.tga");
+
 
 
 	//Projectile
