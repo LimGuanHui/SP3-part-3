@@ -850,7 +850,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            m_cMap->LoadMap("Map\\Map4B.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -924,8 +924,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
-                       newmon->InitAttrib(25, 1,50,1);
+                       newmon->Init(temp,Vector3(1,1,1),10 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
+                       newmon->InitAttrib(25, 5,50,1);
             }
                 break;
             
@@ -936,8 +936,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
-                       newmon->InitAttrib(50, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
+                       newmon->InitAttrib(50, 15,50,1);
             }
                 break;
             case 14:
@@ -947,8 +947,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
-                       newmon->InitAttrib(75, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
+                       newmon->InitAttrib(75, 25,50,1);
             }
 				break;
 			case 15:
@@ -958,8 +958,8 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 15 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
-					   newmon->InitAttrib(150, 50, 10, 1);
+					   newmon->Init(temp, Vector3(3, 3, 1), 20 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
+					   newmon->InitAttrib(150, 35, 10, 1);
 			}
                 break;
             default:
@@ -1271,6 +1271,11 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
 	case Projectile::BossBullet:
 		Character->Attribute->SetReceivedDamage(go->Attribute->GetMonsterDamage());
 		projectile->active = false;
+		if (Character->Attribute->GetCurrentHP() <= 0)
+		{
+			CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
+		}
+			
 		break;
     default:
         break;
