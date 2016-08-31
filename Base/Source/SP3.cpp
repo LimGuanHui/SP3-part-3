@@ -373,11 +373,12 @@ void SP3::Update(double dt)
                     Main.RestartGame = false;
                 }
             }
+            if (!MiniBossAlive)
+            {
+                battlestage = true;
+            }
         }
-       	if (!MiniBossAlive)
-		{
-            battlestage = true;
-		}
+       	
 
         else
         {
@@ -924,7 +925,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),10 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
+                       newmon->Init(temp,Vector3(1,1,1),30 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
                        newmon->InitAttrib(25, 5,50,1);
             }
                 break;
@@ -936,7 +937,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
                        newmon->InitAttrib(50, 15,50,1);
             }
                 break;
@@ -947,7 +948,7 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
+                       newmon->Init(temp, Vector3(1, 1, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
                        newmon->InitAttrib(75, 25,50,1);
             }
 				break;
@@ -958,7 +959,7 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 20 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
+                       newmon->Init(temp, Vector3(3, 3, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
 					   newmon->InitAttrib(150, 35, 10, 1);
 			}
                 break;

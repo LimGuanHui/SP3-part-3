@@ -17,6 +17,7 @@ lifetime(0)
 
 ParticleObject::~ParticleObject(void)
 {
+
 }
 
 void ParticleObject::update(double dt)
