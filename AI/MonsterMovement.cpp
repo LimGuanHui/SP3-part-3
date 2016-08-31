@@ -174,7 +174,6 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
                 }
-			
             }            
             //left
             if (facingleft)
@@ -205,11 +204,10 @@ namespace MONSTER_MOVEMENT
 
 			if (Float)
 			{
-				float timer = 0;
-				timer += 2;
-				if (theMonsterPosition.y <= startpos.y)
+				int timer = 2;
+				if (theMonsterPosition.y <= startpos.y + 0.05)
 				{
-					theMonsterPosition.y = startpos.y;
+					theMonsterPosition.y = startpos.y + 0.05;
 					theMonsterVel.y += timer;
 				}
 				if (theMonsterPosition.y > startpos.y + 2)

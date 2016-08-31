@@ -212,6 +212,31 @@ void SceneBase::Init()
     meshList[GEO_WALK_FRAME11] = MeshBuilder::Generate2DMesh("WALK11", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_WALK_FRAME11]->textureID = LoadTGA("Image//tiles//walk11.tga");
 
+	meshList[GEO_IDLE_FRAME1] = MeshBuilder::Generate2DMesh("MEWTWO_IDLE", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_IDLE_FRAME1]->textureID = LoadTGA("Image//character//idle1.tga");
+
+	meshList[GEO_IDLE_FRAME2] = MeshBuilder::Generate2DMesh("MEWTWO_IDLE2", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_IDLE_FRAME2]->textureID = LoadTGA("Image//character//idle2.tga");
+
+	meshList[GEO_WALKING_FRAME] = MeshBuilder::Generate2DMesh("MEWTWO_WALKING", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_WALKING_FRAME]->textureID = LoadTGA("Image//character//Moving.tga");
+
+	meshList[GEO_JUMPING_FRAME] = MeshBuilder::Generate2DMesh("MEWTWO_JUMPING", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_JUMPING_FRAME]->textureID = LoadTGA("Image//character//Jumping.tga");
+
+	meshList[GEO_SHOOT_FRAME1] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING1", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME1]->textureID = LoadTGA("Image//character//ShootFrame1.tga");
+
+	meshList[GEO_SHOOT_FRAME2] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING2", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME2]->textureID = LoadTGA("Image//character//ShootFrame2.tga");
+
+	meshList[GEO_SHOOT_FRAME3] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING3", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME3]->textureID = LoadTGA("Image//character//ShootFrame3.tga");
+
+	meshList[GEO_SHOOT_FRAME4] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING4", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME4]->textureID = LoadTGA("Image//character//ShootFrame4.tga");
+
+
 	//Boss Frames
 	meshList[GEO_GENGAR_FRAME0] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_GENGAR_FRAME0]->textureID = LoadTGA("Image//enemy//gengar1.tga");
@@ -271,6 +296,9 @@ void SceneBase::Init()
 	
 	meshList[GEO_CASTLEBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_CASTLEBACKGROUND]->textureID = LoadTGA("Image//background//bg_castle.tga");
+
+	meshList[GEO_SNOWBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_SNOWBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+	meshList[GEO_SNOWBACKGROUND]->textureID = LoadTGA("Image//background//SnowBG.tga");
 
 
 
@@ -372,14 +400,15 @@ void SceneBase::Init()
     meshList[GEO_NET_ANIM] = MeshBuilder::GenerateSpriteAnimation("Net animation", 7, 7);
     meshList[GEO_NET_ANIM]->textureID = LoadTGA("Image//particle effects//capture_effect.tga");
 
-    SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
-    if (sa)
-    {
-        sa->m_anim = new Animation();
-        sa->m_anim->Set(0, 63, 0, 3.f, false); // startFrame, endFrame, repeat, Time, Enable
-    }
+    //SpriteAnimation *sa = dynamic_cast<SpriteAnimation*>(meshList[GEO_NET_ANIM]);
+    //if (sa)
+    //{
+    //    sa->m_anim = new Animation();
+    //    sa->m_anim->Set(0, 63, 0, 3.f, false); // startFrame, endFrame, repeat, Time, Enable
+    //}
 
     //panels
+    //player panels
     meshList[GEO_B_PANEL] = MeshBuilder::GenerateQuad("bPanel", Color(0, 1, 0), 1.f);
     meshList[GEO_B_PANEL]->textureID = LoadTGA("Image//panels//bPanel.tga");
 
@@ -389,7 +418,17 @@ void SceneBase::Init()
     meshList[GEO_T_PANEL] = MeshBuilder::GenerateQuad("tPanel", Color(0, 1, 0), 1.f);
     meshList[GEO_T_PANEL]->textureID = LoadTGA("Image//panels//tPanel.tga");
 
-    meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("GEO_PLAYER", Color(0, 1, 0), 1.f);
+    //enemy panels
+    meshList[GEO_E_B_PANEL] = MeshBuilder::GenerateQuad("bPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_E_B_PANEL]->textureID = LoadTGA("Image//panels//b_E_Panel.tga");
+
+    meshList[GEO_E_M_PANEL] = MeshBuilder::GenerateQuad("mPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_E_M_PANEL]->textureID = LoadTGA("Image//panels//m_E_Panel.tga");
+
+    meshList[GEO_E_T_PANEL] = MeshBuilder::GenerateQuad("tPanel", Color(0, 1, 0), 1.f);
+    meshList[GEO_E_T_PANEL]->textureID = LoadTGA("Image//panels//t_E_Panel.tga");
+
+    meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("GEO_PLAYER", Color(0, 1, 0), 70.f);
     //meshList[GEO_PLAYER]->textureID = LoadTGA("Image//panels//tPanel.tga");
     meshList[GEO_PLAYER_CHARGING] = MeshBuilder::GenerateQuad("GEO_PLAYER_CHARGING", Color(1, 0, 0), 1.f);
     //meshList[GEO_PLAYER_CHARGING]->textureID = LoadTGA("Image//panels//tPanel.tga");
@@ -699,6 +738,7 @@ void SceneBase::Exit()
         if (meshList[i])
             delete meshList[i];
     }
+    
 	glDeleteProgram(m_programID);
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 }	

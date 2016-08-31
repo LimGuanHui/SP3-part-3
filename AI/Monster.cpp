@@ -11,6 +11,12 @@ namespace MONSTER
 	}
 	Monster::~Monster()
 	{
+        if (Movement)
+            delete Movement;
+        Movement = NULL;
+        if (Attribute)
+            delete Attribute;
+        Attribute = NULL;
 	}
 
     void Monster::Init(Vector3 startpos, Vector3 scale, float patrol, 

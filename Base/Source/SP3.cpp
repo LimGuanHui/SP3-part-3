@@ -10,7 +10,6 @@ SP3::SP3()
 : m_cMinimap(NULL)
 , tileOffset_x(0)
 , tileOffset_y(0)
-, m_cRearMap(NULL)
 , rearWallOffset_x(0)
 , rearWallOffset_y(0)
 , rearWallTileOffset_x(0)
@@ -20,6 +19,10 @@ SP3::SP3()
 //, theEnemy(NULL)
 , sceneSoundEngine(NULL)
 , Moving(false)
+, ShootingN(false)
+, ShootingNet(false)
+, CShooting(false)
+, Shooting(false)
 {
 }
 
@@ -33,8 +36,52 @@ SP3::~SP3()
 
     if (sceneSoundEngine != NULL)
     {
+        sceneSoundEngine->removeAllSoundSources();
         sceneSoundEngine->drop();
     }
+
+    if (Character)
+        delete Character;
+    Character = NULL;
+    if (AI)
+        delete AI;
+    AI = NULL;
+    /*if (LoadFile)
+        delete LoadFile;*/
+    LoadFile = NULL;
+    while (m_goList.size() > 0)
+    {
+        GameObject* go = m_goList.back();
+        delete go;
+        m_goList.pop_back();
+    }
+
+    if (m_cMinimap)
+        delete m_cMinimap;
+    m_cMinimap = NULL;
+    while (Monster_List.size() > 0)
+    {
+        Monster* go = Monster_List.back();
+        delete go;
+        Monster_List.pop_back();
+    }
+    while (MissileList.size() > 0)
+    {
+        Missile* go = MissileList.back();
+        delete go;
+        MissileList.pop_back();
+    }
+    while (particleList.size() > 0)
+    {
+        ParticleObject* go = particleList.back();
+        delete go;
+        particleList.pop_back();
+    }
+
+    if (Battle)
+        delete Battle;
+    Battle = NULL;
+
 }
 
 void SP3::Init()
@@ -50,9 +97,9 @@ void SP3::Init()
     
 
     // Initialise and load the REAR tile map
-    m_cRearMap = LoadMap();
+    /*m_cRearMap = LoadMap();
     m_cRearMap->Init(600, 800, 24, 32, 600, 1600);
-    m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");
+    m_cRearMap->LoadMap("Image//MapDesign_Rear.csv");*/
 
 	//theHero = new CPlayerInfo();
 	Character = N_Character();
@@ -80,12 +127,14 @@ void SP3::Init()
 	chargeFire = false;
 	chargeDmg = 0;
 	BossFiringDebounce = 0;
-	winTimer = 0;
+	endScreenTimer = 0;
+	AnimationCounter = 0;
+	AnimationTimer = 0;
 
-	for (int i = 0; i < 1; ++i)
+	/*for (int i = 0; i < 1; ++i)
 	{
 		Character->Movement->m_projectileList.push_back(new Projectile(m_cMap));
-	}
+	}*/
 
 	m_objectCount = 0;
 	Play.Init(&m_goList, m_cMap);
@@ -96,17 +145,16 @@ void SP3::Init()
     MAX_PARTICLE = 420;
     m_gravity.Set(0, -9.8f, 0);
 
-    for (unsigned i = 0; i <= 400; ++i)
-    {
-        ParticleObject *particle = new ParticleObject(ParticleObject_TYPE::P_WATER);
-        particleList.push_back(particle);
-    }
+    //for (unsigned i = 0; i <= 400; ++i)
+    //{
+    //    ParticleObject *particle = new ParticleObject(ParticleObject_TYPE::P_WATER);
+    //    particleList.push_back(particle);
+    //}
 
     /*spritemanager = new SpriteManager();
     spritemanager->Init(800, 600);*/
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
-
 
     battlestage = false;
 
@@ -128,16 +176,22 @@ void SP3::Update(double dt)
 
     if (jumpsoundtimer > 0)
         jumpsoundtimer -= dt;
+    
+    if (Main.RestartGame)
+    {
+        Restart();
+        Main.RestartGame = false;
+    }
 
+    if (Main.gamestate == Main.Game)
+    {
 
-	if (Main.gamestate == Main.Game)
-	{
-		if (!battlestage)
-		{
-			Scenetransition();
-			//sprite update
-			//spritemanager->update(dt);
-			//battlestage update
+        if (!battlestage)
+        {
+            Scenetransition();
+            //sprite update
+            //spritemanager->update(dt);
+            //battlestage update
 
 			// Update the hero
 			if (Application::IsKeyPressed('A'))
@@ -152,97 +206,135 @@ void SP3::Update(double dt)
 				Character->Movement->MoveLeftRight(false, 1.0f);
 			}
 
-			if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
-			{
-				Moving = false;
-			}
+            if (!Application::IsKeyPressed('A') && !Application::IsKeyPressed('D'))
+            {
+                Moving = false;
+            }
 
 
-			if (Application::IsKeyPressed(' '))
-			{
-				Character->Movement->SetToJumpUpwards(true);
-				if (jumpsoundtimer <= 0)
-				{
-					jumpsoundtimer = 0.4f;
-					//sceneSoundEngine->play2D(jump);
-				}
+            if (Application::IsKeyPressed(' '))
+            {
+                Character->Movement->SetToJumpUpwards(true);
+                if (jumpsoundtimer <= 0)
+                {
+                    jumpsoundtimer = 0.4f;
+                    //sceneSoundEngine->play2D(jump);
+                }
 
-			}
+            }
 
-			Character->Movement->HeroUpdate(m_cMap);
-			Character->Attribute->update(dt);
+            Character->Movement->HeroUpdate(m_cMap);
+            Character->Attribute->update(dt);
             Character->Update(dt);
-		}
-
-		else
-		{
-			//battlestage update
-			Battle->Update(dt);
-		}
-		// Update the hero
-	}
-
-    float ActionIncrease = 0;
-    ActionIncrease += dt;
-
-    firingDebounce += (float)dt;
-    bool KeyUp = true;
-
-    //Normal Projectile
-    if (Application::IsKeyPressed('J') && firingDebounce > 2.f / fireRate)
-    {
-        firingDebounce = 0;
-        Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
-    }
 
 
-    //Net
-    if (Application::IsKeyPressed('L') && firingDebounce > 2.f / fireRate)
-    {
-        firingDebounce = 0;
-        Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
-    }
+            // Update the hero
 
-    //Charge Projectile
-    if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)
-    {
-        chargeTime += 2 * dt;
-        chargeDmg = chargeTime;
-        if (chargeDmg > 1.5)
-        {
-            chargeDmg = 1.5;
-        }
-        if (chargeTime > 2)
-        {
-            chargeTime = 2;
-            chargeFire = true;
-        }
-        KeyUp = false;
-    }
-    if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
-    {
-        if (chargeTime > 0)
-        {
-            chargeFire = true;
-            chargeTime = 0;
-        }
-    }
-    if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire)
-    {
-        chargeTime = 0;
-    }
-    if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
-    {
-        Character->Attribute->ActionBar(-50);
-        chargeFire = false;
-        KeyUp = false;
-        chargeTime = 0;
-        Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
-        std::cout << "Fire" << std::endl;
-    }
-    
+			 float ActionIncrease = 0;
+			 ActionIncrease += dt;
 
-    std::cout << AI->Monster->Movement->GetPos() << std::endl;
+			firingDebounce += (float)dt;
+            bool KeyUp = true;
+
+			
+
+            //Normal Projectile
+            if (Application::IsKeyPressed('J'))
+            {
+				ShootingN = true;
+				Shooting = true;
+            }
+			if (ShootingN && Shooting && firingDebounce > 0.5 / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter == 4)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Bullet, m_cMap);
+					ShootingN = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+			}
+
+            //Net
+			if (Application::IsKeyPressed('L'))
+			{
+				ShootingNet = true;
+				Shooting = true;
+				
+            }
+			if (ShootingNet && Shooting && firingDebounce > 0.5f / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter == 4)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Net, m_cMap);
+					ShootingNet = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+			}
+
+            //Charge Projectile
+            if (Application::IsKeyPressed('K') && KeyUp && Character->Attribute->GetActionBar() >= 50)//Charging
+            {
+                chargeTime += 2 * dt;
+                chargeDmg = chargeTime;
+                if (chargeDmg > 1.5)
+                {
+                    chargeDmg = 1.5;
+                }
+                if (chargeTime > 2)
+                {
+                    chargeTime = 2;
+                    chargeFire = true;
+                }
+                KeyUp = false;
+				CShooting = true;
+				Shooting = true;
+            }
+
+			if (CShooting && Shooting && firingDebounce > 1.f / fireRate)
+			{
+				firingDebounce = 0;
+				AnimationCounter++;
+
+				if (AnimationCounter > 2)
+				{
+					AnimationCounter = 2;
+				}
+			}
+
+            if (!Application::IsKeyPressed('K') && KeyUp && !chargeFire) //reset Charge
+            {
+                if (chargeTime > 0)
+                {
+                    chargeFire = true;
+                    chargeTime = 0;
+                }
+            }
+            if (!Application::IsKeyPressed('K') && KeyUp && chargeFire)
+            {
+                Character->Attribute->ActionBar(-50);
+                chargeFire = false;
+                KeyUp = false;
+                chargeTime = 0;
+				AnimationCounter = 3;
+				if (AnimationCounter == 3)
+				{
+					Character->Movement->ProjectileUpdate(dt, 1, (Character->Attribute->GetDmg() *  chargeDmg), Projectile::ChargeBullet, m_cMap);
+					std::cout << "Fire" << std::endl;
+					CShooting = false;
+					Shooting = false;
+					AnimationCounter = 0;
+				}
+               
+            }
+        
 
     for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
     {
@@ -262,52 +354,65 @@ void SP3::Update(double dt)
 
     // if the hero enters the kill zone, then enemy goes into kill strategy mode
 
-    MonsterUpdate(dt, m_cMap);
-    //SpriteAnimationUpdate(dt);
-    UpdateParticles(dt);
-		
-	if (MiniBossAlive == false)
-	{
-		winTimer += (float)dt;
-		if (winTimer > 5)
+            MonsterUpdate(dt, m_cMap);
+            //SpriteAnimationUpdate(dt);
+            UpdateParticles(dt);
+            if (!MiniBossAlive)
+            {
+                battlestage = true;
+            }
+            if (Character->Attribute->GetCurrentHP() <= 0)
+            {
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2)
+                {
+                    State = End;
+                    Main.gamestate = Main.End;
+                    Main.RestartGame = false;
+                }
+            }
+        }
+       	if (!MiniBossAlive)
 		{
-			Main.gamestate = Main.Win;
-			winTimer = 0;
+            battlestage = true;
 		}
-	}
 
-	if (Main.RestartGame)
-	{
-		Restart();
-		Main.RestartGame = false;
-	}
+        else
+        {
+            //battlestage update
+            Battle->Update(dt);
+            if (Battle->player->gethp() > 0 && Battle->enemy->gethp() <= 0 )
+            {
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2)
+                {
+                    Main.gamestate = Main.Win;
+                    endScreenTimer = 0;
+                }
+            }
+            else if (Battle->player->gethp() <= 0 )
+            {
+                State = End;
+                Main.gamestate = Main.End;
+                Main.RestartGame = false;
+            }
+        }
 
-	if (Character->Attribute->GetCurrentHP() <= 0)
-	{
-		winTimer += (float)dt;
-		if (winTimer > 2)
-		{
-			State = End;
-			Main.gamestate = Main.End;
-			Main.RestartGame = false;
-		}
+        if (Main.gamestate == Main.Menu)
+        {
+            State = Menu;
+            Main.RestartGame = false;
+        }
+
+        if (Main.gamestate == Main.Win)
+        {
+            State = Win;
+            Main.RestartGame = false;
+        }
+
+    }
 		
-	}
-
-	if (Main.gamestate == Main.Menu)
-	{
-		State = Menu;
-		Main.RestartGame = false;
-	}
-
-	if (Main.gamestate == Main.Win)
-	{
-		State = Win;
-		Main.RestartGame = false;
-	}
-	
-	//std::cout << Main.deadArrow << std::endl;
-	//std::cout << fps << std::endl;
+    
 }
 
 void SP3::RenderGO(GameObject *go)
@@ -478,7 +583,7 @@ void SP3::Render()
             ss.str(string());
             ss.precision(7);
             ss << Character->getScore();
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 25, 550);
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 27, 520);
 
         }
 		break;
@@ -596,41 +701,6 @@ void SP3::RenderTileMap()
         }
     }
 }
-
-/********************************************************************************
-Render the rear tile map. This is a private function for use in this class only
-********************************************************************************/
-void SP3::RenderRearTileMap()
-{
-    rearWallOffset_x = (int)(Character->Movement->GetMapOffset_x() / 2);
-    rearWallOffset_y = 0;
-    rearWallTileOffset_y = 0;
-    rearWallTileOffset_x = (int)(rearWallOffset_x / m_cRearMap->GetTileSize());
-    if (rearWallTileOffset_x + m_cRearMap->GetNumOfTiles_Width() > m_cRearMap->getNumOfTiles_MapWidth())
-        rearWallTileOffset_x = m_cRearMap->getNumOfTiles_MapWidth() - m_cRearMap->GetNumOfTiles_Width();
-    rearWallFineOffset_x = rearWallOffset_x % m_cRearMap->GetTileSize();
-
-    int m = 0;
-    for (int i = 0; i < m_cRearMap->GetNumOfTiles_Height(); i++)
-    {
-        for (int k = 0; k < m_cRearMap->GetNumOfTiles_Width() + 1; k++)
-        {
-            m = rearWallTileOffset_x + k;
-            // If we have reached the right side of the Map, then do not display the extra column of tiles.
-            if ((rearWallTileOffset_x + k) >= m_cRearMap->getNumOfTiles_MapWidth())
-                break;
-            if (m_cRearMap->theScreenMap[i][m] == 3)
-            {
-                Render2DMesh(meshList[GEO_TILESTRUCTURE], false, 1.0f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize(), false);
-            }
-			if (m_cRearMap->theScreenMap[i][m] == 93)
-			{
-				Render2DMesh(meshList[GEO_CAVEBACKGROUND], false, 1.f, k*m_cRearMap->GetTileSize() - rearWallFineOffset_x, 575 - i*m_cRearMap->GetTileSize(), false);
-			}
-        }
-    }
-}
-
 Missile* SP3::FetchMissile()
 {
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
@@ -668,10 +738,7 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-		/*ss.str(string());
-		ss.precision(5);
-		ss << Character->Attribute->GetCurrentHP();
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);*/
+
     }
         break;
     case SP3::Game:
@@ -759,7 +826,9 @@ void SP3::Restart()
 	Character->active = true;
 	MiniBossAlive = true;
 	SpawnObjects();
-
+    battlestage = false;
+    Battle->exit();
+    Battle->Init(800, 600, 25);
 }
 
 void SP3::Scenetransition()
@@ -773,7 +842,7 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map1.csv");
             break;
         case SP3::LEVEL2:
-            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            m_cMap->LoadMap("Map\\Map2.csv");
             break;
         case SP3::LEVEL3:	
             m_cMap->LoadMap("Map\\Map3.csv");
@@ -797,7 +866,7 @@ void SP3::Scenetransition()
 		switch (CurrLevel)
 		{
 		case SP3::LEVEL2:
-			m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+			m_cMap->LoadMap("Map\\2B.csv");
 			break;
 		case SP3::LEVEL3:
 			m_cMap->LoadMap("Map\\Map3B.csv");
@@ -848,8 +917,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp,Vector3(1,1,1),6 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
-                       newmon->InitAttrib(25, 1,50,1);
+                       newmon->Init(temp,Vector3(1,1,1),10 * m_cMap->GetTileSize(),5.f,m_cMap->GetTileSize(),Monster::GASTLY,m_cMap, true, true);
+                       newmon->InitAttrib(25, 5,30,1);
             }
                 break;
             
@@ -860,8 +929,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
-                       newmon->InitAttrib(50, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
+                       newmon->InitAttrib(50, 15,25,1);
             }
                 break;
             case 14:
@@ -871,8 +940,8 @@ void SP3::SpawnObjects()
                        float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(1, 1, 1), 6 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
-                       newmon->InitAttrib(75, 1,50,1);
+                       newmon->Init(temp, Vector3(1, 1, 1),10 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
+                       newmon->InitAttrib(75, 25,25,1);
             }
 				break;
 			case 15:
@@ -882,8 +951,8 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-					   newmon->Init(temp, Vector3(3, 3, 1), 15 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
-					   newmon->InitAttrib(150, 50, 10, 1);
+					   newmon->Init(temp, Vector3(3, 3, 1), 20 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
+					   newmon->InitAttrib(300, 35, 5, 1);
 			}
                 break;
             default:
@@ -922,62 +991,60 @@ void SP3::RenderCharacter()
 {
 	if (Character->Movement->GetAnimationInvert() == false && Moving == true)
 	{
-		if (Character->Movement->GetAnimationCounter() == 1)
-            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 2)
-            Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 3)
-            Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 4)
-            Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 5)
-            Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 6)
-            Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 7)
-            Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 8)
-            Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 9)
-            Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 10)
-            Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else if (Character->Movement->GetAnimationCounter() == 11)
-            Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
-		else
-            Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false);
+		if (Character->Movement->GetAnimationCounter() == 0)
+			Render2DMesh(meshList[GEO_WALKING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false,false);
+		else if (Character->Movement->GetAnimationCounter() == 1)
+			Render2DMesh(meshList[GEO_JUMPING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		if (Shooting)
+		{
+ 			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		}
 	}
 	else if (Character->Movement->GetAnimationInvert() == true && Moving == true)
 	{
-		if (Character->Movement->GetAnimationCounter() == 1)
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 2)
-			Render2DMesh(meshList[GEO_WALK_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 3)
-			Render2DMesh(meshList[GEO_WALK_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 4)
-			Render2DMesh(meshList[GEO_WALK_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 5)
-			Render2DMesh(meshList[GEO_WALK_FRAME5], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 6)
-			Render2DMesh(meshList[GEO_WALK_FRAME6], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 7)
-			Render2DMesh(meshList[GEO_WALK_FRAME7], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 8)
-			Render2DMesh(meshList[GEO_WALK_FRAME8], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 9)
-			Render2DMesh(meshList[GEO_WALK_FRAME9], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 10)
-			Render2DMesh(meshList[GEO_WALK_FRAME10], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else if (Character->Movement->GetAnimationCounter() == 11)
-			Render2DMesh(meshList[GEO_WALK_FRAME11], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
-		else
-			Render2DMesh(meshList[GEO_WALK_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		if (Character->Movement->GetAnimationCounter() == 0)
+			Render2DMesh(meshList[GEO_WALKING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		else if (Character->Movement->GetAnimationCounter() == 1)
+			Render2DMesh(meshList[GEO_JUMPING_FRAME], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), true, false);
+		if (Shooting)
+		{
+			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), false, false);
+		}
+
 	}
 	else if (Moving == false)
 	{
-		Render2DMesh(meshList[GEO_STANDING], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		if (!Shooting)
+			Render2DMesh(meshList[GEO_IDLE_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		else if (Shooting)
+		{
+			if (AnimationCounter == 0)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME1], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 1)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME2], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 2)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME3], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+			else if (AnimationCounter == 3)
+				Render2DMesh(meshList[GEO_SHOOT_FRAME4], false, 1.0f, Character->Movement->GetPos_x(), Character->Movement->GetPos_y(), !Character->Movement->facingRight, false);
+		}
 	}
+	
+
+	
 
     Render2DMesh(meshList[GEO_MON_HP_BAR],false, 0.1f, (Character->Attribute->GetActionBar() / 100.f) * 2 , Character->Movement->GetPos_x() - 2.f, Character->Movement->GetPos_y(),false,false);
 
@@ -1162,7 +1229,7 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     case Projectile::Bullet:
         Character->Attribute->ActionBar(5);
         {            
-            Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
+            //Mesh* lol = new Mesh(*meshList[GEO_NET_ANIM]);
             //spritemanager->NewSpriteAnimation(lol, go->Movement->GetPos(), go->Movement->GetScale(), 7, 7, 0, 64, 1.f, 0, false);
         }
 		projectile->active = false;
@@ -1177,6 +1244,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
+            Monster* go = (Monster*)*monsterlist_iterator;
+            delete go;
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
@@ -1344,13 +1413,23 @@ void SP3::renderbattlestage()
         switch (go->panel_pos)
         {
         case Panel::PanelPos::Top:
-            Render2DMesh(meshList[GEO_T_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            if (go->who == Panel::BELONGS_TO::PLAYER)
+                Render2DMesh(meshList[GEO_T_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            else
+                Render2DMesh(meshList[GEO_E_T_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
             break;
         case Panel::PanelPos::Middle:
-            Render2DMesh(meshList[GEO_M_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            if (go->who == Panel::BELONGS_TO::PLAYER)
+                Render2DMesh(meshList[GEO_M_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            else
+                Render2DMesh(meshList[GEO_E_M_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+
             break;
         case Panel::PanelPos::Bottom:
-            Render2DMesh(meshList[GEO_B_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            if (go->who == Panel::BELONGS_TO::PLAYER)
+                Render2DMesh(meshList[GEO_B_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
+            else
+                Render2DMesh(meshList[GEO_E_B_PANEL], false, go->getscale().x, go->getscale().y, go->getpos().x, go->getpos().y, false, false);
             break;
         default:
             break;
@@ -1361,12 +1440,12 @@ void SP3::renderbattlestage()
     if (Battle->player->getcharging())
     {
         if (!Battle->player->getisFullyCharged())
-            Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+            Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
         else
-            Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+            Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
     }
     else
-        Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1, Battle->player->getpos().x, Battle->player->getpos().y, false, false);
+        Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
     std::ostringstream ss;
     ss.str(string());
     ss.precision(3);

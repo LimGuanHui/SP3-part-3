@@ -10,6 +10,9 @@ namespace BOSS_SKILL
 
 	CBossSkills::~CBossSkills()
 	{
+        if (N_BossAttribute)
+            delete N_BossAttribute;
+        N_BossAttribute = NULL;
 	}
 
 	void CBossSkills::BossSkill(int Skill)

@@ -47,7 +47,7 @@ void BattleStage::Init(float ortho_x, float ortho_y, float panelsize)
     player = new Player();
     //set player stats here
     player->Init(&Panel_List);
-    player->sethp(100);
+    player->sethp(20);
     player->setatk(10);
     enemy = new ENEMY(&Panel_List);
     //set enemy stats here
@@ -66,6 +66,14 @@ void BattleStage::Update(double dt)
         if (player->panel_pos == enemy->panel_pos)
         {
             enemy->gethit(player->getatk());
+        }
+    }
+    if (enemy->isAttacking())
+    {
+        //check if player and enemy on same column
+        if (player->panel_pos == enemy->panel_pos)
+        {
+            player->gethit(enemy->getatk());
         }
     }
     player->update(dt);
@@ -89,6 +97,13 @@ void BattleStage::exit()
 {
     player->Exit();
     enemy->Exit();
+    while (Panel_List.size() > 0)
+    {
+        Panel *go = Panel_List.back();
+        delete go;
+        Panel_List.pop_back();
+    }
+
     Panel_List.clear();
     delete player;
     delete enemy;

@@ -121,14 +121,12 @@ private:
     
     void RenderTileMap();
     // Hero's information
-    CPlayerInfo* theHero;
 
     // Codes for Scrolling
     int tileOffset_x, tileOffset_y;
 
     // Codes for Parallax Scrolling
-    MapLoad* m_cRearMap;
-    void RenderRearTileMap();
+
     int rearWallOffset_x, rearWallOffset_y;
     int rearWallTileOffset_x, rearWallTileOffset_y;
     int rearWallFineOffset_x, rearWallFineOffset_y;
@@ -148,7 +146,13 @@ private:
 	float BossFiringDebounce;
     int lives;
 	bool Moving;
-	float winTimer;
+	float endScreenTimer;
+	int AnimationCounter;
+	float AnimationTimer;
+	bool ShootingN;
+	bool ShootingNet;
+	bool CShooting;
+	bool Shooting;
 
     GameState State = Menu;
 

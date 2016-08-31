@@ -24,6 +24,12 @@ namespace MOVEMENT
 
 	CMovement::~CMovement(void)
 	{
+        while (m_projectileList.size() > 0)
+        {
+            PROJECTILE::Projectile* go = m_projectileList.back();
+            delete go;
+            m_projectileList.pop_back();
+        }
 	}
 
 	// Initialise this class instance
@@ -133,17 +139,17 @@ namespace MOVEMENT
 			facingRight = false;
 			theHeroPosition.x = theHeroPosition.x - (int)(5.0f * timeDiff);
 			heroAnimationInvert = true;
-			heroAnimationCounter--;
-			if (heroAnimationCounter < 1)
-				heroAnimationCounter = 11;
+			heroAnimationCounter = 0;
+			if (!isOnGround())
+				heroAnimationCounter = 1;
 		}
 		else
 		{
 			facingRight = true;
 			theHeroPosition.x = theHeroPosition.x + (int)(5.0f * timeDiff);
 			heroAnimationInvert = false;
-			heroAnimationCounter++;
-			if (heroAnimationCounter>11)
+			heroAnimationCounter = 0;
+			if (!isOnGround())
 				heroAnimationCounter = 1;
 		}
 	}
