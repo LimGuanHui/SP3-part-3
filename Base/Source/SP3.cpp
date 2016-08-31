@@ -536,7 +536,7 @@ void SP3::Render()
             ss.str(string());
             ss.precision(7);
             ss << Character->getScore();
-            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 25, 550);
+            RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, 27, 520);
 
         }
 		break;
@@ -726,10 +726,7 @@ void SP3::GameStateRenderText()
     {
     case SP3::Menu:
     {
-		/*ss.str(string());
-		ss.precision(5);
-		ss << Character->Attribute->GetCurrentHP();
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 30, 150, 16);*/
+
     }
         break;
     case SP3::Game:
