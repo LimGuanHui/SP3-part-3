@@ -148,7 +148,13 @@ private:
 	float BossFiringDebounce;
     int lives;
 	bool Moving;
-	float winTimer;
+	float endScreenTimer;
+	int AnimationCounter;
+	float AnimationTimer;
+	bool ShootingN;
+	bool ShootingNet;
+	bool CShooting;
+	bool Shooting;
 
     GameState State = Menu;
 

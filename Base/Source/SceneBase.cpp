@@ -212,6 +212,31 @@ void SceneBase::Init()
     meshList[GEO_WALK_FRAME11] = MeshBuilder::Generate2DMesh("WALK11", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_WALK_FRAME11]->textureID = LoadTGA("Image//tiles//walk11.tga");
 
+	meshList[GEO_IDLE_FRAME1] = MeshBuilder::Generate2DMesh("MEWTWO_IDLE", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_IDLE_FRAME1]->textureID = LoadTGA("Image//character//idle1.tga");
+
+	meshList[GEO_IDLE_FRAME2] = MeshBuilder::Generate2DMesh("MEWTWO_IDLE2", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_IDLE_FRAME2]->textureID = LoadTGA("Image//character//idle2.tga");
+
+	meshList[GEO_WALKING_FRAME] = MeshBuilder::Generate2DMesh("MEWTWO_WALKING", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_WALKING_FRAME]->textureID = LoadTGA("Image//character//Moving.tga");
+
+	meshList[GEO_JUMPING_FRAME] = MeshBuilder::Generate2DMesh("MEWTWO_JUMPING", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_JUMPING_FRAME]->textureID = LoadTGA("Image//character//Jumping.tga");
+
+	meshList[GEO_SHOOT_FRAME1] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING1", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME1]->textureID = LoadTGA("Image//character//ShootFrame1.tga");
+
+	meshList[GEO_SHOOT_FRAME2] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING2", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME2]->textureID = LoadTGA("Image//character//ShootFrame2.tga");
+
+	meshList[GEO_SHOOT_FRAME3] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING3", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME3]->textureID = LoadTGA("Image//character//ShootFrame3.tga");
+
+	meshList[GEO_SHOOT_FRAME4] = MeshBuilder::Generate2DMesh("MEWTWO_SHOOTING4", Color(1, 1, 1), 0.0f, 0.0f, 25.f, 25.f);
+	meshList[GEO_SHOOT_FRAME4]->textureID = LoadTGA("Image//character//ShootFrame4.tga");
+
+
 	//Boss Frames
 	meshList[GEO_GENGAR_FRAME0] = MeshBuilder::Generate2DMesh("WALK1", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
 	meshList[GEO_GENGAR_FRAME0]->textureID = LoadTGA("Image//enemy//gengar1.tga");
