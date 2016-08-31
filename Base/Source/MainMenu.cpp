@@ -11,7 +11,13 @@ MainMenu::MainMenu() : QuitGame(false), RestartGame(false)
 
 MainMenu::~MainMenu()
 {
-
+    while (m_goList.size() > 0)
+    {
+        GameObject* go = m_goList.back();
+        delete go;
+        m_goList.pop_back();
+    }
+    SceneBase::Exit();
 }
 
 //void MainMenu::Init(CCharacter* Character, Buttons* button, bool *quitegame)

@@ -201,6 +201,10 @@ protected:
         GEO_M_PANEL,
         GEO_T_PANEL,
 
+        GEO_E_B_PANEL,
+        GEO_E_M_PANEL,
+        GEO_E_T_PANEL,
+
         GEO_PLAYER,
         GEO_PLAYER_CHARGING,
         GEO_PLAYER_MAXCHARGE,

@@ -1,6 +1,6 @@
 #include "P_Player.h"
 #include "Application.h"
-#define timerdelay 0.2f
+#define timerdelay 0.1f
 Player::Player()
 {
 
@@ -16,7 +16,7 @@ void Player::Init(std::vector<Panel *> *Panel_List)
     inputimer = timerdelay;
     charging = false;
     chargetimer = 0.f;
-    maxcharge = 4.f;
+    maxcharge = 2.f;
     GunState = Normal;
     fireshot = false;
     panel_pos = Panel::PanelPos::Middle;

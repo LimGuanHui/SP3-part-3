@@ -19,7 +19,20 @@ namespace MAPLOADER
 
 	MapLoad::~MapLoad(void)
 	{
-		theScreenMap.clear();
+        //while (theScreenMap.size() > 0)
+        //{
+        //    vector<int> go = theScreenMap.back();
+        //    while (go.size() > 0)
+        //    {
+        //        int i = go.back();
+        //        go.pop_back();
+        //        /*delete i;
+        //        go.pop_back();*/
+        //    }
+        //    theScreenMap.pop_back();
+        //    if (theScreenMap.size() == 0)
+        //        break;
+        //}
 	}
 
 	void MapLoad::Init(const int theScreen_Height, const int theScreen_Width,

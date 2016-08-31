@@ -7,7 +7,12 @@ namespace SKILLS
 		Attribute = new ATTRIBUTE::CAttribute();
 	}
 
-	CSkills::~CSkills(){}
+	CSkills::~CSkills()
+    {
+        if (Attribute)
+            delete Attribute;
+        Attribute = NULL;
+    }
 
 	void CSkills::Skill(int Skill)
 	{

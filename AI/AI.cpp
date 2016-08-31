@@ -11,6 +11,10 @@ namespace AI
 
 	ArtInt::~ArtInt()
 	{
+        delete Boss;
+        Boss = NULL;
+        delete Monster;
+        Monster = NULL;
 	}
 
 	ArtInt *N_AI()

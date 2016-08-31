@@ -1,8 +1,8 @@
 #include "P_Enemy.h"
 #include "MyMath.h"
-#define movetimerdelay 0.5f
-#define atktimerdelay 3.5f
-#define atkdelay 1.f
+#define movetimerdelay 0.4f
+#define atktimerdelay 2.f
+#define atkdelay 0.4f
 ENEMY::ENEMY(std::vector<Panel *> *Panel_List) :
 Panel_List(Panel_List)
 {
