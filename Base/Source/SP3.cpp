@@ -158,7 +158,7 @@ void SP3::Init()
 
     battlestage = false;
 
-	MiniBossAlive = true;
+	MiniBossAlive = false;
 
 }
 
@@ -1458,7 +1458,16 @@ void SP3::renderbattlestage()
 
     RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->player->getpos().x - 25, Battle->player->getpos().y - 25);
     //render enemy
-    Render2DMesh(meshList[GEO_QUAD], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y, false, false);
+    if (Battle->enemy->state == ENEMY::State::Move)
+        Render2DMesh(meshList[GEO_BOSS], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+    else
+    {
+        if (!Battle->enemy->isAtking)
+            Render2DMesh(meshList[GEO_BOSS_CHARGING], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+        else
+            Render2DMesh(meshList[GEO_BOSS_MAXCHARGE], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+    }
+
     ss.str(string());
     ss.precision(3);
     ss << Battle->enemy->gethp();
