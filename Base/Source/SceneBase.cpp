@@ -151,9 +151,6 @@ void SceneBase::Init()
     meshList[GEO_CONE]->material.kDiffuse.Set(0.99f, 0.99f, 0.99f);
     meshList[GEO_CONE]->material.kSpecular.Set(0.f, 0.f, 0.f);
 
-    meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
-    meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background.tga");
-
     meshList[GEO_TILEGROUND] = MeshBuilder::Generate2DMesh("GEO_TILEGROUND", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_TILEGROUND]->textureID = LoadTGA("Image//tile1_ground.tga");
     meshList[GEO_TILEHERO] = MeshBuilder::Generate2DMesh("GEO_TILEHERO", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
@@ -241,6 +238,9 @@ void SceneBase::Init()
 
     meshList[GEO_DIRT] = MeshBuilder::Generate2DMesh("GEO_DIRT", Color(1, 1, 1), 0.0f, 0.0f, 25.0f, 25.0f);
     meshList[GEO_DIRT]->textureID = LoadTGA("Image//tiles//dirt.tga");
+
+    meshList[GEO_BACKGROUND] = MeshBuilder::Generate2DMesh("GEO_BACKGROUND", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
+    meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//background//snowBG.tga");
 
 	meshList[GEO_FORESTBACKGROUND] = MeshBuilder::Generate2DMesh("GEO_CASTLEBG", Color(1, 1, 1), 0.0f, 0.0f, 800.0f, 600.0f);
 	meshList[GEO_FORESTBACKGROUND]->textureID = LoadTGA("Image//background//forest.tga");
