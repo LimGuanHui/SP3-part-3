@@ -268,15 +268,15 @@ namespace MONSTER_MOVEMENT
 				//right
 				float test = (theMonsterPosition.x - startpos.x) * (theMonsterPosition.x - startpos.x);
 
+				theMonsterVel = Vector3(0, 0, 0);
 				if (facingleft)
 				{
-					theMonsterVel = Vector3(0, 0, 0);
 					SetAnimationCounter(4);
 				}
 			}
 
 			Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60) || playerDead)
+			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 120) || playerDead)
 			{
 				Monstate = IDLE;
 				theMonsterVel = Vector3(-movespeed, 0, 0);
