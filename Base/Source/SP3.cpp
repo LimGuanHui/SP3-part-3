@@ -518,7 +518,7 @@ void SP3::RenderBackground()
 	else if (CurrLevel == SP3::LEVEL4)
 		Render2DMesh(meshList[GEO_CASTLEBACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
 	else if (CurrLevel == SP3::LEVEL5)
-		Render2DMesh(meshList[GEO_BACKGROUND], false, 1.0f, 0.f, 0.f, false, false);
+		Render2DMesh(meshList[GEO_MINIBOSS_BG], false, 1.0f, 0.f, 0.f, false, false);
 }
 
 void SP3::Render()
@@ -694,6 +694,7 @@ void SP3::RenderTileMap()
         }
     }
 }
+
 Missile* SP3::FetchMissile()
 {
     for (std::vector<Missile *>::iterator it = MissileList.begin(); it != MissileList.end(); ++it)
