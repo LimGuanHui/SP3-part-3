@@ -106,19 +106,6 @@ protected:
 		//GEO_OBJECT,
         GEO_TEXT,
 
-        GEO_STANDING,
-        GEO_WALK_FRAME1,
-        GEO_WALK_FRAME2,
-        GEO_WALK_FRAME3,
-        GEO_WALK_FRAME4,
-        GEO_WALK_FRAME5,
-        GEO_WALK_FRAME6,
-        GEO_WALK_FRAME7,
-        GEO_WALK_FRAME8,
-        GEO_WALK_FRAME9,
-        GEO_WALK_FRAME10,
-        GEO_WALK_FRAME11,
-
 		GEO_IDLE_FRAME1,
 		GEO_IDLE_FRAME2,
 		GEO_WALKING_FRAME,
@@ -157,6 +144,7 @@ protected:
 		GEO_CASTLE,
 		GEO_CASTLEGROUND,
 		GEO_CASTLEBACKGROUND,
+		GEO_MINIBOSS_BG,
 
         //miniboss stage tile
         GEO_MINIBOSS_TILE1,
