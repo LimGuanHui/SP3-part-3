@@ -170,6 +170,7 @@ protected:
 
 		// UI Stuffs
 		GEO_UI,
+		GEO_GAMENAME,
 		GEO_PAUSEUI,
 		GEO_BACKGROUND2,
 		GEO_EDITBACKGROUND,
