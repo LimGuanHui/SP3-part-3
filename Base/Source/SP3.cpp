@@ -371,10 +371,6 @@ void SP3::Update(double dt)
                     Main.RestartGame = false;
                 }
             }
-            if (!MiniBossAlive)
-            {
-                battlestage = true;
-            }
         }
        	
 
