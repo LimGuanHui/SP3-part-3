@@ -167,7 +167,7 @@ void Application::Init()
 
     theSoundEngine = createIrrKlangDevice();
     BGM = theSoundEngine->addSoundSourceFromFile("music//bestsong.ogg");
-    BGM->setDefaultVolume(0.1f);
+    BGM->setDefaultVolume(0.02f);
 }
 
 void Application::Run()
@@ -177,7 +177,7 @@ void Application::Run()
 	scene->Init();
 
     HWND hwnd = GetActiveWindow();
-    theSoundEngine->play2D(BGM, true, false);
+    //theSoundEngine->play2D(BGM, true, false);
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && (!IsKeyPressed(VK_ESCAPE) && !scene->Main.QuitGame))
