@@ -12,6 +12,10 @@ namespace BOSS
 
 	Boss::~Boss()
 	{
+        delete BossMovement;
+        BossMovement = NULL;
+        delete BossSkill;
+        BossSkill = NULL;
 	}
 
 	Boss* N_Boss()

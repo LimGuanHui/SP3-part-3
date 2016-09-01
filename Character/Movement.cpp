@@ -24,6 +24,12 @@ namespace MOVEMENT
 
 	CMovement::~CMovement(void)
 	{
+        while (m_projectileList.size() > 0)
+        {
+            PROJECTILE::Projectile* go = m_projectileList.back();
+            delete go;
+            m_projectileList.pop_back();
+        }
 	}
 
 	// Initialise this class instance

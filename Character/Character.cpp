@@ -2,7 +2,7 @@
 
 namespace CHARACTER
 {
-	CCharacter::CCharacter()
+	CCharacter::CCharacter() : active(false)
 	{
 		Movement = new MOVEMENT::CMovement();
 		Skill = new SKILLS::CSkills();
@@ -13,6 +13,12 @@ namespace CHARACTER
 
 	CCharacter::~CCharacter()
 	{
+        if (Movement)
+            delete Movement;
+        Movement = NULL;
+        if (Skill)
+            delete Skill;
+        Skill = NULL;
 	}
 
 	void CCharacter::Restart()

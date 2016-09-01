@@ -7,6 +7,7 @@ namespace MONSTER_MOVEMENT
 		, theMonsterVel(0, 0, 0)
 		, AnimationCounter(1)
 		, timer(0)
+		, playerDead(false)
 	{
 	}
 
@@ -134,7 +135,7 @@ namespace MONSTER_MOVEMENT
         {
         case MONSTER_MOVEMENT::MMovement::IDLE:
         {
-            int checkPosition_X = (int)((theMonsterPosition.x + 0.5f) / map->GetTileSize());
+            int checkPosition_X = (int)((theMonsterPosition.x - 0.5f) / map->GetTileSize());
             int checkPosition_Y = map->GetNumOfTiles_Height() - (int)((theMonsterPosition.y) / map->GetTileSize()) - 1;
 
             //int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
@@ -173,7 +174,6 @@ namespace MONSTER_MOVEMENT
                     theMonsterVel.x = -theMonsterVel.x;
                     facingleft = true;
                 }
-			
             }            
             //left
             if (facingleft)
@@ -204,11 +204,10 @@ namespace MONSTER_MOVEMENT
 
 			if (Float)
 			{
-				float timer = 0;
-				timer += 2;
-				if (theMonsterPosition.y <= startpos.y)
+				int timer = 2;
+				if (theMonsterPosition.y <= startpos.y + 0.05)
 				{
-					theMonsterPosition.y = startpos.y;
+					theMonsterPosition.y = startpos.y + 0.05;
 					theMonsterVel.y += timer;
 				}
 				if (theMonsterPosition.y > startpos.y + 2)
@@ -242,7 +241,7 @@ namespace MONSTER_MOVEMENT
 			if (isBoss)
 			{
 				Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60))
+				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60) && !playerDead)
 				{
 					Monstate = ATTACK;
 					facingleft = true;
@@ -277,7 +276,7 @@ namespace MONSTER_MOVEMENT
 			}
 
 			Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60))
+			if (dist.LengthSquared() / map->GetTileSize() > (map->GetTileSize() * 60) || playerDead)
 			{
 				Monstate = IDLE;
 				theMonsterVel = Vector3(-movespeed, 0, 0);

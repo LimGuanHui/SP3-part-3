@@ -1,4 +1,3 @@
-
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
@@ -7,6 +6,7 @@
 #include "SP3.h"
 #include "MainMenu.h"
 #include <irrKlang.h>
+#include "DetectMemoryLeak.h"
 using namespace irrklang;
 class Application
 {

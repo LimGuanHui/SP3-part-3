@@ -35,6 +35,8 @@ public:
     Panel::PanelPos panel_pos;
     std::vector<P_Projectile* >Projecile_List;
     std::vector<Panel *> *Panel_List;
+
+    bool isAtking;
 private:
     int hp;
     int atk;
@@ -42,7 +44,7 @@ private:
     float movetimer;
     float attacktimer;
     float atk_delay;
-    bool isAtking;
+    
     Vector3 pos;
 };
 

@@ -96,8 +96,12 @@ Application::~Application()
 {
     if (theSoundEngine != NULL)
     {
+        theSoundEngine->removeAllSoundSources();
         theSoundEngine->drop();
     }
+    if (Main != NULL)
+        delete Main;
+    Main = NULL;
 }
 
 void Application::Init()
