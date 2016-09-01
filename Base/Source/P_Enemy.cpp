@@ -2,7 +2,7 @@
 #include "MyMath.h"
 #define movetimerdelay 0.4f
 #define atktimerdelay 2.f
-#define atkdelay 0.4f
+#define atkdelay 0.5f
 ENEMY::ENEMY(std::vector<Panel *> *Panel_List) :
 Panel_List(Panel_List)
 {

@@ -47,7 +47,7 @@ void BattleStage::Init(float ortho_x, float ortho_y, float panelsize)
     player = new Player();
     //set player stats here
     player->Init(&Panel_List);
-    player->sethp(20);
+    player->sethp(100);
     player->setatk(10);
     enemy = new ENEMY(&Panel_List);
     //set enemy stats here

@@ -162,6 +162,11 @@ private:
     ISoundSource* win;
     ISoundSource* lose;*/
     ISoundSource* jump;
+    ISoundSource* shoot;
+    ISoundSource* Normal_level_sound;
+    ISoundSource* Miniboss_level_sound;
+    ISoundSource* Finalboss_level_sound;
+    ISound* Currsound;
     float jumpsoundtimer;
 
     //level transition

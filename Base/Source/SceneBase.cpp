@@ -318,6 +318,9 @@ void SceneBase::Init()
 	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(0, 1, 0), 1.f);
 	meshList[GEO_UI]->textureID = LoadTGA("Image//bg.tga");
 
+	meshList[GEO_GAMENAME] = MeshBuilder::GenerateQuad("Game Name", Color(1, 1, 1), 1.f);
+	meshList[GEO_GAMENAME]->textureID = LoadTGA("Image//gamename.tga");
+
 	meshList[GEO_PAUSEUI] = MeshBuilder::GenerateQuad("PauseUI", Color(0, 1, 0), 1.f);
 	meshList[GEO_PAUSEUI]->textureID = LoadTGA("Image//pauseui.tga");
 
@@ -429,11 +432,11 @@ void SceneBase::Init()
     meshList[GEO_E_T_PANEL]->textureID = LoadTGA("Image//panels//t_E_Panel.tga");
 
     meshList[GEO_PLAYER] = MeshBuilder::GenerateQuad("GEO_PLAYER", Color(0, 1, 0), 70.f);
-    //meshList[GEO_PLAYER]->textureID = LoadTGA("Image//panels//tPanel.tga");
-    meshList[GEO_PLAYER_CHARGING] = MeshBuilder::GenerateQuad("GEO_PLAYER_CHARGING", Color(1, 0, 0), 1.f);
-    //meshList[GEO_PLAYER_CHARGING]->textureID = LoadTGA("Image//panels//tPanel.tga");
-    meshList[GEO_PLAYER_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_PLAYER_MAXCHARGE", Color(0, 0, 1), 1.f);
-    //meshList[GEO_PLAYER_MAXCHARGE]->textureID = LoadTGA("Image//panels//tPanel.tga");
+    meshList[GEO_PLAYER]->textureID = LoadTGA("Image//character//Moving.tga");
+    meshList[GEO_PLAYER_CHARGING] = MeshBuilder::GenerateQuad("GEO_PLAYER_CHARGING", Color(1, 0, 0), 70.f);
+    meshList[GEO_PLAYER_CHARGING]->textureID = LoadTGA("Image//character//ShootFrame1.tga");
+    meshList[GEO_PLAYER_MAXCHARGE] = MeshBuilder::GenerateQuad("GEO_PLAYER_MAXCHARGE", Color(0, 0, 1), 70.f);
+    meshList[GEO_PLAYER_MAXCHARGE]->textureID = LoadTGA("Image//character//ShootFrame3.tga");
 
     meshList[GEO_BOSS] = MeshBuilder::GenerateQuad("GEO_BOSS", Color(0, 1, 0), 60.f);
     meshList[GEO_BOSS]->textureID = LoadTGA("Image//enemy//BOSS1.tga");

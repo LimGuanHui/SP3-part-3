@@ -118,7 +118,7 @@ void SP3::Init()
     sceneSoundEngine = createIrrKlangDevice();
     //source = sceneSoundEngine->addSoundSourceFromFile("music//etc.ogg")
     jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
-
+    jump->setDefaultVolume(0.1f);
     jumpsoundtimer = 0;
 
 	firingDebounce = 0;
@@ -145,14 +145,6 @@ void SP3::Init()
     MAX_PARTICLE = 420;
     m_gravity.Set(0, -9.8f, 0);
 
-    //for (unsigned i = 0; i <= 400; ++i)
-    //{
-    //    ParticleObject *particle = new ParticleObject(ParticleObject_TYPE::P_WATER);
-    //    particleList.push_back(particle);
-    //}
-
-    /*spritemanager = new SpriteManager();
-    spritemanager->Init(800, 600);*/
     Battle = new BattleStage();
     Battle->Init(800, 600, 25);
 
@@ -160,6 +152,13 @@ void SP3::Init()
 
 	MiniBossAlive = true;
 
+    shoot = sceneSoundEngine->addSoundSourceFromFile("music//shoot.ogg");
+    shoot->setDefaultVolume(0.05f);
+    Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.ogg");
+    Normal_level_sound->setDefaultVolume(2.f);
+    Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.mp3");
+    if (Normal_level_sound)
+        Currsound = sceneSoundEngine->play2D(Normal_level_sound, true);
 }
 
 void SP3::Update(double dt)
@@ -218,9 +217,8 @@ void SP3::Update(double dt)
                 if (jumpsoundtimer <= 0)
                 {
                     jumpsoundtimer = 0.4f;
-                    //sceneSoundEngine->play2D(jump);
+                    sceneSoundEngine->play2D(jump);
                 }
-
             }
 
             Character->Movement->HeroUpdate(m_cMap);
@@ -255,6 +253,9 @@ void SP3::Update(double dt)
 					ShootingN = false;
 					Shooting = false;
 					AnimationCounter = 0;
+                    
+                    sceneSoundEngine->play2D(shoot);
+
 				}
 			}
 
@@ -334,33 +335,27 @@ void SP3::Update(double dt)
 				}
                
             }
-        
+            for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
+            {
+                PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
+                if (projectile->active)
+                {
+                    //projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
+                    projectile->Update(dt);
+                    ProjectileCollision(dt, projectile);
+                }
+            }
 
-    for (std::vector<PROJECTILE::Projectile *>::iterator it = Character->Movement->m_projectileList.begin(); it != Character->Movement->m_projectileList.end(); ++it)
-    {
-        PROJECTILE::Projectile *projectile = (PROJECTILE::Projectile *)*it;
-        if (projectile->active)
-        {
-            //projectile->SetPos(projectile->GetPos() + projectile->GetVel() * dt);
-            projectile->Update(dt);
-            ProjectileCollision(dt, projectile);
-        }
-    }
-
-    // ReCalculate the tile offsets
-    tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
-    if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
-        tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
+            // ReCalculate the tile offsets
+            tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
+            if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
+                tileOffset_x = m_cMap->getNumOfTiles_MapWidth() - m_cMap->GetNumOfTiles_Width();
 
     // if the hero enters the kill zone, then enemy goes into kill strategy mode
 
             MonsterUpdate(dt, m_cMap);
             //SpriteAnimationUpdate(dt);
             UpdateParticles(dt);
-            if (!MiniBossAlive)
-            {
-                battlestage = true;
-            }
             if (Character->Attribute->GetCurrentHP() <= 0)
             {
                 endScreenTimer += (float)dt;
@@ -371,9 +366,13 @@ void SP3::Update(double dt)
                     Main.RestartGame = false;
                 }
             }
+            if (!MiniBossAlive)
+            {
+                battlestage = true;
+                //Currsound->drop();
+                //Currsound = sceneSoundEngine->play2D(Finalboss_level_sound, true);
+            }
         }
-       	
-
         else
         {
             //battlestage update
@@ -394,22 +393,19 @@ void SP3::Update(double dt)
                 Main.RestartGame = false;
             }
         }
-
-        if (Main.gamestate == Main.Menu)
-        {
-            State = Menu;
-            Main.RestartGame = false;
-        }
-
-        if (Main.gamestate == Main.Win)
-        {
-            State = Win;
-            Main.RestartGame = false;
-        }
-
     }
 		
-    
+    if (Main.gamestate == Main.Menu)
+    {
+        State = Menu;
+        Main.RestartGame = false;
+    }
+
+    if (Main.gamestate == Main.Win)
+    {
+        State = Win;
+        Main.RestartGame = false;
+    }
 }
 
 void SP3::RenderGO(GameObject *go)
@@ -826,6 +822,14 @@ void SP3::Restart()
     battlestage = false;
     Battle->exit();
     Battle->Init(800, 600, 25);
+
+    //Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.mp3");
+    //Normal_level_sound->setDefaultVolume(0.2f);
+    //Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.mp3");
+    //Miniboss_level_sound->setDefaultVolume(0.2f);
+
+    sceneSoundEngine->play2D(Normal_level_sound, true);
+
 }
 
 void SP3::Scenetransition()
@@ -845,6 +849,7 @@ void SP3::Scenetransition()
             m_cMap->LoadMap("Map\\Map3.csv");
             break;
         case SP3::LEVEL4:
+            Currsound = sceneSoundEngine->play2D(Miniboss_level_sound, true);
             m_cMap->LoadMap("Map\\Map4.csv");
             break;
 		case SP3::LEVEL5:
@@ -863,12 +868,13 @@ void SP3::Scenetransition()
 		switch (CurrLevel)
 		{
 		case SP3::LEVEL2:
-			m_cMap->LoadMap("Map\\2B.csv");
+			m_cMap->LoadMap("Map\\Map2B.csv");
 			break;
 		case SP3::LEVEL3:
 			m_cMap->LoadMap("Map\\Map3B.csv");
 			break;
 		case SP3::LEVEL4:
+            Currsound = sceneSoundEngine->play2D(Miniboss_level_sound, true);
 			m_cMap->LoadMap("Map\\Map4B.csv");
 			break;
 		case SP3::LEVEL5:
@@ -1245,17 +1251,18 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
             //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
             CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
+            if (go->type == Monster::MINIBOSS)
+            {
+                MiniBossAlive = false;
+                std::cout << "DEAD" << std::endl;
+            }
             Monster* go = (Monster*)*monsterlist_iterator;
             delete go;
             Monster_List.erase(monsterlist_iterator);
             //particle animation here
 			Character->Attribute->ActionBar(10);
 			projectile->active = false;
-			if (go->type == Monster::MINIBOSS)
-			{
-				MiniBossAlive = false;
-				std::cout << "DEAD" << std::endl;
-			}
+			
 
             return;
         }
@@ -1278,6 +1285,8 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
+        Monster* go = (Monster*)*monsterlist_iterator;
+        delete go;
         Monster_List.erase(monsterlist_iterator);   
 		if (go->type == Monster::MINIBOSS)
 		{

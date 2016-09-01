@@ -363,7 +363,6 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 
 	if (gamestate == Menu)
 	{
-
 		modelStack.PushMatrix();
 		modelStack.Translate(m_worldWidth / 2, m_worldHeight / 2, 0.f);
 		modelStack.Scale(180, 100, 0);
@@ -371,7 +370,9 @@ void MainMenu::RenderMenu(MapLoad* m_cMap)
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], "Escape Dungeon", Color(0, 0, 1), 30, m_worldWidth + 30, m_worldHeight + 400);
+		modelStack.Translate(m_worldWidth / 2, (m_worldHeight / 2) + 35.f, 0.f);
+		modelStack.Scale(150, 20, 0);
+		RenderMesh(meshList[GEO_GAMENAME], false);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
