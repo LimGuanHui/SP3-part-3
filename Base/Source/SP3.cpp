@@ -158,7 +158,7 @@ void SP3::Init()
 
     battlestage = false;
 
-	MiniBossAlive = false;
+	MiniBossAlive = true;
 
 }
 

@@ -135,7 +135,7 @@ namespace MONSTER_MOVEMENT
         {
         case MONSTER_MOVEMENT::MMovement::IDLE:
         {
-            int checkPosition_X = (int)((theMonsterPosition.x + 0.5f) / map->GetTileSize());
+            int checkPosition_X = (int)((theMonsterPosition.x - 0.5f) / map->GetTileSize());
             int checkPosition_Y = map->GetNumOfTiles_Height() - (int)((theMonsterPosition.y) / map->GetTileSize()) - 1;
 
             //int tileOffset_x = (int)(GetMapOffset_x() / m_cMap->GetTileSize());
