@@ -387,7 +387,7 @@ void SP3::Update(double dt)
                     battlestage = true;
                     sceneSoundEngine->removeSoundSource(Miniboss_level_sound);
                     sceneSoundEngine->play2D(Finalboss_level_sound, true);
-
+                    endScreenTimer = 0;
                 }
 
             }
@@ -410,6 +410,7 @@ void SP3::Update(double dt)
                 endScreenTimer += (float)dt;
                 if (endScreenTimer > 2)
                 {
+                    endScreenTimer = 0; 
                     State = End;
                     Main.gamestate = Main.End;
                     Main.RestartGame = false;
