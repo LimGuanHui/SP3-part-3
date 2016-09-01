@@ -46,5 +46,8 @@ namespace CHARACTER
     {
         return scoreforshow;
     }
-
+    void CCharacter::setscore(int score)
+    {
+        this->score = scoreforshow = score;
+    }
 }

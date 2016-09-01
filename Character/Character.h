@@ -30,6 +30,7 @@ namespace CHARACTER
         void Update(double dt);
         void IncreaseScore(int score);
         int getScore();
+        void setscore(int score);
 	private:
         int score;
         int scoreforshow;

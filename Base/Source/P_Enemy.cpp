@@ -89,7 +89,7 @@ int ENEMY::gethp()
 }
 void ENEMY::sethp(int hp)
 {
-    this->hp = hp;
+    this->hp = maxhp = hp;
 }
 
 int ENEMY::getatk()
@@ -133,4 +133,9 @@ bool ENEMY::isAttacking()
         return true;
     }
     return isAtking;
+}
+
+int ENEMY::getmaxhp()
+{
+    return maxhp;
 }

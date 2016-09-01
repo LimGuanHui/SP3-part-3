@@ -241,7 +241,7 @@ namespace MONSTER_MOVEMENT
 			if (isBoss)
 			{
 				Vector3 dist(theMonsterPosition - Vector3(characterpos.x, characterpos.y, 0));
-				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 60) && !playerDead)
+				if (dist.LengthSquared() / map->GetTileSize() < (map->GetTileSize() * 120) && !playerDead)
 				{
 					Monstate = ATTACK;
 					facingleft = true;

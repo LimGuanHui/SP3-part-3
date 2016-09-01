@@ -21,6 +21,7 @@ public:
 
     int gethp();
     void sethp(int hp);
+    int getmaxhp();
 
     int getatk();
     void setatk(int atk);
@@ -39,6 +40,7 @@ public:
     bool isAtking;
 private:
     int hp;
+    int maxhp;
     int atk;
     int panel_no;
     float movetimer;

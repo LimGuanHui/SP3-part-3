@@ -92,7 +92,7 @@ void Player::sethp(int hp)
 int Player::getatk()
 {
     if (GunState == Charge)
-        return atk * 5;
+        return atk * 10;
     return atk;
 }
 void Player::setatk(int atk)

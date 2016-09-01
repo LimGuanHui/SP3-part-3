@@ -117,8 +117,6 @@ void SP3::Init()
 
     sceneSoundEngine = createIrrKlangDevice();
     //source = sceneSoundEngine->addSoundSourceFromFile("music//etc.ogg")
-    jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
-    jump->setDefaultVolume(0.1f);
     jumpsoundtimer = 0;
 
 	firingDebounce = 0;
@@ -152,13 +150,21 @@ void SP3::Init()
 
 	MiniBossAlive = true;
 
+    jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
+    jump->setDefaultVolume(0.1f);
     shoot = sceneSoundEngine->addSoundSourceFromFile("music//shoot.ogg");
     shoot->setDefaultVolume(0.05f);
     Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.ogg");
     Normal_level_sound->setDefaultVolume(2.f);
-    Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.mp3");
+    Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.ogg");
+    Miniboss_level_sound->setDefaultVolume(0.5f);
+    Finalboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//panel.ogg");
+    Finalboss_level_sound->setDefaultVolume(0.5f);
+
     if (Normal_level_sound)
         Currsound = sceneSoundEngine->play2D(Normal_level_sound, true);
+
+    int o = 0;
 }
 
 void SP3::Update(double dt)
@@ -273,7 +279,7 @@ void SP3::Update(double dt)
 
 				if (AnimationCounter == 4)
 				{
-					Character->Movement->ProjectileUpdate(dt, 1, Character->Attribute->GetDmg(), Projectile::Net, m_cMap);
+					Character->Movement->ProjectileUpdate(dt, 1, 1, Projectile::Net, m_cMap);
 					ShootingNet = false;
 					Shooting = false;
 					AnimationCounter = 0;
@@ -345,7 +351,6 @@ void SP3::Update(double dt)
                     ProjectileCollision(dt, projectile);
                 }
             }
-
             // ReCalculate the tile offsets
             tileOffset_x = (int)(Character->Movement->GetMapOffset_x() / m_cMap->GetTileSize());
             if (tileOffset_x + m_cMap->GetNumOfTiles_Width() > m_cMap->getNumOfTiles_MapWidth())
@@ -366,18 +371,32 @@ void SP3::Update(double dt)
                     Main.RestartGame = false;
                 }
             }
-            if (!MiniBossAlive)
+            if (!MiniBossAlive )
             {
-                battlestage = true;
-                //Currsound->drop();
-                //Currsound = sceneSoundEngine->play2D(Finalboss_level_sound, true);
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2.f)
+                {
+                    if (Character->getScore() < 100)
+                        Battle->player->sethp(100 * 2);
+                    else
+                        Battle->player->sethp(Character->getScore() * 2);
+                    Battle->player->setatk(Battle->player->gethp() / 15);
+                    int temp = Math::RandIntMinMax(Battle->player->gethp() * 2, Battle->player->gethp() * 4);
+                    Battle->enemy->sethp(temp);
+                    Battle->enemy->setatk(temp / 4);
+                    battlestage = true;
+                    sceneSoundEngine->removeSoundSource(Miniboss_level_sound);
+                    sceneSoundEngine->play2D(Finalboss_level_sound, true);
+
+                }
+
             }
         }
         else
         {
             //battlestage update
             Battle->Update(dt);
-            if (Battle->player->gethp() > 0 && Battle->enemy->gethp() <= 0 )
+            if (Battle->enemy->gethp() <= 0 )
             {
                 endScreenTimer += (float)dt;
                 if (endScreenTimer > 2)
@@ -388,9 +407,13 @@ void SP3::Update(double dt)
             }
             else if (Battle->player->gethp() <= 0 )
             {
-                State = End;
-                Main.gamestate = Main.End;
-                Main.RestartGame = false;
+                endScreenTimer += (float)dt;
+                if (endScreenTimer > 2)
+                {
+                    State = End;
+                    Main.gamestate = Main.End;
+                    Main.RestartGame = false;
+                }                
             }
         }
     }
@@ -812,6 +835,8 @@ void SP3::GameStateRender()
 
 void SP3::Restart()
 {
+    sceneSoundEngine->removeAllSoundSources();
+    Character->setscore(0);
 	CurrLevel = LEVEL1;
 	m_cMap->LoadMap("Map\\Map1.csv");
 	Character->Restart();
@@ -823,10 +848,16 @@ void SP3::Restart()
     Battle->exit();
     Battle->Init(800, 600, 25);
 
-    //Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.mp3");
-    //Normal_level_sound->setDefaultVolume(0.2f);
-    //Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.mp3");
-    //Miniboss_level_sound->setDefaultVolume(0.2f);
+    jump = sceneSoundEngine->addSoundSourceFromFile("music//jump.ogg");
+    jump->setDefaultVolume(0.1f);
+    shoot = sceneSoundEngine->addSoundSourceFromFile("music//shoot.ogg");
+    shoot->setDefaultVolume(0.05f);
+    Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.ogg");
+    Normal_level_sound->setDefaultVolume(0.5f);
+    Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.ogg");
+    Miniboss_level_sound->setDefaultVolume(0.5f);
+    Finalboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//panel.ogg");
+    Finalboss_level_sound->setDefaultVolume(0.5f);
 
     sceneSoundEngine->play2D(Normal_level_sound, true);
 
@@ -849,11 +880,12 @@ void SP3::Scenetransition()
             m_cMap->LoadMap("Map\\Map3.csv");
             break;
         case SP3::LEVEL4:
-            Currsound = sceneSoundEngine->play2D(Miniboss_level_sound, true);
             m_cMap->LoadMap("Map\\Map4.csv");
             break;
 		case SP3::LEVEL5:
-			m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            sceneSoundEngine->removeSoundSource(Normal_level_sound);
+            sceneSoundEngine->play2D(Miniboss_level_sound, true);
+            m_cMap->LoadMap("Map\\MapMiniBoss.csv");
 			break;
         default:
             break;
@@ -874,11 +906,11 @@ void SP3::Scenetransition()
 			m_cMap->LoadMap("Map\\Map3B.csv");
 			break;
 		case SP3::LEVEL4:
-            Currsound = sceneSoundEngine->play2D(Miniboss_level_sound, true);
 			m_cMap->LoadMap("Map\\Map4B.csv");
 			break;
 		case SP3::LEVEL5:
-			m_cMap->LoadMap("Map\\MapMiniBoss.csv");
+            sceneSoundEngine->removeSoundSource(Normal_level_sound);
+            sceneSoundEngine->play2D(Miniboss_level_sound, true);
 			break;
 		default:
 			break;
@@ -934,7 +966,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER2, m_cMap, true, true);
-                       newmon->InitAttrib(50, 15,50,1);
+                       newmon->InitAttrib(50, 15,50,0.8);
 
             }
                 break;
@@ -946,7 +978,7 @@ void SP3::SpawnObjects()
                        float y = 575 - i*m_cMap->GetTileSize();
                        Vector3 temp = Vector3(x, y, 0);
                        newmon->Init(temp, Vector3(1, 1, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MONSTER3, m_cMap, true, true);
-                       newmon->InitAttrib(75, 25,50,1);
+                       newmon->InitAttrib(75, 25,50,0.5);
 
             }
 				break;
@@ -957,8 +989,8 @@ void SP3::SpawnObjects()
 					   float x = k*m_cMap->GetTileSize() - Character->Movement->GetMapFineOffset_x();
 					   float y = 575 - i*m_cMap->GetTileSize();
 					   Vector3 temp = Vector3(x, y, 0);
-                       newmon->Init(temp, Vector3(3, 3, 1), 30 * m_cMap->GetTileSize(), 5.f, m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
-					   newmon->InitAttrib(150, 35, 10, 1);
+                       newmon->Init(temp, Vector3(3, 3, 1), 100 * m_cMap->GetTileSize(), 5.f, 2.8 * m_cMap->GetTileSize(), Monster::MINIBOSS, m_cMap, false, true);
+					   newmon->InitAttrib(150, 35, 10, 0.2);
 
 			}
                 break;
@@ -1248,14 +1280,16 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
     case Projectile::Net:
         if (go->Attribute->Capture())
         {
-            //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
-            CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
-            Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
             if (go->type == Monster::MINIBOSS)
             {
                 MiniBossAlive = false;
-                std::cout << "DEAD" << std::endl;
+                std::cout << "DEAD" << std::endl; 
+                CreateParticles(40, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
             }
+            //CreateParticles(10, go->Movement->GetPos(), 2, 20, ParticleObject_TYPE::NET);
+            CreateParticles(20, go->Movement->GetPos(), 0.5, 15, ParticleObject_TYPE::NET);
+            Character->IncreaseScore((go->Attribute->GetMonsterMaxHealth() - go->Attribute->GetCurrentHP()) * 3);
+            
             Monster* go = (Monster*)*monsterlist_iterator;
             delete go;
             Monster_List.erase(monsterlist_iterator);
@@ -1285,14 +1319,14 @@ void SP3::ProjectileCollisionResponse(Projectile* projectile,
         
     if (go->Attribute->GetCurrentHP() <= 0)
     {
-        Monster* go = (Monster*)*monsterlist_iterator;
-        delete go;
-        Monster_List.erase(monsterlist_iterator);   
 		if (go->type == Monster::MINIBOSS)
 		{
 			MiniBossAlive = false;
 			std::cout << "DEAD" << std::endl;
 		}
+        Monster* go = (Monster*)*monsterlist_iterator;
+        delete go;
+        Monster_List.erase(monsterlist_iterator);
 
     }
 }
@@ -1446,36 +1480,48 @@ void SP3::renderbattlestage()
         }
 
     }
-    //render character
-    if (Battle->player->getcharging())
-    {
-        if (!Battle->player->getisFullyCharged())
-            Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
-        else
-            Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
-    }
-    else
-        Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
     std::ostringstream ss;
-    ss.str(string());
-    ss.precision(3);
-    ss << Battle->player->gethp();
-
-    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->player->getpos().x - 25, Battle->player->getpos().y - 25);
-    //render enemy
-    if (Battle->enemy->state == ENEMY::State::Move)
-        Render2DMesh(meshList[GEO_BOSS], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
-    else
+    //render character
+    if (!(Battle->player->gethp() <= 0))
     {
-        if (!Battle->enemy->isAtking)
-            Render2DMesh(meshList[GEO_BOSS_CHARGING], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+        if (Battle->player->getcharging())
+        {
+            if (!Battle->player->getisFullyCharged())
+                Render2DMesh(meshList[GEO_PLAYER_CHARGING], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
+            else
+                Render2DMesh(meshList[GEO_PLAYER_MAXCHARGE], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
+        }
         else
-            Render2DMesh(meshList[GEO_BOSS_MAXCHARGE], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
-    }
+            Render2DMesh(meshList[GEO_PLAYER], false,/*player x scale*/ 1, /*player y scale*/ 1.2, Battle->player->getpos().x, Battle->player->getpos().y + (35 * 1.2), false, false);
+        
+        ss.str(string());
+        ss.precision(3);
+        ss << Battle->player->gethp();
 
-    ss.str(string());
-    ss.precision(3);
-    ss << Battle->enemy->gethp();
-    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(1, 1, 1), 20, Battle->enemy->getpos().x - 25, Battle->enemy->getpos().y - 25);
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.000, 1.000, 0.000), 20, Battle->player->getpos().x - 25, Battle->player->getpos().y - 25);
+    }
+    
+    if (!(Battle->enemy->gethp() <= 0))
+    {
+        //render enemy
+        if (Battle->enemy->state == ENEMY::State::Move)
+            Render2DMesh(meshList[GEO_BOSS], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+        else
+        {
+            if (!Battle->enemy->isAtking)
+                Render2DMesh(meshList[GEO_BOSS_CHARGING], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+            else
+                Render2DMesh(meshList[GEO_BOSS_MAXCHARGE], false,/*enemy x scale*/ 1, /*enemy y scale*/ 1, Battle->enemy->getpos().x, Battle->enemy->getpos().y + 30, false, false);
+        }
+        ss.str(string());
+        ss.precision(3);
+        ss << Battle->enemy->gethp();
+        RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0.000, 1.000, 0.000), 20, Battle->enemy->getpos().x - 25, Battle->enemy->getpos().y - 25);
+
+    }
+    
+
+
+    //Render2DMesh(meshList[GEO_MON_HP_BAR], false,( (Battle->enemy->gethp() / Battle->enemy->getmaxhp()) * 2), 0.7f, Battle->enemy->getpos().x - 25, Battle->enemy->getpos().y - 25, false, false);
 
 }
