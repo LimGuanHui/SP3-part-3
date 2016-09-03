@@ -155,7 +155,7 @@ void SP3::Init()
     shoot = sceneSoundEngine->addSoundSourceFromFile("music//shoot.ogg");
     shoot->setDefaultVolume(0.05f);
     Normal_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//Normal.ogg");
-    Normal_level_sound->setDefaultVolume(2.f);
+    Normal_level_sound->setDefaultVolume(0.5f);
     Miniboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//MiniBoss.ogg");
     Miniboss_level_sound->setDefaultVolume(0.5f);
     Finalboss_level_sound = sceneSoundEngine->addSoundSourceFromFile("music//panel.ogg");

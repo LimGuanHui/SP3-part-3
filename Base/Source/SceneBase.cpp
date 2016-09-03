@@ -450,7 +450,7 @@ void SceneBase::Update(double dt)
 {
    // camera.Update(dt);
 	//Keyboard Section
-	if(Application::IsKeyPressed('1'))
+	/*if(Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 	if(Application::IsKeyPressed('2'))
 		glDisable(GL_CULL_FACE);
@@ -458,7 +458,7 @@ void SceneBase::Update(double dt)
 	if(Application::IsKeyPressed('7'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	if(Application::IsKeyPressed('8'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
 
 
 	
